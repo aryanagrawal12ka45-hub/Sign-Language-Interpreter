@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASL Academy — Interactive Practice & Speed Quiz</title>
+    <meta name="description"
+        content="Interactive sign language learning game and real-time speed quiz with pose validation powered by MediaPipe and TensorFlow.js.">
+
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=2.4.0">
+
+    <!-- MediaPipe Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+    <!-- TensorFlow.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- ==================== HEADER ==================== -->
+        <header class="glass-panel">
+            <div class="header-inner">
+                <div class="header-left">
+                    <div class="brand-badge">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                            <path d="M4 22h16"></path>
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                    </div>
+                    <div class="header-titles">
+                        <h1>ASL <span class="highlight">Academy</span> <span class="version-pill">v2.4</span></h1>
+                        <p>Interactive gesture practice & real-time speed quiz</p>
+                    </div>
+                </div>
+                <nav class="nav-menu" aria-label="Primary Navigation">
+                    <a href="index.html" class="nav-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span>Alphabet Detector</span>
+                    </a>
+                    <a href="quiz.html" class="nav-link active" aria-current="page">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                            <path d="M4 22h16"></path>
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                        <span>Practice Academy</span>
+                    </a>
+                    <a href="chat.html" class="nav-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>Gesture assistant</span>
+                    </a>
+                    <button id="open-dictionary-btn" class="nav-link" type="button" aria-haspopup="dialog" style="background: transparent; border: 0; cursor: pointer;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span>Sign Dictionary</span>
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ==================== MAIN WORKSPACE ==================== -->
+        <main class="vision-container">
+
+            <!-- ===== LEFT COLUMN (Webcam & Target HUD) ===== -->
+            <div class="left-column">
+
+                <!-- Camera Feed Viewport -->
+                <div class="camera-wrapper glass-panel" id="camera-container">
+                    <video id="webcam" autoplay playsinline muted></video>
+                    <canvas class="output_canvas" id="output_canvas"></canvas>
+
+                    <!-- Camera Telemetry Overlay -->
+                    <div class="camera-status-bar">
+                        <div class="camera-badge"><span class="dot"></span> Camera Input</div>
+                        <div class="camera-badge" id="fps-badge">FPS: --</div>
+                    </div>
+
+                    <!-- Loading / Initialization Overlay -->
+                    <div class="status-overlay" id="status-overlay">
+                        <div class="loader"></div>
+                        <p id="status-text">Preparing camera and gesture engine…</p>
+                    </div>
+                </div>
+
+                <!-- Target Sign & Pose Hold HUD -->
+                <div class="quiz-target-hud glass-panel" id="quiz-target-hud">
+                    <div class="quiz-target-card" id="quiz-target-card">
+                        <!-- Circular Hold Progress SVG -->
+                        <svg class="hold-ring-svg" viewBox="0 0 140 140">
+                            <circle class="hold-ring-bg" cx="70" cy="70" r="64"></circle>
+                            <circle class="hold-ring-progress" id="hold-ring-progress" cx="70" cy="70" r="64"></circle>
+                        </svg>
+                        <span class="target-badge">Target</span>
+                        <span class="target-glyph" id="target-glyph">A</span>
+                        <span class="target-subtext" id="target-subtext">Letter A</span>
+                    </div>
+                    <div class="target-details">
+                        <div class="target-instructions-title">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <span>Pose Instructions</span>
+                        </div>
+                        <div class="target-instructions-text" id="target-hint">
+                            Make a closed fist with thumb resting vertically along the side of index finger.
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+                            <span class="target-hints-box" id="target-category-badge">Category: Alphabet</span>
+                            <span class="target-hints-box" id="target-hold-status">Hold pose for 0.4s</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ===== RIGHT COLUMN (Academy Hub & Telemetry) ===== -->
+            <div class="side-panel">
+
+                <!-- Academy Scorecard & Live HUD -->
+                <div class="sentence-panel glass-panel">
+                    <div class="panel-header-row">
+                        <h2 class="section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                            <span>Live Performance</span>
+                        </h2>
+                        <span id="quiz-status-badge" class="status-badge connected">Practice Mode</span>
+                    </div>
+
+                    <!-- Live Stats Grid -->
+                    <div class="quiz-stats-grid">
+                        <div class="quiz-stat-card">
+                            <span class="quiz-stat-label">Score</span>
+                            <span class="quiz-stat-value highlight-blue" id="quiz-score">0</span>
+                        </div>
+                        <div class="quiz-stat-card">
+                            <span class="quiz-stat-label">Streak</span>
+                            <div class="streak-container">
+                                <svg class="flame-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                                </svg>
+                                <span class="quiz-stat-value highlight-green" id="quiz-streak">0</span>
+                            </div>
+                        </div>
+                        <div class="quiz-stat-card">
+                            <span class="quiz-stat-label">Accuracy</span>
+                            <span class="quiz-stat-value" id="quiz-accuracy">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Timer Bar for Speed Run -->
+                    <div id="quiz-timer-container" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 2px;">
+                            <span>Time Remaining</span>
+                            <span id="quiz-timer-text" style="font-family: var(--font-mono); font-weight: 600; color: var(--text-primary);">60s</span>
+                        </div>
+                        <div class="timer-track-quiz">
+                            <div class="timer-fill-quiz" id="quiz-timer-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Action Controls -->
+                    <div class="sentence-controls">
+                        <button id="primary-action-btn" class="btn primary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            <span id="primary-action-text">Start Speed Run</span>
+                        </button>
+                        <button id="skip-target-btn" class="btn secondary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                                <line x1="19" y1="5" x2="19" y2="19"></line>
+                            </svg>
+                            <span>Skip Sign</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Challenge Configuration -->
+                <div class="training-panel glass-panel">
+                    <h2 class="section-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                        </svg>
+                        <span>Challenge Setup</span>
+                    </h2>
+
+                    <div class="quiz-config-section">
+                        <!-- Mode Selector -->
+                        <div class="config-group">
+                            <span class="config-label">Practice Type</span>
+                            <div class="pill-group" id="quiz-mode-pills">
+                                <button type="button" class="pill-btn active" data-qmode="practice">Free Practice</button>
+                                <button type="button" class="pill-btn" data-qmode="speed">60s Speed Run</button>
+                            </div>
+                        </div>
+
+                        <!-- Category Selector -->
+                        <div class="config-group">
+                            <span class="config-label">Vocabulary Category</span>
+                            <div class="pill-group" id="quiz-category-pills">
+                                <button type="button" class="pill-btn active" data-qcat="all">Mixed All</button>
+                                <button type="button" class="pill-btn" data-qcat="alphabet">Letters (A–Z)</button>
+                                <button type="button" class="pill-btn" data-qcat="numbers">Numbers (0–9)</button>
+                                <button type="button" class="pill-btn" data-qcat="signs">Common Signs</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Career Records & Progress -->
+                <div class="hardware-panel glass-panel">
+                    <h2 class="section-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                        </svg>
+                        <span>Personal Records</span>
+                    </h2>
+                    <div class="data-grid">
+                        <div class="data-box">
+                            <div class="data-header">
+                                <span class="data-label">High Score</span>
+                            </div>
+                            <span class="data-value" id="record-high-score">0</span>
+                        </div>
+                        <div class="data-box">
+                            <div class="data-header">
+                                <span class="data-label">Best Streak</span>
+                            </div>
+                            <span class="data-value" id="record-best-streak">0</span>
+                        </div>
+                    </div>
+                    <div class="debug-divider">
+                        <div class="data-grid">
+                            <div class="data-box small">
+                                <span class="data-label">Signs Solved</span>
+                                <span class="data-value" id="record-total-signs">0</span>
+                            </div>
+                            <div class="data-box small">
+                                <span class="data-label">Speed Runs</span>
+                                <span class="data-value" id="record-total-rounds">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Round Summary Modal -->
+        <div class="quiz-summary-modal" id="quiz-summary-modal" role="dialog" aria-modal="true">
+            <div class="summary-card">
+                <div class="summary-trophy">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                        <path d="M4 22h16"></path>
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                    </svg>
+                </div>
+                <h3 class="summary-title" id="modal-summary-title">Round Complete!</h3>
+                <p class="summary-subtitle" id="modal-summary-subtitle">Great performance on your sign recognition speed run.</p>
+
+                <div class="summary-grid">
+                    <div class="summary-metric">
+                        <div class="summary-metric-val" id="modal-metric-score">0</div>
+                        <div class="summary-metric-lbl">Final Score</div>
+                    </div>
+                    <div class="summary-metric">
+                        <div class="summary-metric-val" id="modal-metric-streak">0</div>
+                        <div class="summary-metric-lbl">Max Streak</div>
+                    </div>
+                    <div class="summary-metric">
+                        <div class="summary-metric-val" id="modal-metric-solved">0</div>
+                        <div class="summary-metric-lbl">Signs Solved</div>
+                    </div>
+                    <div class="summary-metric">
+                        <div class="summary-metric-val" id="modal-metric-accuracy">100%</div>
+                        <div class="summary-metric-lbl">Accuracy</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 6px;">
+                    <button id="modal-play-again-btn" class="btn primary" style="flex: 1;">
+                        <span>Play Again</span>
+                    </button>
+                    <button id="modal-close-btn" class="btn secondary" style="flex: 1;">
+                        <span>Close</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- System status footer -->
+        <footer class="footer-status glass-panel" role="contentinfo">
+            <div class="footer-item">
+                <span class="dot-indicator" id="footer-camera-dot"></span>
+                <span>Camera: <strong id="footer-camera-status">Initializing</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span class="dot-indicator" id="footer-model-dot"></span>
+                <span>Engine: <strong id="footer-model-status">Loading</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span>FPS: <strong id="footer-fps">--</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span>Career High: <strong id="footer-high-score">0</strong></span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Sign Dictionary & Quiz Engine -->
+    <script src="dictionary.js"></script>
+    <script src="quiz.js?v=2.4.0"></script>
+</body>
+
+</html>

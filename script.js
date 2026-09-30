@@ -19,6 +19,45 @@ const footerGloveStatus = document.getElementById('footer-glove-status');
 const footerGloveDot = document.getElementById('footer-glove-dot');
 const cameraContainer = document.getElementById('camera-container');
 
+// --- Recognition Modes & Gesture Switcher ---
+let currentRecognitionMode = 'alphabet'; // 'alphabet' | 'numbers' | 'signs' | 'unified'
+const RECOGNITION_MODES = ['alphabet', 'numbers', 'signs', 'unified'];
+const modePills = document.getElementById('mode-pills');
+const gestureHoldIndicator = document.getElementById('gesture-hold-indicator');
+const gestureHoldMeter = document.getElementById('gesture-hold-meter');
+const gestureHoldText = document.getElementById('gesture-hold-text');
+let gestureHoldFrames = 0;
+const GESTURE_SWITCH_THRESHOLD = 30; // ~1.5 - 2s at ~20fps
+let gestureSwitchCooldown = 0;
+
+function setRecognitionMode(mode) {
+    if (!RECOGNITION_MODES.includes(mode)) return;
+    currentRecognitionMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        const isActive = btn.getAttribute('data-mode') === mode;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+    });
+    console.log(`[Mode Switch] Recognition Mode set to: ${mode}`);
+}
+
+function cycleRecognitionMode() {
+    const currentIndex = RECOGNITION_MODES.indexOf(currentRecognitionMode);
+    const nextIndex = (currentIndex + 1) % RECOGNITION_MODES.length;
+    setRecognitionMode(RECOGNITION_MODES[nextIndex]);
+    playDetectionSound();
+}
+
+if (modePills) {
+    modePills.addEventListener('click', (e) => {
+        const btn = e.target.closest('.mode-btn');
+        if (btn) {
+            const mode = btn.getAttribute('data-mode');
+            if (mode) setRecognitionMode(mode);
+        }
+    });
+}
+
 // --- FPS Counter ---
 let fpsFrameCount = 0;
 let fpsLastTime = performance.now();
@@ -60,12 +99,27 @@ const hands = new Hands({
 
 hands.setOptions({
     maxNumHands: 1, // Focus on single hand for ASL spelling
-    modelComplexity: 1,
-    minDetectionConfidence: 0.7,
-    minTrackingConfidence: 0.5  // Lower tracking confidence for smoother frame-to-frame tracking
+    modelComplexity: 0, // Lite model for smooth 30+ FPS real-time tracking
+    minDetectionConfidence: 0.65,
+    minTrackingConfidence: 0.5
 });
 
 hands.onResults(onResults);
+
+// Profile switch: Fast (30+ FPS) vs HD Precision (720p)
+const cameraPerfSelect = document.getElementById('camera-perf-mode');
+if (cameraPerfSelect) {
+    cameraPerfSelect.addEventListener('change', (e) => {
+        const mode = e.target.value;
+        if (mode === 'hd') {
+            hands.setOptions({ modelComplexity: 1, minDetectionConfidence: 0.7 });
+            console.log('[Camera Perf] Switched to HD Precision profile');
+        } else {
+            hands.setOptions({ modelComplexity: 0, minDetectionConfidence: 0.65 });
+            console.log('[Camera Perf] Switched to Fast 30+ FPS profile');
+        }
+    });
+}
 
 // Setup WebCam using MediaPipe CameraUtils
 const camera = new Camera(videoElement, {
@@ -212,121 +266,63 @@ statusOverlay.classList.remove('hidden');
 statusText.innerText = 'Initializing Deep Learning Neural Network...';
 
 async function buildAndTrainModel() {
+    statusText.innerText = 'Loading pre-trained neural network...';
+
+    // 1. Direct load from local pre-trained model directory
     try {
-        // Try to load cached model first
-        statusText.innerText = 'Checking for cached neural network...';
-        const cachedModel = await tf.loadLayersModel('indexeddb://asl-alphabet-model');
-
-        // If successful
-        mlModel = cachedModel;
-        mlModel.compile({
-            optimizer: 'adam',
-            loss: 'categoricalCrossentropy',
-            metrics: ['accuracy']
-        });
-
-        console.log("Loaded cached model from IndexedDB!");
-        isModelReady = true;
-        statusText.innerText = 'Cached Neural Network Online! Show hands.';
-        if (footerModelStatus) footerModelStatus.textContent = 'Loaded';
-        if (footerModelDot) { footerModelDot.style.background = 'var(--accent-color)'; footerModelDot.style.boxShadow = '0 0 6px var(--accent-glow)'; }
-        setTimeout(() => {
-            statusOverlay.classList.add('hidden');
-        }, 1000);
-        return; // Exit early! No need to train.
-
-    } catch (e) {
-        console.log("No cached model found, initiating fresh training...", e);
-    }
-
-    try {
-        statusText.innerText = 'Downloading Dataset (36,000+ gestures)...';
-        const response = await fetch('./models/keypoint.csv');
-        const csvText = await response.text();
-
-        statusText.innerText = 'Compiling Neural Network...';
-
-        const lines = csvText.split('\n');
-        const xs = [];
-        const ys = [];
-
-        for (let i = 0; i < lines.length; i++) {
-            const row = lines[i].trim();
-            if (!row) continue;
-
-            const cols = row.split(',').map(Number);
-            const label = cols[0];
-            const features = cols.slice(1); // 42 features (x, y for 21 points)
-
-            // Basic sanity check to avoid bad lines
-            if (features.length === 42 && !isNaN(label)) {
-                xs.push(features);
-                ys.push(label);
-            }
-        }
-
-        const xTensor = tf.tensor2d(xs);
-        const maxLabel = Math.max(...ys);
-        const numClasses = maxLabel + 1;
-        const yTensor = tf.oneHot(tf.tensor1d(ys, 'int32'), numClasses);
-
-        // Build a highly powerful Deep Neural Network
-        const model = tf.sequential();
-        model.add(tf.layers.dense({ inputShape: [42], units: 256, activation: 'relu' }));
-        model.add(tf.layers.batchNormalization());
-        model.add(tf.layers.dropout({ rate: 0.3 }));
-        model.add(tf.layers.dense({ units: 128, activation: 'relu' }));
-        model.add(tf.layers.batchNormalization());
-        model.add(tf.layers.dropout({ rate: 0.2 }));
-        model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
-        model.add(tf.layers.dense({ units: numClasses, activation: 'softmax' }));
-
+        console.log("Loading local pre-trained model from ./models/model.json...");
+        const model = await tf.loadLayersModel('./models/model.json');
         model.compile({
             optimizer: 'adam',
             loss: 'categoricalCrossentropy',
             metrics: ['accuracy']
         });
 
-        statusText.innerText = `Training Powerful Deep Learning Model on ${xs.length} variations. Please wait...`;
-
-        await model.fit(xTensor, yTensor, {
-            epochs: 20,
-            batchSize: 256,
-            shuffle: true,
-            yieldEvery: 'batch',
-            callbacks: {
-                onEpochEnd: async (epoch, logs) => {
-                    const progress = Math.round(((epoch + 1) / 20) * 100);
-                    statusText.innerText = `Training Neural Network... ${progress}%`;
-                    await tf.nextFrame();
-                }
-            }
-        });
-
         mlModel = model;
         isModelReady = true;
+        console.log("Pre-trained Neural Network Loaded Successfully from ./models/model.json!");
+        statusText.innerText = 'Pre-trained Model Online! Show hands.';
+        if (footerModelStatus) footerModelStatus.textContent = 'Active (Local)';
+        if (footerModelDot) {
+            footerModelDot.style.background = 'var(--accent-color)';
+            footerModelDot.style.boxShadow = '0 0 6px var(--accent-glow)';
+        }
 
-        // Save model to browser DB for infinite fast subsequent loads!
-        statusText.innerText = 'Caching model for future use...';
-        await model.save('indexeddb://asl-alphabet-model');
-
-        statusText.innerText = 'Neural Network Online! Show hands.';
-        if (footerModelStatus) footerModelStatus.textContent = 'Loaded';
-        if (footerModelDot) { footerModelDot.style.background = 'var(--accent-color)'; footerModelDot.style.boxShadow = '0 0 6px var(--accent-glow)'; }
         setTimeout(() => {
             statusOverlay.classList.add('hidden');
-        }, 1000);
-
-        // cleanup training tensors
-        xTensor.dispose();
-        yTensor.dispose();
-
+        }, 500);
+        return;
     } catch (err) {
-        console.error("Error building model:", err);
-        statusText.innerText = 'Falling back to Manual Overrides (Base Network Failed).';
+        console.warn("Direct ./models/model.json load failed, checking cache...", err);
+    }
+
+    // 2. Fallback to IndexedDB cached model if available
+    try {
+        const cachedModel = await tf.loadLayersModel('indexeddb://asl-alphabet-model');
+        mlModel = cachedModel;
+        mlModel.compile({
+            optimizer: 'adam',
+            loss: 'categoricalCrossentropy',
+            metrics: ['accuracy']
+        });
+        isModelReady = true;
+        console.log("Loaded cached model from IndexedDB!");
+        statusText.innerText = 'Cached Neural Network Online!';
+        if (footerModelStatus) footerModelStatus.textContent = 'Active (Cached)';
+        if (footerModelDot) {
+            footerModelDot.style.background = 'var(--accent-color)';
+            footerModelDot.style.boxShadow = '0 0 6px var(--accent-glow)';
+        }
         setTimeout(() => {
             statusOverlay.classList.add('hidden');
-        }, 2000);
+        }, 500);
+        return;
+    } catch (e) {
+        console.error("No model could be loaded:", e);
+        statusText.innerText = 'Model offline. Manual calibration active.';
+        setTimeout(() => {
+            statusOverlay.classList.add('hidden');
+        }, 1500);
     }
 }
 
@@ -359,6 +355,153 @@ function extractNormalizedFeatures(landmarks) {
     }
 
     return features;
+}
+
+// ==================== GEOMETRIC LANDMARK ANALYZER ====================
+// Rotation-invariant, scale-independent detector for ASL Numbers (0-9) & Common Static Signs
+function lmDist(a, b) {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    const dz = (a.z || 0) - (b.z || 0);
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+}
+
+function detectStaticSignAndNumber(landmarks) {
+    if (!landmarks || landmarks.length < 21) return null;
+
+    const wrist = landmarks[0];
+    const palmSize = lmDist(wrist, landmarks[9]) || 0.1; // wrist to middle MCP scale
+
+    // Finger extensions
+    const isIndexExt = lmDist(landmarks[8], wrist) > lmDist(landmarks[6], wrist) * 1.15 &&
+                       lmDist(landmarks[8], landmarks[5]) > palmSize * 0.70;
+    const isMiddleExt = lmDist(landmarks[12], wrist) > lmDist(landmarks[10], wrist) * 1.15 &&
+                        lmDist(landmarks[12], landmarks[9]) > palmSize * 0.70;
+    const isRingExt = lmDist(landmarks[16], wrist) > lmDist(landmarks[14], wrist) * 1.15 &&
+                      lmDist(landmarks[16], landmarks[13]) > palmSize * 0.70;
+    const isPinkyExt = lmDist(landmarks[20], wrist) > lmDist(landmarks[18], wrist) * 1.15 &&
+                       lmDist(landmarks[20], landmarks[17]) > palmSize * 0.70;
+    const isThumbExt = lmDist(landmarks[4], landmarks[9]) > palmSize * 0.85;
+
+    // Finger curls
+    const isIndexCurled = lmDist(landmarks[8], wrist) < lmDist(landmarks[6], wrist) * 1.08;
+    const isMiddleCurled = lmDist(landmarks[12], wrist) < lmDist(landmarks[10], wrist) * 1.08;
+    const isRingCurled = lmDist(landmarks[16], wrist) < lmDist(landmarks[14], wrist) * 1.08;
+    const isPinkyCurled = lmDist(landmarks[20], wrist) < lmDist(landmarks[18], wrist) * 1.08;
+
+    // Thumb pinches / touches with fingertips
+    const touchThumbIndex = lmDist(landmarks[4], landmarks[8]) < palmSize * 0.42;
+    const touchThumbMiddle = lmDist(landmarks[4], landmarks[12]) < palmSize * 0.42;
+    const touchThumbRing = lmDist(landmarks[4], landmarks[16]) < palmSize * 0.42;
+    const touchThumbPinky = lmDist(landmarks[4], landmarks[20]) < palmSize * 0.42;
+
+    // Thumb orientation
+    const isThumbUp = (landmarks[4].y < landmarks[3].y) && (landmarks[4].y < landmarks[5].y);
+    const isThumbDown = (landmarks[4].y > landmarks[3].y) && (landmarks[4].y > landmarks[0].y);
+    const isIndexMiddleSpread = lmDist(landmarks[8], landmarks[12]) > palmSize * 0.32;
+
+    // --- EVALUATE COMMON STATIC SIGNS ---
+    if (isThumbUp && isThumbExt && isIndexCurled && isMiddleCurled && isRingCurled && isPinkyCurled) {
+        return { label: 'THUMBS_UP', type: 'SIGN', confidence: 0.92 };
+    }
+    if (isThumbDown && isThumbExt && isIndexCurled && isMiddleCurled && isRingCurled && isPinkyCurled) {
+        return { label: 'THUMBS_DOWN', type: 'SIGN', confidence: 0.90 };
+    }
+    if (touchThumbIndex && isMiddleExt && isRingExt && isPinkyExt) {
+        return { label: 'OK', type: 'SIGN', confidence: 0.91 };
+    }
+    if (isThumbExt && isIndexExt && isPinkyExt && isMiddleCurled && isRingCurled) {
+        return { label: 'I_LOVE_YOU', type: 'SIGN', confidence: 0.93 };
+    }
+    if (isIndexExt && isPinkyExt && isMiddleCurled && isRingCurled && !isThumbExt) {
+        return { label: 'ROCK_ON', type: 'SIGN', confidence: 0.90 };
+    }
+    if (isIndexExt && isMiddleExt && isRingCurled && isPinkyCurled && isIndexMiddleSpread) {
+        return { label: 'PEACE', type: 'SIGN', confidence: 0.88 };
+    }
+    if (isThumbExt && isIndexExt && isMiddleExt && isRingExt && isPinkyExt) {
+        return { label: 'OPEN_PALM', type: 'SIGN', confidence: 0.89 };
+    }
+    if (isIndexCurled && isMiddleCurled && isRingCurled && isPinkyCurled && !isThumbExt) {
+        return { label: 'FIST', type: 'SIGN', confidence: 0.86 };
+    }
+
+    // --- EVALUATE ASL NUMBERS (0 - 9) ---
+    if (touchThumbIndex && touchThumbMiddle) {
+        return { label: '0', type: 'NUMBER', confidence: 0.88 };
+    }
+    if (isIndexExt && isMiddleCurled && isRingCurled && isPinkyCurled && !isThumbExt) {
+        return { label: '1', type: 'NUMBER', confidence: 0.90 };
+    }
+    if (isIndexExt && isMiddleExt && isRingCurled && isPinkyCurled && !isThumbExt) {
+        return { label: '2', type: 'NUMBER', confidence: 0.89 };
+    }
+    if (isThumbExt && isIndexExt && isMiddleExt && isRingCurled && isPinkyCurled) {
+        // In ASL, 3 is thumb + index + middle extended
+        return { label: '3', type: 'NUMBER', confidence: 0.92 };
+    }
+    if (!isThumbExt && isIndexExt && isMiddleExt && isRingExt && isPinkyExt) {
+        return { label: '4', type: 'NUMBER', confidence: 0.91 };
+    }
+    if (isThumbExt && isIndexExt && isMiddleExt && isRingExt && isPinkyExt) {
+        return { label: '5', type: 'NUMBER', confidence: 0.90 };
+    }
+    if (isIndexExt && isMiddleExt && isRingExt && touchThumbPinky) {
+        return { label: '6', type: 'NUMBER', confidence: 0.87 };
+    }
+    if (isIndexExt && isMiddleExt && isPinkyExt && touchThumbRing) {
+        return { label: '7', type: 'NUMBER', confidence: 0.87 };
+    }
+    if (isIndexExt && isRingExt && isPinkyExt && touchThumbMiddle) {
+        return { label: '8', type: 'NUMBER', confidence: 0.87 };
+    }
+    if (isMiddleExt && isRingExt && isPinkyExt && touchThumbIndex) {
+        return { label: '9', type: 'NUMBER', confidence: 0.88 };
+    }
+
+    return null;
+}
+
+// Hands-free Gesture Mode Switcher: holding ROCK_ON for 2s cycles through modes
+function checkGestureModeSwitch(landmarks) {
+    if (!landmarks || landmarks.length < 21) {
+        if (gestureHoldFrames > 0) {
+            gestureHoldFrames = 0;
+            if (gestureHoldIndicator) gestureHoldIndicator.classList.remove('active');
+        }
+        return false;
+    }
+
+    if (Date.now() < gestureSwitchCooldown) return false;
+
+    const res = detectStaticSignAndNumber(landmarks);
+    const isHorns = res && res.label === 'ROCK_ON';
+
+    if (isHorns) {
+        gestureHoldFrames++;
+        if (gestureHoldIndicator) {
+            gestureHoldIndicator.classList.add('active');
+            const pct = Math.min(100, Math.round((gestureHoldFrames / GESTURE_SWITCH_THRESHOLD) * 100));
+            if (gestureHoldMeter) gestureHoldMeter.style.width = pct + '%';
+            if (gestureHoldText) gestureHoldText.textContent = `Switching Mode... ${pct}%`;
+        }
+
+        if (gestureHoldFrames >= GESTURE_SWITCH_THRESHOLD) {
+            cycleRecognitionMode();
+            gestureHoldFrames = 0;
+            gestureSwitchCooldown = Date.now() + 1800; // 1.8s debounce
+            if (gestureHoldIndicator) gestureHoldIndicator.classList.remove('active');
+            return true;
+        }
+    } else {
+        if (gestureHoldFrames > 0) {
+            gestureHoldFrames = Math.max(0, gestureHoldFrames - 2);
+            if (gestureHoldFrames === 0 && gestureHoldIndicator) {
+                gestureHoldIndicator.classList.remove('active');
+            }
+        }
+    }
+    return false;
 }
 
 // --- Hybrid KNN Model (Manual Override) ---
@@ -447,6 +590,8 @@ function getLandmarkTensor(landmarks) {
     return tf.tensor1d(features);
 }
 
+let isModelInferenceBusy = false;
+
 function onResults(results) {
     // Update FPS
     updateFps();
@@ -474,16 +619,13 @@ function onResults(results) {
                 radius: 4
             });
 
-            // Neural Network Prediction Pipeline!
-            if (!isModelReady || !mlModel) {
-                handlePrediction('-');
-                continue;
-            }
+            // Check hands-free gesture mode switcher
+            checkGestureModeSwitch(landmarks);
 
-            // 1. Process for KNN Manual Override Setup
-            const knnTensor = getLandmarkTensor(landmarks);
-
+            // 1. Process for KNN Manual Override (allocate tensor only if calibrating or calibrated)
+            let knnTensor = null;
             if (isTraining && trainClassSelect) {
+                knnTensor = getLandmarkTensor(landmarks);
                 const className = trainClassSelect.value;
                 classifier.addExample(knnTensor, className);
                 classExamples[className] = (classExamples[className] || 0) + 1;
@@ -492,53 +634,100 @@ function onResults(results) {
             }
 
             // 2. Main Prediction Logic
-            const features = extractNormalizedFeatures(landmarks);
-            const dlTensor = tf.tensor2d([features]);
-
             if (classifier.getNumClasses() > 0) {
-                // If the user taught the AI anything, check KNN first
+                if (!knnTensor) knnTensor = getLandmarkTensor(landmarks);
                 classifier.predictClass(knnTensor).then((res) => {
                     const knnConfidence = res.confidences[res.label];
-                    // If KNN is extremely confident, use the override
-                    if (knnConfidence > 0.7) {
+                    if (knnConfidence > 0.70) {
+                        updateConfidenceUI(knnConfidence);
                         handlePrediction(res.label);
-                        disposeTensors();
+                        if (knnTensor) knnTensor.dispose();
                     } else {
-                        // Otherwise fallback to Deep Learning
-                        runDeepLearningModel();
+                        processModePrediction();
                     }
                 });
             } else {
-                // Pure Deep Learning Branch
-                runDeepLearningModel();
+                if (knnTensor) knnTensor.dispose();
+                processModePrediction();
+            }
+
+            function processModePrediction() {
+                if (currentRecognitionMode === 'numbers') {
+                    const numRes = detectStaticSignAndNumber(landmarks);
+                    if (numRes && numRes.type === 'NUMBER') {
+                        updateConfidenceUI(numRes.confidence);
+                        handlePrediction(numRes.label);
+                    } else {
+                        updateConfidenceUI(0);
+                        handlePrediction('-');
+                    }
+                } else if (currentRecognitionMode === 'signs') {
+                    const signRes = detectStaticSignAndNumber(landmarks);
+                    if (signRes && signRes.type === 'SIGN') {
+                        updateConfidenceUI(signRes.confidence);
+                        handlePrediction(signRes.label);
+                    } else {
+                        updateConfidenceUI(0);
+                        handlePrediction('-');
+                    }
+                } else if (currentRecognitionMode === 'unified') {
+                    const staticRes = detectStaticSignAndNumber(landmarks);
+                    if (staticRes && staticRes.confidence >= 0.88) {
+                        updateConfidenceUI(staticRes.confidence);
+                        handlePrediction(staticRes.label);
+                    } else {
+                        runDeepLearningModel();
+                    }
+                } else {
+                    // Default Alphabet Mode
+                    runDeepLearningModel();
+                }
             }
 
             function runDeepLearningModel() {
-                const prediction = mlModel.predict(dlTensor);
-                const probabilities = prediction.dataSync();
-                const classId = prediction.argMax(-1).dataSync()[0];
-                const confidence = probabilities[classId];
-
-                // Update confidence UI
-                updateConfidenceUI(confidence);
-
-                if (confidence > 0.6) {
-                    const predictedChar = ALPHABET[classId] || '-';
-                    handlePrediction(predictedChar);
-                } else {
-                    handlePrediction('-');
+                if (!isModelReady || !mlModel || isModelInferenceBusy) {
+                    return;
                 }
-                prediction.dispose();
-                disposeTensors();
-            }
 
-            function disposeTensors() {
-                dlTensor.dispose();
-                knnTensor.dispose();
+                isModelInferenceBusy = true;
+                const features = extractNormalizedFeatures(landmarks);
+                const dlTensor = tf.tensor2d([features]);
+
+                try {
+                    const prediction = mlModel.predict(dlTensor);
+                    const probabilities = prediction.dataSync();
+                    
+                    // Pure JS argMax: 0 GPU stall, 100x faster than tensor argMax + dataSync
+                    let classId = 0;
+                    let maxProb = probabilities[0];
+                    for (let i = 1; i < probabilities.length; i++) {
+                        if (probabilities[i] > maxProb) {
+                            maxProb = probabilities[i];
+                            classId = i;
+                        }
+                    }
+
+                    updateConfidenceUI(maxProb);
+
+                    if (maxProb > 0.58) {
+                        const predictedChar = ALPHABET[classId] || '-';
+                        handlePrediction(predictedChar);
+                    } else {
+                        handlePrediction('-');
+                    }
+
+                    prediction.dispose();
+                } catch (err) {
+                    console.warn('Inference error:', err);
+                } finally {
+                    dlTensor.dispose();
+                    isModelInferenceBusy = false;
+                }
             }
         }
     } else {
         // No hand detected
+        checkGestureModeSwitch(null);
         handlePrediction('-');
         updateConfidenceUI(0);
         if (cameraContainer) cameraContainer.classList.remove('detecting');
@@ -776,11 +965,24 @@ function handlePrediction(rawPrediction) {
     // Apply Hardware Overrides
     const letter = applyHardwareHeuristics(rawPrediction);
 
+    const FRIENDLY_NAMES = {
+        'SPACE': 'Space',
+        'YES': 'Yes',
+        'HELLO': 'Hello',
+        'THUMBS_UP': 'Thumbs Up',
+        'THUMBS_DOWN': 'Thumbs Down',
+        'PEACE': 'Peace',
+        'OK': 'OK',
+        'I_LOVE_YOU': 'I Love You',
+        'ROCK_ON': 'Rock On',
+        'OPEN_PALM': 'Open Palm',
+        'FIST': 'Fist',
+        '0': 'Zero', '1': 'One', '2': 'Two', '3': 'Three', '4': 'Four',
+        '5': 'Five', '6': 'Six', '7': 'Seven', '8': 'Eight', '9': 'Nine'
+    };
+
     if (letter === lastLetter) {
-        if (letter !== '-' && letter !== 'SPACE' && letter !== 'YES' && letter !== 'HELLO') {
-            consecutiveFrames++;
-        } else if (letter === 'SPACE' || letter === 'YES' || letter === 'HELLO') {
-            // Let words and space bypass strict consecutive frame requirements since the heuristic handles the timing
+        if (letter !== '-') {
             consecutiveFrames++;
         }
     } else {
@@ -788,15 +990,14 @@ function handlePrediction(rawPrediction) {
         consecutiveFrames = 1;
         lastLetter = letter;
 
-        if (letter === 'SPACE') {
-            detectedLetterEl.innerText = '[SPACE]';
-            detectedLetterEl.style.fontSize = '2.5rem';
-        } else if (letter === 'YES') {
-            detectedLetterEl.innerText = 'YES!';
-            detectedLetterEl.style.fontSize = '3rem';
-        } else if (letter === 'HELLO') {
-            detectedLetterEl.innerText = 'HELLO!';
-            detectedLetterEl.style.fontSize = '2.5rem';
+        if (FRIENDLY_NAMES[letter]) {
+            if (['0','1','2','3','4','5','6','7','8','9'].includes(letter)) {
+                detectedLetterEl.innerText = letter;
+                detectedLetterEl.style.fontSize = '3.5rem';
+            } else {
+                detectedLetterEl.innerText = FRIENDLY_NAMES[letter];
+                detectedLetterEl.style.fontSize = FRIENDLY_NAMES[letter].length > 7 ? '1.7rem' : '2.3rem';
+            }
         } else {
             detectedLetterEl.innerText = letter;
             detectedLetterEl.style.fontSize = ''; // Reset to default CSS
@@ -830,12 +1031,9 @@ function handlePrediction(rawPrediction) {
         if (currentSpokenLetter !== letter) {
             playDetectionSound();
 
-            // Read out the letter or word
+            // Read out the letter, number, or sign word
             synth.cancel();
-            let speechText = letter;
-            if (letter === 'SPACE') speechText = 'Space';
-            if (letter === 'YES') speechText = 'Yes';
-            if (letter === 'HELLO') speechText = 'Hello';
+            let speechText = FRIENDLY_NAMES[letter] || letter;
 
             const utterance = new SpeechSynthesisUtterance(speechText);
             utterance.pitch = 1.1;
@@ -845,16 +1043,17 @@ function handlePrediction(rawPrediction) {
             currentSpokenLetter = letter;
         }
 
-        // Continuous Stream logic: Instantly add if it's a new letter
+        // Continuous Stream logic: Instantly add if it's a new letter/word/number
         if (letter !== lastAddedLetter) {
             if (letter === 'SPACE') {
-                // Ensure we don't add multiple spaces in a row
                 if (!currentSentence.endsWith(' ')) {
                     currentSentence += ' ';
                 }
-            } else if (letter === 'YES' || letter === 'HELLO') {
-                // For words, add spaces padding it automatically
-                currentSentence += (currentSentence.length > 0 && !currentSentence.endsWith(' ') ? ' ' : '') + letter + ' ';
+            } else if (['0','1','2','3','4','5','6','7','8','9'].includes(letter)) {
+                currentSentence += letter;
+            } else if (FRIENDLY_NAMES[letter]) {
+                const wordToken = FRIENDLY_NAMES[letter].toUpperCase();
+                currentSentence += (currentSentence.length > 0 && !currentSentence.endsWith(' ') ? ' ' : '') + wordToken + ' ';
             } else {
                 currentSentence += letter;
             }
@@ -1091,3 +1290,266 @@ if (speakTranslatedBtn) {
         }
     });
 }
+
+
+// =========================================================================
+// TWO-WAY COMMUNICATION: SPEECH-TO-SIGN TRANSLATOR
+// =========================================================================
+
+function initSpeechToSign() {
+    const toggleMicBtn = document.getElementById('toggle-speech-rec-btn');
+    const micBtnText = document.getElementById('speech-rec-btn-text');
+    const speechStatusBadge = document.getElementById('speech-status-badge');
+    const transcriptPlaceholder = document.getElementById('transcript-placeholder');
+    const transcriptTextEl = document.getElementById('speech-transcript-text');
+    const playerContainer = document.getElementById('sign-player-container');
+    const activeGlyphEl = document.getElementById('active-sign-glyph');
+    const activeTitleEl = document.getElementById('active-sign-title');
+    const activeDescEl = document.getElementById('active-sign-desc');
+    const timelineEl = document.getElementById('sign-sequence-timeline');
+    const replayBtn = document.getElementById('replay-sign-btn');
+    const speedSelect = document.getElementById('sign-playback-speed');
+
+    if (!toggleMicBtn) return;
+
+    let isListening = false;
+    let sequenceTimeout = null;
+    let currentTokens = [];
+
+    // Check Speech Recognition capability
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        if (speechStatusBadge) {
+            speechStatusBadge.textContent = 'Voice Not Supported';
+            speechStatusBadge.className = 'status-badge disconnected';
+        }
+        toggleMicBtn.disabled = true;
+        if (transcriptPlaceholder) {
+            transcriptPlaceholder.textContent = 'Speech recognition is not supported in this browser. Use Chrome or Edge.';
+        }
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+        isListening = true;
+        toggleMicBtn.classList.add('listening');
+        if (micBtnText) micBtnText.textContent = 'Listening...';
+        if (speechStatusBadge) {
+            speechStatusBadge.textContent = 'Listening';
+            speechStatusBadge.className = 'status-badge connected';
+        }
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.trim();
+        handleSpokenTranscript(transcript);
+    };
+
+    recognition.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        stopListening();
+    };
+
+    recognition.onend = () => {
+        stopListening();
+    };
+
+    function startListening() {
+        try {
+            recognition.start();
+        } catch (err) {
+            console.warn('Recognition already started:', err);
+        }
+    }
+
+    function stopListening() {
+        isListening = false;
+        toggleMicBtn.classList.remove('listening');
+        if (micBtnText) micBtnText.textContent = 'Listen to Voice';
+        if (speechStatusBadge) {
+            speechStatusBadge.textContent = 'Mic Inactive';
+            speechStatusBadge.className = 'status-badge disconnected';
+        }
+    }
+
+    toggleMicBtn.addEventListener('click', () => {
+        if (isListening) {
+            recognition.stop();
+            stopListening();
+        } else {
+            startListening();
+        }
+    });
+
+    // Known word to sign mapping
+    const WORD_TO_SIGN = {
+        'HELLO': { id: 'HELLO', name: 'Hello (Salute)', desc: 'Open flat hand near forehead moving outward.' },
+        'HI': { id: 'HELLO', name: 'Hello (Salute)', desc: 'Open flat hand near forehead moving outward.' },
+        'YES': { id: 'YES', name: 'Yes (Nodding Fist)', desc: 'Closed fist nodding up and down from the wrist.' },
+        'OK': { id: 'OK', name: 'OK Sign', desc: 'Thumb and index form circle, other 3 fingers upright.' },
+        'OKAY': { id: 'OK', name: 'OK Sign', desc: 'Thumb and index form circle, other 3 fingers upright.' },
+        'PEACE': { id: 'PEACE', name: 'Peace / Victory', desc: 'Index and middle fingers extended in a wide V shape.' },
+        'VICTORY': { id: 'PEACE', name: 'Peace / Victory', desc: 'Index and middle fingers extended in a wide V shape.' },
+        'LOVE': { id: 'I_LOVE_YOU', name: 'I Love You', desc: 'Thumb, index, and pinky fingers extended; middle and ring curled.' },
+        'ROCK': { id: 'ROCK_ON', name: 'Rock On', desc: 'Index and pinky fingers extended; thumb holds middle and ring.' },
+        'STOP': { id: 'OPEN_PALM', name: 'Open Palm (Stop)', desc: 'All five fingers extended flat facing forward.' },
+        'FIST': { id: 'FIST', name: 'Closed Fist', desc: 'All fingers curled tightly into palm with thumb wrapped.' },
+        'GOOD': { id: 'THUMBS_UP', name: 'Thumbs Up (Good)', desc: 'Closed fist with thumb extended straight up.' },
+        'BAD': { id: 'THUMBS_DOWN', name: 'Thumbs Down (Bad)', desc: 'Closed fist with thumb extended straight down.' },
+        'ZERO': { id: '0', name: 'Number 0', desc: 'Fingertips touch thumb tip forming O.' },
+        'ONE': { id: '1', name: 'Number 1', desc: 'Index finger extended straight up.' },
+        'TWO': { id: '2', name: 'Number 2', desc: 'Index and middle fingers extended in a V.' },
+        'THREE': { id: '3', name: 'Number 3', desc: 'Thumb, index, and middle fingers extended.' },
+        'FOUR': { id: '4', name: 'Number 4', desc: 'Four fingers extended upright, thumb folded in.' },
+        'FIVE': { id: '5', name: 'Number 5', desc: 'All five fingers spread open.' },
+        'SIX': { id: '6', name: 'Number 6', desc: 'Thumb tip touches pinky tip.' },
+        'SEVEN': { id: '7', name: 'Number 7', desc: 'Thumb tip touches ring finger tip.' },
+        'EIGHT': { id: '8', name: 'Number 8', desc: 'Thumb tip touches middle finger tip.' },
+        'NINE': { id: '9', name: 'Number 9', desc: 'Thumb touches index tip forming circle.' }
+    };
+
+    function parseTextToTokens(rawText) {
+        const tokens = [];
+        const words = rawText.toUpperCase().replace(/[^A-Z0-9\s]/g, '').split(/\s+/);
+
+        words.forEach((word, wordIdx) => {
+            if (!word) return;
+
+            if (WORD_TO_SIGN[word]) {
+                const sign = WORD_TO_SIGN[word];
+                tokens.push({
+                    type: 'SIGN',
+                    token: word,
+                    glyph: sign.id,
+                    name: sign.name,
+                    desc: sign.desc
+                });
+            } else {
+                // Fingerspell letter by letter
+                for (let i = 0; i < word.length; i++) {
+                    const ch = word[i];
+                    tokens.push({
+                        type: ch >= '0' && ch <= '9' ? 'NUMBER' : 'LETTER',
+                        token: ch,
+                        glyph: ch,
+                        name: `Sign '${ch}'`,
+                        desc: `ASL fingerspelling for character ${ch}`
+                    });
+                }
+            }
+
+            // Space between words if not last
+            if (wordIdx < words.length - 1) {
+                tokens.push({
+                    type: 'SPACE',
+                    token: '[PAUSE]',
+                    glyph: '---',
+                    name: 'Word Pause',
+                    desc: 'Rest hands momentarily between words.'
+                });
+            }
+        });
+
+        return tokens;
+    }
+
+    function handleSpokenTranscript(text) {
+        if (transcriptPlaceholder) transcriptPlaceholder.style.display = 'none';
+        if (transcriptTextEl) transcriptTextEl.textContent = `"${text}"`;
+
+        currentTokens = parseTextToTokens(text);
+        if (currentTokens.length === 0) return;
+
+        playSignSequence(currentTokens);
+    }
+
+    function playSignSequence(tokens) {
+        if (!tokens || tokens.length === 0) return;
+
+        if (sequenceTimeout) {
+            clearTimeout(sequenceTimeout);
+            sequenceTimeout = null;
+        }
+
+        if (playerContainer) playerContainer.style.display = 'flex';
+        if (timelineEl) {
+            timelineEl.innerHTML = '';
+            tokens.forEach((t, idx) => {
+                const chip = document.createElement('div');
+                chip.className = 'sign-token';
+                chip.id = `sign-token-${idx}`;
+                chip.textContent = t.token;
+                timelineEl.appendChild(chip);
+            });
+        }
+
+        if (replayBtn) replayBtn.disabled = false;
+
+        let currentIndex = 0;
+
+        function step() {
+            if (currentIndex >= tokens.length) {
+                // Completed sequence
+                timelineEl.querySelectorAll('.sign-token').forEach(c => c.classList.remove('active-token'));
+                if (activeGlyphEl) {
+                    activeGlyphEl.innerHTML = `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                }
+                if (activeTitleEl) activeTitleEl.textContent = 'Sequence Complete';
+                if (activeDescEl) activeDescEl.textContent = 'Finished signing spoken phrase.';
+                return;
+            }
+
+            const current = tokens[currentIndex];
+            const speed = parseInt(speedSelect ? speedSelect.value : '800', 10) || 800;
+
+            // Highlight chip
+            timelineEl.querySelectorAll('.sign-token').forEach(c => c.classList.remove('active-token'));
+            const activeChip = document.getElementById(`sign-token-${currentIndex}`);
+            if (activeChip) {
+                activeChip.classList.add('active-token');
+                activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            // Update display card with image or clean text
+            if (activeGlyphEl) {
+                if (current.type === 'SPACE') {
+                    activeGlyphEl.innerHTML = `<span style="font-size: 0.85rem; font-weight: 700; color: var(--text-tertiary);">PAUSE</span>`;
+                } else {
+                    const imgPath = `assets/signs/${current.glyph}.svg`;
+                    activeGlyphEl.innerHTML = `
+                        <img src="${imgPath}" alt="${current.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="width:100%; height:100%; object-fit:contain; display:block;" />
+                        <span style="display:none; font-size:1.1rem; font-weight:800; color:var(--text-primary); text-align:center;">${current.glyph}</span>
+                    `;
+                }
+            }
+            if (activeTitleEl) activeTitleEl.textContent = current.name;
+            if (activeDescEl) activeDescEl.textContent = current.desc;
+
+            currentIndex++;
+            sequenceTimeout = setTimeout(step, current.type === 'SPACE' ? speed * 0.6 : speed);
+        }
+
+        step();
+    }
+
+    if (replayBtn) {
+        replayBtn.addEventListener('click', () => {
+            if (currentTokens.length > 0) {
+                playSignSequence(currentTokens);
+            }
+        });
+    }
+}
+
+// Initialize on DOM load
+window.addEventListener('DOMContentLoaded', () => {
+    initSpeechToSign();
+});
+
+

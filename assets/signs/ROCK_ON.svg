@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <!-- Wrist -->
+  <path d="M36 68 L36 92 L64 92 L64 68 Z" fill="#ffcaa4" stroke="#2b1a10" stroke-width="2.5"/>
+  <!-- Palm -->
+  <path d="M32 50 L32 72 Q50 78 68 72 L68 50 Z" fill="#ffcaa4" stroke="#2b1a10" stroke-width="2.5"/>
+  <!-- Middle & Ring Curled with Thumb across -->
+  <path d="M44 48 C44 58 56 58 56 48 Z" fill="#e8986c" stroke="#2b1a10" stroke-width="2.5"/>
+  <path d="M56 48 C56 58 66 58 66 48 Z" fill="#e8986c" stroke="#2b1a10" stroke-width="2.5"/>
+  <!-- Folded Thumb over knuckles -->
+  <path d="M30 56 C34 46 54 48 58 54 C56 58 40 62 30 56 Z" fill="#ffcaa4" stroke="#2b1a10" stroke-width="2.5"/>
+  <!-- Extended Index -->
+  <path d="M34 50 L34 16 C34 10 44 10 44 16 L44 50 Z" fill="#ffcaa4" stroke="#2b1a10" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- Extended Pinky -->
+  <path d="M66 50 L66 22 C66 16 76 16 76 22 L76 56 Z" fill="#ffcaa4" stroke="#2b1a10" stroke-width="2.5" stroke-linejoin="round"/>
+</svg>

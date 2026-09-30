@@ -54,12 +54,30 @@
                         </svg>
                         <span>Alphabet Detector</span>
                     </a>
+                    <a href="quiz.html" class="nav-link">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                            <path d="M4 22h16"></path>
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                        <span>Practice Academy</span>
+                    </a>
                     <a href="chat.html" class="nav-link">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
                         <span>Gesture assistant</span>
                     </a>
+                    <button id="open-dictionary-btn" class="nav-link" type="button" aria-haspopup="dialog" style="background: transparent; border: 0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span>Sign Dictionary</span>
+                    </button>
                 </nav>
             </div>
         </header>
@@ -79,12 +97,71 @@
                     <div class="camera-status-bar">
                         <div class="camera-badge"><span class="dot"></span> Camera input</div>
                         <div class="camera-badge" id="fps-badge">FPS: --</div>
+                        <select id="camera-perf-mode" class="camera-perf-select" title="Performance Profile" aria-label="Performance Profile">
+                            <option value="fast" selected>Fast (30+ FPS)</option>
+                            <option value="hd">HD Precision (720p)</option>
+                        </select>
+                    </div>
+
+                    <!-- Gesture Hold Switch Indicator -->
+                    <div class="gesture-hold-indicator" id="gesture-hold-indicator">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                        </svg>
+                        <div class="hold-meter-track">
+                            <div class="hold-meter-fill" id="gesture-hold-meter"></div>
+                        </div>
+                        <span class="gesture-hold-text" id="gesture-hold-text">Switching Mode...</span>
                     </div>
 
                     <!-- Loading / Initialization Overlay -->
                     <div class="status-overlay" id="status-overlay">
                         <div class="loader"></div>
                         <p id="status-text">Preparing camera and recognition model…</p>
+                    </div>
+                </div>
+
+                <!-- Recognition Mode Selector Bar -->
+                <div class="mode-selector-bar">
+                    <div class="mode-pills" id="mode-pills" role="radiogroup" aria-label="Recognition Mode">
+                        <button type="button" class="mode-btn active" data-mode="alphabet" id="mode-btn-alphabet" aria-checked="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                                <line x1="9" y1="20" x2="15" y2="20"></line>
+                                <line x1="12" y1="4" x2="12" y2="20"></line>
+                            </svg>
+                            <span>Letters (A–Z)</span>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="numbers" id="mode-btn-numbers" aria-checked="false">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="9" x2="20" y2="9"></line>
+                                <line x1="4" y1="15" x2="20" y2="15"></line>
+                                <line x1="10" y1="3" x2="8" y2="21"></line>
+                                <line x1="16" y1="3" x2="14" y2="21"></line>
+                            </svg>
+                            <span>Numbers (0–9)</span>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="signs" id="mode-btn-signs" aria-checked="false">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                                <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                                <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                                <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                            </svg>
+                            <span>Common Signs</span>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="unified" id="mode-btn-unified" aria-checked="false">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                            <span>Unified</span>
+                        </button>
+                    </div>
+                    <div class="gesture-switch-hint" title="Hold the Horns gesture for 2 seconds to switch modes hands-free">
+                        <span>Gesture switch:</span>
+                        <kbd>Horns Hold 2s</kbd>
                     </div>
                 </div>
 
@@ -109,6 +186,70 @@
                                 <div class="confidence-fill" id="confidence-fill"></div>
                             </div>
                             <span class="confidence-text" id="confidence-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-Way Communication: Speech-to-Sign Panel -->
+                <div class="speech-to-sign-panel glass-panel">
+                    <div class="panel-header-row">
+                        <h2 class="section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            <span>Two-Way: Speech to Sign</span>
+                        </h2>
+                        <span id="speech-status-badge" class="status-badge disconnected">Mic Inactive</span>
+                    </div>
+                    <p class="desc">Hearing partner speaks into microphone &rarr; system visualizes corresponding sign sequence.</p>
+
+                    <div class="speech-controls-row">
+                        <button type="button" id="toggle-speech-rec-btn" class="btn primary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            <span id="speech-rec-btn-text">Listen to Voice</span>
+                        </button>
+                        <button type="button" id="replay-sign-btn" class="btn secondary" disabled title="Replay current sign sequence">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="1 4 1 10 7 10"></polyline>
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                            </svg>
+                            <span>Replay</span>
+                        </button>
+                        <select id="sign-playback-speed" class="speed-select" aria-label="Sign playback speed">
+                            <option value="1200">0.75x Speed</option>
+                            <option value="800" selected>1.0x Speed</option>
+                            <option value="500">1.5x Speed</option>
+                        </select>
+                    </div>
+
+                    <!-- Spoken Transcript Box -->
+                    <div class="speech-transcript-box" id="speech-transcript-box">
+                        <span class="transcript-placeholder" id="transcript-placeholder">Click &ldquo;Listen to Voice&rdquo; and speak into your microphone...</span>
+                        <span id="speech-transcript-text" class="transcript-text"></span>
+                    </div>
+
+                    <!-- Visual Sign Display Card & Sequence Timeline -->
+                    <div class="sign-player-container" id="sign-player-container" style="display: none;">
+                        <div class="active-sign-card" id="active-sign-card">
+                            <div class="active-sign-visual" id="active-sign-visual">
+                                <span class="active-sign-glyph" id="active-sign-glyph">-</span>
+                            </div>
+                            <div class="active-sign-info">
+                                <span class="active-sign-title" id="active-sign-title">Ready</span>
+                                <span class="active-sign-desc" id="active-sign-desc">Sign instruction will appear here</span>
+                            </div>
+                        </div>
+                        <!-- Sequence token stream -->
+                        <div class="sign-sequence-timeline" id="sign-sequence-timeline" role="region" aria-label="Sign token stream">
+                            <!-- Tokens injected by script.js -->
                         </div>
                     </div>
                 </div>
@@ -271,32 +412,56 @@
 
                     <div class="train-controls">
                         <select id="train-class" aria-label="Select Target Class for Training">
-                            <option value="A">Class A</option>
-                            <option value="B">Class B</option>
-                            <option value="C">Class C</option>
-                            <option value="D">Class D</option>
-                            <option value="E">Class E</option>
-                            <option value="F">Class F</option>
-                            <option value="G">Class G</option>
-                            <option value="H">Class H</option>
-                            <option value="I">Class I</option>
-                            <option value="J">Class J</option>
-                            <option value="K">Class K</option>
-                            <option value="L">Class L</option>
-                            <option value="M">Class M</option>
-                            <option value="N">Class N</option>
-                            <option value="O">Class O</option>
-                            <option value="P">Class P</option>
-                            <option value="Q">Class Q</option>
-                            <option value="R">Class R</option>
-                            <option value="S">Class S</option>
-                            <option value="T">Class T</option>
-                            <option value="U">Class U</option>
-                            <option value="V">Class V</option>
-                            <option value="W">Class W</option>
-                            <option value="X">Class X</option>
-                            <option value="Y">Class Y</option>
-                            <option value="Z">Class Z</option>
+                            <optgroup label="Letters (A–Z)">
+                                <option value="A">Letter A</option>
+                                <option value="B">Letter B</option>
+                                <option value="C">Letter C</option>
+                                <option value="D">Letter D</option>
+                                <option value="E">Letter E</option>
+                                <option value="F">Letter F</option>
+                                <option value="G">Letter G</option>
+                                <option value="H">Letter H</option>
+                                <option value="I">Letter I</option>
+                                <option value="J">Letter J</option>
+                                <option value="K">Letter K</option>
+                                <option value="L">Letter L</option>
+                                <option value="M">Letter M</option>
+                                <option value="N">Letter N</option>
+                                <option value="O">Letter O</option>
+                                <option value="P">Letter P</option>
+                                <option value="Q">Letter Q</option>
+                                <option value="R">Letter R</option>
+                                <option value="S">Letter S</option>
+                                <option value="T">Letter T</option>
+                                <option value="U">Letter U</option>
+                                <option value="V">Letter V</option>
+                                <option value="W">Letter W</option>
+                                <option value="X">Letter X</option>
+                                <option value="Y">Letter Y</option>
+                                <option value="Z">Letter Z</option>
+                            </optgroup>
+                            <optgroup label="Numbers (0–9)">
+                                <option value="0">Number 0</option>
+                                <option value="1">Number 1</option>
+                                <option value="2">Number 2</option>
+                                <option value="3">Number 3</option>
+                                <option value="4">Number 4</option>
+                                <option value="5">Number 5</option>
+                                <option value="6">Number 6</option>
+                                <option value="7">Number 7</option>
+                                <option value="8">Number 8</option>
+                                <option value="9">Number 9</option>
+                            </optgroup>
+                            <optgroup label="Common Signs">
+                                <option value="THUMBS_UP">Thumbs Up (Good)</option>
+                                <option value="THUMBS_DOWN">Thumbs Down (Bad)</option>
+                                <option value="PEACE">Peace / Victory</option>
+                                <option value="OK">OK Sign</option>
+                                <option value="I_LOVE_YOU">I Love You (ILY)</option>
+                                <option value="ROCK_ON">Rock On / Horns</option>
+                                <option value="OPEN_PALM">Open Palm / Stop</option>
+                                <option value="FIST">Fist</option>
+                            </optgroup>
                         </select>
                         <button id="add-example-btn" class="btn primary">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -355,10 +520,59 @@
             </div>
         </footer>
 
+        <!-- ==================== SIGN DICTIONARY MODAL ==================== -->
+        <div class="dictionary-modal" id="dictionary-modal" role="dialog" aria-modal="true" aria-labelledby="dict-modal-title">
+            <div class="dictionary-card glass-panel">
+                <div class="dict-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="brand-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="dict-title" id="dict-modal-title">Visual Sign Dictionary &amp; Reference Guide</h2>
+                            <p class="dict-subtitle">Visual guide for all 26 Letters, 10 Numbers, and Common Signs</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-dict" id="close-dictionary-btn" aria-label="Close Dictionary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Category Filters & Search -->
+                <div class="dict-toolbar">
+                    <div class="dict-tabs" id="dict-category-tabs" role="tablist">
+                        <button type="button" class="dict-tab active" data-dict-cat="all" role="tab" aria-selected="true">All (46)</button>
+                        <button type="button" class="dict-tab" data-dict-cat="alphabet" role="tab" aria-selected="false">Letters A–Z (26)</button>
+                        <button type="button" class="dict-tab" data-dict-cat="numbers" role="tab" aria-selected="false">Numbers 0–9 (10)</button>
+                        <button type="button" class="dict-tab" data-dict-cat="signs" role="tab" aria-selected="false">Common Signs (10)</button>
+                    </div>
+                    <div class="dict-search-box">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="dict-search-input" placeholder="Search letters, numbers, signs..." aria-label="Search dictionary">
+                    </div>
+                </div>
+
+                <!-- Dictionary Grid of Cards -->
+                <div class="dict-grid scroll-container" id="dict-cards-grid">
+                    <!-- Cards injected dynamically by script.js -->
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Machine Learning Runtime -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script>
+    <script src="dictionary.js"></script>
     <script src="script.js?v=2.4.0"></script>
 </body>
 
