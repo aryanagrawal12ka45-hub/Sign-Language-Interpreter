@@ -61,12 +61,19 @@ The **Sign Language Interpreter** addresses these challenges by introducing a **
 * **Continuous Stream Sentence Builder**: Instant letter typing stream with double-letter reset (by briefly dropping hand) and space/backspace keyboard shortcuts.
 * **Speech Synthesis & Audio Chimes**: Web Audio API $880\text{ Hz}$ confirmation tone and localized SpeechSynthesis vocalization.
 * **14-Language Cloud Translation**: Real-time translation to Tamil, Hindi, Telugu, Malayalam, Kannada, Spanish, French, German, Japanese, Korean, Chinese, Arabic, Portuguese, and Russian.
+* **Windows OS Gesture Controls (Feature 6)**: High-performance bidirectional WebSocket bridge (`ws://127.0.0.1:8765`) enabling native Windows automation:
+  - **Virtual Mouse Cursor**: Index finger steering with exponential moving average (EMA) smoothing and sensitivity scaling.
+  - **Clicks & Drag**: Quick pinch for left click, double pinch for double-click, sustained pinch (>380ms) for drag & drop, thumb-middle pinch for right click context menu.
+  - **Smooth Wheel Scrolling**: Two upright parallel fingers moving vertically.
+  - **Hardware Audio & Brightness**: Pinch aperture dial for volume (0–100%) and 3-finger hand elevation for display brightness.
+  - **Productivity Shortcuts**: Hold 'L' pose for Windows Snipping Tool (`Win+Shift+S`) or full screenshot, downward open palm for Show Desktop (`Win+D`), and direct sentence typing into active Windows apps.
+* **Gamified ASL Learning Academy (`quiz.html`)**: Interactive practice mode with real-time feedback, streak counters, and score tracking.
+* **Visual Sign Dictionary (`dictionary.js`)**: Searchable 46-sign vector library with illustrations, descriptions, and practice shortcuts.
 * **Multimodal AI Gesture Chatbot (`chat.html`)**: Integrated Puter.js GPT-4o Vision chatbot for step-by-step analysis of uploaded gesture photos.
 
 ### Planned Capabilities (Future Roadmap)
 * **Continuous Sign & Sequence Modeling**: Transition to Spatial-Temporal Graph Convolutional Networks (ST-GCN) and CNN + LSTM sequence models for fluid sentence-level sign language.
 * **Bilateral Two-Handed Tracking**: Simultaneous tracking and dual-glove fusion for complex two-handed signs.
-* **Virtual HID OS Interaction**: Mapping recognized gestures to native operating system controls (mouse movement, clicking, scrolling, typing, window management, and screenshot triggers).
 * **Standalone Edge Kiosk Deployment**: Porting the inference pipeline to dedicated embedded hardware (Raspberry Pi 5 + Coral Edge TPU).
 
 ---
@@ -300,6 +307,19 @@ Sign-Language-Interpreter/
    ```bash
    python scripts/train_model.py --epochs 20 --batch-size 256
    ```
+
+---
+
+### 4. Windows OS Gesture Controller Execution
+
+Launch both the WebSocket automation bridge and local application with one command:
+```bash
+python run_os_control.py
+```
+- **Bridge Port**: `ws://127.0.0.1:8765`
+- **Web App**: `http://localhost:8000/index.html`
+- Select **OS Control** mode in the top mode selector bar.
+- Use your index finger to steer the mouse pointer, pinch thumb+index for left click/drag, pinch thumb+middle for right click, or elevate 3 fingers for screen brightness!
 
 ---
 

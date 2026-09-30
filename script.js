@@ -20,8 +20,8 @@ const footerGloveDot = document.getElementById('footer-glove-dot');
 const cameraContainer = document.getElementById('camera-container');
 
 // --- Recognition Modes & Gesture Switcher ---
-let currentRecognitionMode = 'alphabet'; // 'alphabet' | 'numbers' | 'signs' | 'unified'
-const RECOGNITION_MODES = ['alphabet', 'numbers', 'signs', 'unified'];
+let currentRecognitionMode = 'alphabet'; // 'alphabet' | 'numbers' | 'signs' | 'unified' | 'os_control'
+const RECOGNITION_MODES = ['alphabet', 'numbers', 'signs', 'unified', 'os_control'];
 const modePills = document.getElementById('mode-pills');
 const gestureHoldIndicator = document.getElementById('gesture-hold-indicator');
 const gestureHoldMeter = document.getElementById('gesture-hold-meter');
@@ -38,6 +38,25 @@ function setRecognitionMode(mode) {
         btn.classList.toggle('active', isActive);
         btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
     });
+
+    const osPanel = document.getElementById('os-control-panel');
+    if (osPanel) {
+        osPanel.style.display = (mode === 'os_control') ? 'block' : 'none';
+    }
+
+    if (mode === 'os_control') {
+        if (typeof osBridge !== 'undefined' && !osBridge.isConnected) {
+            osBridge.connect();
+        }
+        if (detectedLetterEl) detectedLetterEl.textContent = 'OS';
+        updateConfidenceUI(1.0);
+    } else {
+        if (typeof osControlState !== 'undefined' && osControlState.isDragging) {
+            if (typeof osBridge !== 'undefined') osBridge.send({ action: 'mouse_up', button: 'left' });
+            osControlState.isDragging = false;
+        }
+    }
+
     console.log(`[Mode Switch] Recognition Mode set to: ${mode}`);
 }
 
@@ -652,7 +671,12 @@ function onResults(results) {
             }
 
             function processModePrediction() {
-                if (currentRecognitionMode === 'numbers') {
+                if (currentRecognitionMode === 'os_control') {
+                    if (typeof processOSControlGestures === 'function') {
+                        processOSControlGestures(landmarks);
+                    }
+                    return;
+                } else if (currentRecognitionMode === 'numbers') {
                     const numRes = detectStaticSignAndNumber(landmarks);
                     if (numRes && numRes.type === 'NUMBER') {
                         updateConfidenceUI(numRes.confidence);
@@ -728,8 +752,14 @@ function onResults(results) {
     } else {
         // No hand detected
         checkGestureModeSwitch(null);
-        handlePrediction('-');
-        updateConfidenceUI(0);
+        if (currentRecognitionMode === 'os_control') {
+            if (typeof handleOSControlNoHand === 'function') {
+                handleOSControlNoHand();
+            }
+        } else {
+            handlePrediction('-');
+            updateConfidenceUI(0);
+        }
         if (cameraContainer) cameraContainer.classList.remove('detecting');
     }
 
@@ -1547,9 +1577,631 @@ function initSpeechToSign() {
     }
 }
 
+// ==================== WINDOWS OS NATIVE CONTROLLER & WEBSOCKET BRIDGE ====================
+
+class WindowsOSBridgeClient {
+    constructor(url = 'ws://127.0.0.1:8765') {
+        this.url = url;
+        this.ws = null;
+        this.isConnected = false;
+        this.reconnectTimer = null;
+        this.reconnectInterval = 3000;
+        this.telemetry = {
+            screenWidth: 1920,
+            screenHeight: 1080,
+            mouseX: 0,
+            mouseY: 0,
+            volume: 50,
+            isMuted: false,
+            brightness: 50,
+            lastAction: 'Ready'
+        };
+        this.onTelemetryCallbacks = [];
+        this.onStatusChangeCallbacks = [];
+    }
+
+    connect() {
+        if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
+            return;
+        }
+
+        try {
+            this.ws = new WebSocket(this.url);
+
+            this.ws.onopen = () => {
+                console.log('[OS Bridge] Connected to Python native bridge at', this.url);
+                this.isConnected = true;
+                if (this.reconnectTimer) {
+                    clearInterval(this.reconnectTimer);
+                    this.reconnectTimer = null;
+                }
+                this._notifyStatus(true);
+            };
+
+            this.ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'telemetry') {
+                        if (data.screen_width) this.telemetry.screenWidth = data.screen_width;
+                        if (data.screen_height) this.telemetry.screenHeight = data.screen_height;
+                        if (data.mouse_pos) {
+                            this.telemetry.mouseX = data.mouse_pos[0];
+                            this.telemetry.mouseY = data.mouse_pos[1];
+                        }
+                        if (typeof data.volume === 'number') this.telemetry.volume = data.volume;
+                        if (typeof data.is_muted === 'boolean') this.telemetry.isMuted = data.is_muted;
+                        if (typeof data.brightness === 'number') this.telemetry.brightness = data.brightness;
+                        if (data.last_action) this.telemetry.lastAction = data.last_action;
+
+                        this._notifyTelemetry(this.telemetry);
+                    }
+                } catch (e) {
+                    console.warn('[OS Bridge] Failed to parse message:', e);
+                }
+            };
+
+            this.ws.onclose = () => {
+                if (this.isConnected) {
+                    console.warn('[OS Bridge] Disconnected from Python native bridge.');
+                }
+                this.isConnected = false;
+                this._notifyStatus(false);
+                this._scheduleReconnect();
+            };
+
+            this.ws.onerror = () => {
+                this.isConnected = false;
+                this._notifyStatus(false);
+            };
+        } catch (err) {
+            this.isConnected = false;
+            this._notifyStatus(false);
+            this._scheduleReconnect();
+        }
+    }
+
+    _scheduleReconnect() {
+        if (!this.reconnectTimer && currentRecognitionMode === 'os_control') {
+            this.reconnectTimer = setInterval(() => {
+                if (!this.isConnected && currentRecognitionMode === 'os_control') {
+                    this.connect();
+                }
+            }, this.reconnectInterval);
+        }
+    }
+
+    send(command) {
+        if (this.isConnected && this.ws && this.ws.readyState === WebSocket.OPEN) {
+            try {
+                this.ws.send(JSON.stringify(command));
+                return true;
+            } catch (err) {
+                console.warn('[OS Bridge] Send error:', err);
+            }
+        }
+        return false;
+    }
+
+    _notifyStatus(connected) {
+        this.onStatusChangeCallbacks.forEach(cb => {
+            try { cb(connected); } catch (e) { console.error(e); }
+        });
+    }
+
+    _notifyTelemetry(data) {
+        this.onTelemetryCallbacks.forEach(cb => {
+            try { cb(data); } catch (e) { console.error(e); }
+        });
+    }
+
+    onStatusChange(cb) {
+        this.onStatusChangeCallbacks.push(cb);
+    }
+
+    onTelemetry(cb) {
+        this.onTelemetryCallbacks.push(cb);
+    }
+}
+
+const osBridge = new WindowsOSBridgeClient();
+
+const osControlState = {
+    // Tuning parameters
+    sensitivity: 1.8,
+    smoothingAlpha: 0.65,
+    dragThresholdMs: 380,
+
+    // Filtered coordinates (0.0 to 1.0)
+    smoothX: 0.5,
+    smoothY: 0.5,
+    lastSentTime: 0,
+    sendIntervalMs: 20, // ~50Hz max rate limit for silky motion
+
+    // Click / Drag state
+    isPinchingIndex: false,
+    pinchStartTime: 0,
+    isDragging: false,
+    lastLeftClickTime: 0,
+
+    // Right click state
+    lastRightClickTime: 0,
+
+    // Scroll state
+    lastScrollY: 0,
+    lastScrollTime: 0,
+
+    // Volume state
+    lastVolTime: 0,
+
+    // Brightness state
+    lastBriTime: 0,
+
+    // Timed hold gestures
+    holdGesture: null,
+    holdStartTime: 0,
+    lastActionTime: 0,
+
+    // Current action label
+    currentAction: 'Tracking Standby',
+    currentDetail: 'Point index finger to steer cursor'
+};
+
+function setOSActionHUD(action, detail) {
+    osControlState.currentAction = action;
+    osControlState.currentDetail = detail || '';
+    const actDisplay = document.getElementById('os-action-display');
+    const actDetail = document.getElementById('os-action-detail');
+    if (actDisplay) actDisplay.textContent = action;
+    if (actDetail && detail) actDetail.textContent = detail;
+}
+
+function handleOSControlNoHand() {
+    if (osControlState.isDragging) {
+        osBridge.send({ action: 'mouse_up', button: 'left' });
+        osControlState.isDragging = false;
+        setOSActionHUD('Drag Released', 'Hand left camera viewport');
+    } else if (osControlState.isPinchingIndex) {
+        osControlState.isPinchingIndex = false;
+    }
+    osControlState.holdGesture = null;
+    osControlState.lastScrollY = 0;
+    setOSActionHUD('No Hand Detected', 'Position hand within camera feed');
+    if (detectedLetterEl) detectedLetterEl.textContent = 'OS';
+    updateConfidenceUI(0);
+}
+
+function drawReticle(ctx, normX, normY, color = '#58a6ff', label = 'Pointer') {
+    const px = normX * canvasElement.width;
+    const py = normY * canvasElement.height;
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 2.5;
+
+    // Outer Target Ring
+    ctx.beginPath();
+    ctx.arc(px, py, 18, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Inner Dot
+    ctx.beginPath();
+    ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Crosshairs
+    ctx.beginPath();
+    ctx.moveTo(px - 26, py); ctx.lineTo(px - 10, py);
+    ctx.moveTo(px + 10, py); ctx.lineTo(px + 26, py);
+    ctx.moveTo(px, py - 26); ctx.lineTo(px, py - 10);
+    ctx.moveTo(px, py + 10); ctx.lineTo(px, py + 26);
+    ctx.stroke();
+
+    // Label tag (unmirrored for easy reading)
+    ctx.translate(px, py);
+    ctx.scale(-1, 1); // Flip text so it reads left-to-right on mirrored canvas
+    ctx.font = '600 11px Inter, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+    ctx.shadowBlur = 4;
+    ctx.fillText(label, 22, -10);
+
+    ctx.restore();
+}
+
+function processOSControlGestures(landmarks) {
+    if (!landmarks || landmarks.length < 21) {
+        handleOSControlNoHand();
+        return;
+    }
+
+    const now = performance.now();
+    updateConfidenceUI(1.0);
+    if (detectedLetterEl) detectedLetterEl.textContent = 'OS';
+
+    const indexTip = landmarks[8];
+    const indexPip = landmarks[6];
+    const thumbTip = landmarks[4];
+    const middleTip = landmarks[12];
+    const middlePip = landmarks[10];
+    const ringTip = landmarks[16];
+    const ringPip = landmarks[14];
+    const pinkyTip = landmarks[20];
+    const pinkyPip = landmarks[18];
+    const wrist = landmarks[0];
+
+    // Extension states
+    const isIndexExt = indexTip.y < indexPip.y;
+    const isMiddleExt = middleTip.y < middlePip.y;
+    const isRingExt = ringTip.y < ringPip.y;
+    const isPinkyExt = pinkyTip.y < pinkyPip.y;
+    const isThumbExt = Math.hypot(thumbTip.x - landmarks[2].x, thumbTip.y - landmarks[2].y) > 0.07;
+
+    // Euclidean Distances
+    const distThumbIndex = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
+    const distThumbMiddle = Math.hypot(thumbTip.x - middleTip.x, thumbTip.y - middleTip.y);
+    const distIndexMiddle = Math.hypot(indexTip.x - middleTip.x, indexTip.y - middleTip.y);
+
+    // 1. Mirrored coordinates & Active Interaction Area Mapping
+    // In camera space: x=0 is left, x=1 is right. When user looks at screen, physical right is 1 - x
+    const userX = 1 - indexTip.x;
+    const userY = indexTip.y;
+
+    // Deadzone margin (20% on each edge so user doesn't need to reach border of camera)
+    const margin = 0.18;
+    const rawX = Math.max(0, Math.min(1, (userX - margin) / (1 - 2 * margin)));
+    const rawY = Math.max(0, Math.min(1, (userY - margin) / (1 - 2 * margin)));
+
+    // Interactive Sensitivity Scale
+    const scaledX = Math.max(0, Math.min(1, 0.5 + (rawX - 0.5) * osControlState.sensitivity));
+    const scaledY = Math.max(0, Math.min(1, 0.5 + (rawY - 0.5) * osControlState.sensitivity));
+
+    // Exponential Moving Average Smoothing Filter
+    const alpha = osControlState.smoothingAlpha;
+    osControlState.smoothX = alpha * scaledX + (1 - alpha) * osControlState.smoothX;
+    osControlState.smoothY = alpha * scaledY + (1 - alpha) * osControlState.smoothY;
+
+    // 2. Gesture Evaluation Pipeline
+
+    // A. Instant Screenshot / Snipping Tool ("L" Shape: Thumb horizontal + Index upright, other 3 curled)
+    const isLShape = isIndexExt && !isMiddleExt && !isRingExt && !isPinkyExt &&
+                     Math.abs(thumbTip.x - indexTip.x) > 0.12 &&
+                     Math.abs(thumbTip.y - indexTip.y) > 0.08;
+
+    if (isLShape) {
+        if (osControlState.holdGesture !== 'screenshot') {
+            osControlState.holdGesture = 'screenshot';
+            osControlState.holdStartTime = now;
+        } else {
+            const heldDuration = now - osControlState.holdStartTime;
+            if (heldDuration >= 1100 && (now - osControlState.lastActionTime >= 2800)) {
+                osBridge.send({ action: 'snip' });
+                osControlState.lastActionTime = now;
+                setOSActionHUD('Snipping Tool Launched', 'Win+Shift+S snipping mode active');
+                playDetectionSound();
+                osControlState.holdGesture = null;
+            } else {
+                const pct = Math.min(100, Math.round((heldDuration / 1100) * 100));
+                setOSActionHUD('Snip Tool Armed', `Holding "L" pose: ${pct}%`);
+            }
+        }
+        drawReticle(canvasCtx, indexTip.x, indexTip.y, '#f43f5e', 'Snip [Hold]');
+        return;
+    } else if (osControlState.holdGesture === 'screenshot') {
+        osControlState.holdGesture = null;
+    }
+
+    // B. Show Desktop (Flat open palm pushed low in viewport: y > 0.72)
+    const isOpenPalm = isIndexExt && isMiddleExt && isRingExt && isPinkyExt && isThumbExt;
+    if (isOpenPalm && wrist.y > 0.70) {
+        if (now - osControlState.lastActionTime >= 2200) {
+            osBridge.send({ action: 'desktop' });
+            osControlState.lastActionTime = now;
+            setOSActionHUD('Show Desktop', 'Toggled Win+D Minimize/Restore');
+            playDetectionSound();
+        }
+        drawReticle(canvasCtx, indexTip.x, indexTip.y, '#3b82f6', 'Desktop');
+        return;
+    }
+
+    // C. Screen Brightness Adjustment (3 Fingers upright: Index, Middle, Ring up; Pinky closed)
+    const isThreeFingers = isIndexExt && isMiddleExt && isRingExt && !isPinkyExt;
+    if (isThreeFingers) {
+        // Vertical elevation determines brightness level (from 0.75 low to 0.20 high)
+        const briNorm = Math.max(0, Math.min(1, (0.75 - indexTip.y) / 0.52));
+        const briPercent = Math.round(10 + briNorm * 90);
+
+        if (now - osControlState.lastBriTime >= 150) {
+            osBridge.send({ action: 'set_brightness', percent: briPercent });
+            osControlState.lastBriTime = now;
+            setOSActionHUD(`Brightness: ${briPercent}%`, 'Elevate hand up/down to adjust');
+        }
+        drawReticle(canvasCtx, indexTip.x, indexTip.y, '#a855f7', `Brightness ${briPercent}%`);
+        return;
+    }
+
+    // D. Master Volume Aperture Dial (Thumb + Index aperture dial when Ring & Pinky curled)
+    const isApertureDial = !isRingExt && !isPinkyExt && !isMiddleExt &&
+                           distThumbIndex >= 0.05 && distThumbIndex <= 0.28;
+    if (isApertureDial) {
+        const volNorm = Math.max(0, Math.min(1, (distThumbIndex - 0.05) / 0.22));
+        const volPercent = Math.round(volNorm * 100);
+
+        if (now - osControlState.lastVolTime >= 140) {
+            osBridge.send({ action: 'set_volume', percent: volPercent });
+            osControlState.lastVolTime = now;
+            setOSActionHUD(`Volume: ${volPercent}%`, 'Adjust aperture distance to set volume');
+        }
+        drawReticle(canvasCtx, (thumbTip.x + indexTip.x) / 2, (thumbTip.y + indexTip.y) / 2, '#ec4899', `Volume ${volPercent}%`);
+        return;
+    }
+
+    // E. Smooth Wheel Scroll (Two fingers parallel: Index + Middle upright, Ring & Pinky closed)
+    const isTwoFingerScroll = isIndexExt && isMiddleExt && !isRingExt && !isPinkyExt && distIndexMiddle < 0.075;
+    if (isTwoFingerScroll) {
+        const currentMidY = (indexTip.y + middleTip.y) / 2;
+        if (!osControlState.lastScrollY) {
+            osControlState.lastScrollY = currentMidY;
+        }
+
+        const deltaY = currentMidY - osControlState.lastScrollY;
+        if (Math.abs(deltaY) > 0.014 && (now - osControlState.lastScrollTime >= 70)) {
+            // Hand moves up -> scroll up (+clicks), hand moves down -> scroll down (-clicks)
+            const clicks = deltaY < 0 ? 3 : -3;
+            osBridge.send({ action: 'scroll', clicks: clicks });
+            osControlState.lastScrollTime = now;
+            osControlState.lastScrollY = currentMidY;
+            setOSActionHUD(clicks > 0 ? 'Scrolling Up' : 'Scrolling Down', `Wheel ${clicks > 0 ? '+' : ''}${clicks}`);
+        }
+        drawReticle(canvasCtx, (indexTip.x + middleTip.x) / 2, currentMidY, '#06b6d4', 'Scrolling');
+        return;
+    } else {
+        osControlState.lastScrollY = 0;
+    }
+
+    // F. Right Click (Thumb + Middle pinch)
+    const isPinchingMiddle = distThumbMiddle < 0.046 && distThumbIndex >= 0.055;
+    if (isPinchingMiddle) {
+        if (now - osControlState.lastRightClickTime >= 600) {
+            osBridge.send({ action: 'right_click' });
+            osControlState.lastRightClickTime = now;
+            setOSActionHUD('Right Click', 'Context menu opened');
+            playDetectionSound();
+        }
+        drawReticle(canvasCtx, middleTip.x, middleTip.y, '#eab308', 'Right Click');
+        return;
+    }
+
+    // G. Left Click & Drag (Thumb + Index pinch)
+    const isPinchingIndex = distThumbIndex < 0.046;
+    if (isPinchingIndex) {
+        if (!osControlState.isPinchingIndex) {
+            // Pinch initiated
+            osControlState.isPinchingIndex = true;
+            osControlState.pinchStartTime = now;
+        } else {
+            // Check if held long enough to become a Drag & Drop
+            const pinchDuration = now - osControlState.pinchStartTime;
+            if (!osControlState.isDragging && pinchDuration >= osControlState.dragThresholdMs) {
+                osControlState.isDragging = true;
+                osBridge.send({ action: 'mouse_down', button: 'left' });
+                setOSActionHUD('DRAGGING', 'Left button held - drag window or file');
+            }
+        }
+
+        drawReticle(canvasCtx, indexTip.x, indexTip.y, osControlState.isDragging ? '#f59e0b' : '#10b981', osControlState.isDragging ? 'DRAGGING' : 'Pinch');
+    } else {
+        if (osControlState.isPinchingIndex) {
+            osControlState.isPinchingIndex = false;
+            if (osControlState.isDragging) {
+                // Drag completed
+                osControlState.isDragging = false;
+                osBridge.send({ action: 'mouse_up', button: 'left' });
+                setOSActionHUD('Drag Released', 'Drop operation complete');
+            } else {
+                // Short pinch -> Click or Double Click
+                if (now - osControlState.lastLeftClickTime < 320) {
+                    osBridge.send({ action: 'double_click' });
+                    setOSActionHUD('Double Click', 'Double left click triggered');
+                    playDetectionSound();
+                    osControlState.lastLeftClickTime = 0;
+                } else {
+                    osBridge.send({ action: 'left_click' });
+                    setOSActionHUD('Left Click', 'Left click triggered');
+                    playDetectionSound();
+                    osControlState.lastLeftClickTime = now;
+                }
+            }
+        }
+    }
+
+    // H. Continuous Cursor Movement (Stream to bridge at smooth frame rate)
+    if (now - osControlState.lastSentTime >= osControlState.sendIntervalMs) {
+        osBridge.send({
+            action: 'move',
+            x: osControlState.smoothX,
+            y: osControlState.smoothY,
+            smooth: true
+        });
+        osControlState.lastSentTime = now;
+    }
+
+    if (!isPinchingIndex) {
+        drawReticle(canvasCtx, indexTip.x, indexTip.y, '#3b82f6', 'Pointer');
+        setOSActionHUD('Tracking Cursor', `Screen: ${Math.round(osControlState.smoothX * 100)}%, ${Math.round(osControlState.smoothY * 100)}%`);
+    }
+}
+
+// Initialize Windows OS Control Module and Wire UI DOM Elements
+function initWindowsOSControl() {
+    const osBridgeStatusBadge = document.getElementById('os-bridge-status');
+    const footerBridgeStatus = document.getElementById('footer-bridge-status');
+    const footerBridgeDot = document.getElementById('footer-bridge-dot');
+    const osBridgeAlert = document.getElementById('os-bridge-alert');
+    const osReconnectBtn = document.getElementById('os-reconnect-btn');
+    const coordsDisplay = document.getElementById('os-coords-display');
+    const screenDisplay = document.getElementById('os-screen-display');
+    const volDisplay = document.getElementById('os-volume-display');
+    const volBar = document.getElementById('os-volume-bar');
+    const briDisplay = document.getElementById('os-brightness-display');
+    const briBar = document.getElementById('os-brightness-bar');
+
+    // Telemetry updates
+    osBridge.onStatusChange((connected) => {
+        if (connected) {
+            if (osBridgeStatusBadge) {
+                osBridgeStatusBadge.className = 'status-badge connected';
+                osBridgeStatusBadge.textContent = 'Bridge Online';
+            }
+            if (footerBridgeStatus) footerBridgeStatus.textContent = 'Connected';
+            if (footerBridgeDot) {
+                footerBridgeDot.className = 'dot-indicator';
+                footerBridgeDot.style.background = 'var(--accent-emerald)';
+            }
+            if (osBridgeAlert) {
+                osBridgeAlert.className = 'os-bridge-alert connected';
+                osBridgeAlert.innerHTML = `
+                    <div class="os-bridge-alert-text">
+                        <strong>Native Bridge Connected:</strong> Full Windows OS control active.
+                    </div>
+                `;
+            }
+        } else {
+            if (osBridgeStatusBadge) {
+                osBridgeStatusBadge.className = 'status-badge disconnected';
+                osBridgeStatusBadge.textContent = 'Bridge Offline';
+            }
+            if (footerBridgeStatus) footerBridgeStatus.textContent = 'Offline';
+            if (footerBridgeDot) {
+                footerBridgeDot.className = 'dot-indicator disconnected';
+                footerBridgeDot.style.background = 'var(--accent-rose)';
+            }
+            if (osBridgeAlert) {
+                osBridgeAlert.className = 'os-bridge-alert';
+                osBridgeAlert.innerHTML = `
+                    <div class="os-bridge-alert-text">
+                        <strong>Local Python Bridge Needed:</strong> Run <code class="mono-code">python scripts/windows_bridge.py</code>
+                    </div>
+                    <button type="button" id="os-reconnect-btn-dynamic" class="btn secondary sm">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        <span>Connect</span>
+                    </button>
+                `;
+                const dynamicBtn = document.getElementById('os-reconnect-btn-dynamic');
+                if (dynamicBtn) dynamicBtn.addEventListener('click', () => osBridge.connect());
+            }
+        }
+    });
+
+    osBridge.onTelemetry((t) => {
+        if (coordsDisplay) coordsDisplay.textContent = `X: ${t.mouseX}, Y: ${t.mouseY}`;
+        if (screenDisplay) screenDisplay.textContent = `Screen: ${t.screenWidth} &times; ${t.screenHeight}`;
+        if (volDisplay) volDisplay.textContent = t.isMuted ? 'Muted' : `${t.volume}%`;
+        if (volBar) volBar.style.width = `${t.isMuted ? 0 : t.volume}%`;
+        if (briDisplay) briDisplay.textContent = `${t.brightness}%`;
+        if (briBar) briBar.style.width = `${t.brightness}%`;
+    });
+
+    if (osReconnectBtn) {
+        osReconnectBtn.addEventListener('click', () => {
+            console.log('[OS Bridge] User clicked connect button.');
+            osBridge.connect();
+        });
+    }
+
+    // Quick Action Buttons
+    document.querySelectorAll('.os-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const action = btn.getAttribute('data-os-action');
+            if (action) {
+                console.log(`[OS Quick Action] Triggering: ${action}`);
+                osBridge.send({ action: action });
+                setOSActionHUD(`Quick Action: ${action}`, `Command sent to Windows bridge`);
+                playDetectionSound();
+            }
+        });
+    });
+
+    // Sliders
+    const sensSlider = document.getElementById('os-sensitivity-slider');
+    const sensVal = document.getElementById('os-sensitivity-val');
+    if (sensSlider && sensVal) {
+        sensSlider.addEventListener('input', (e) => {
+            osControlState.sensitivity = parseFloat(e.target.value);
+            sensVal.textContent = `${osControlState.sensitivity.toFixed(1)}x`;
+        });
+    }
+
+    const smoothSlider = document.getElementById('os-smoothing-slider');
+    const smoothVal = document.getElementById('os-smoothing-val');
+    if (smoothSlider && smoothVal) {
+        smoothSlider.addEventListener('input', (e) => {
+            osControlState.smoothingAlpha = parseFloat(e.target.value);
+            smoothVal.textContent = osControlState.smoothingAlpha.toFixed(2);
+        });
+    }
+
+    const dragSlider = document.getElementById('os-drag-slider');
+    const dragVal = document.getElementById('os-drag-val');
+    if (dragSlider && dragVal) {
+        dragSlider.addEventListener('input', (e) => {
+            osControlState.dragThresholdMs = parseInt(e.target.value, 10);
+            dragVal.textContent = `${osControlState.dragThresholdMs}ms`;
+        });
+    }
+
+    // OS Guide Modal Open / Close
+    const guideModal = document.getElementById('os-guide-modal');
+    const openGuideBtn = document.getElementById('open-os-guide-btn');
+    const closeGuideBtn = document.getElementById('close-os-guide-btn');
+
+    if (openGuideBtn && guideModal) {
+        openGuideBtn.addEventListener('click', () => {
+            guideModal.classList.add('open');
+        });
+    }
+    if (closeGuideBtn && guideModal) {
+        closeGuideBtn.addEventListener('click', () => {
+            guideModal.classList.remove('open');
+        });
+    }
+    if (guideModal) {
+        guideModal.addEventListener('click', (e) => {
+            if (e.target === guideModal) guideModal.classList.remove('open');
+        });
+    }
+
+    // Type to Windows App Button
+    const typeToWinBtn = document.getElementById('type-to-windows-btn');
+    if (typeToWinBtn) {
+        typeToWinBtn.addEventListener('click', () => {
+            if (typeof currentSentence !== 'undefined' && currentSentence.length > 0) {
+                const textToType = currentSentence.join(' ');
+                console.log(`[OS Injection] Typing sentence to active Windows app: "${textToType}"`);
+                const sent = osBridge.send({ action: 'type_text', text: textToType });
+                if (sent) {
+                    setOSActionHUD('Text Injected', `Typed: "${textToType}"`);
+                    playDetectionSound();
+                } else {
+                    alert('Windows Bridge is offline. Start the bridge first with: python scripts/windows_bridge.py');
+                }
+            } else {
+                alert('No sentence tokens detected yet to type.');
+            }
+        });
+    }
+
+    // Try initial bridge connection silently
+    osBridge.connect();
+}
+
 // Initialize on DOM load
 window.addEventListener('DOMContentLoaded', () => {
     initSpeechToSign();
+    initWindowsOSControl();
 });
 
 

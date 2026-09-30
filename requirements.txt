@@ -16,3 +16,10 @@ bleak>=0.20.0
 # Visualization & Utilities
 matplotlib>=3.6.0
 seaborn>=0.12.0
+
+# Windows OS Native Control & WebSocket Bridge (Feature 6)
+pyautogui>=0.9.54
+websockets>=12.0
+pycaw>=20240101
+comtypes>=1.4.0
+screen-brightness-control>=0.23.0
