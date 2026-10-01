@@ -748,6 +748,13 @@ function initTwoWayUI() {
         }
     });
 
+    // Inbound: Partner Live Interim Stream (Live Typing / Autocomplete Preview)
+    twoWayManager.onInterimReceived((data) => {
+        if (remoteTextDisplay && data && data.text) {
+            remoteTextDisplay.innerHTML = `<span class="transcript-text" style="color: var(--text-secondary); font-style: italic;">${data.text} <span style="opacity: 0.6; animation: pulse 1s infinite;">&bull;&bull;&bull;</span></span>`;
+        }
+    });
+
     // Vocalize Button (Manual Speak)
     function speakText(text) {
         if (!text || !window.speechSynthesis) return;

@@ -504,9 +504,14 @@
                         <!-- Dynamic word tags rendered by script.js -->
                     </div>
 
+                    <!-- Smart Predictive Autocomplete Suggestions -->
+                    <div id="autocomplete-dropdown" class="autocomplete-dropdown" style="display: none;" role="listbox" aria-label="Autocomplete suggestions">
+                        <!-- Dynamic autocomplete chips injected by predictive.js -->
+                    </div>
+
                     <div class="sentence-instructions">
                         <span>Continuous Token Stream &bull; Drop hand briefly for double characters.<br>
-                        Shortcuts: <kbd>Space</kbd> Space &bull; <kbd>Backspace</kbd> Delete &bull; <kbd>Enter</kbd> Commit</span>
+                        Shortcuts: <kbd>Space</kbd> Space &bull; <kbd>Backspace</kbd> Delete &bull; <kbd>1-5</kbd>/<kbd>Tab</kbd> Accept &bull; <kbd>Esc</kbd> Dismiss &bull; <kbd>Enter</kbd> Commit</span>
                     </div>
 
                     <div class="sentence-controls">
@@ -1242,7 +1247,8 @@
     <!-- Machine Learning Runtime -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script>
     <script src="dictionary.js"></script>
-    <script src="script.js?v=2.5.0"></script>
+    <script src="predictive.js"></script>
+    <script src="script.js?v=2.6.0"></script>
 </body>
 
 </html>

@@ -1075,6 +1075,16 @@ function handlePrediction(rawPrediction) {
 
         // Continuous Stream logic: Instantly add if it's a new letter/word/number
         if (letter !== lastAddedLetter) {
+            // Hands-Free Autocomplete Acceptance: Check if user makes THUMBS_UP while suggestions are active
+            if (letter === 'THUMBS_UP' && window.predictiveEngine && window.predictiveEngine.hasSuggestions()) {
+                const accepted = window.predictiveEngine.tryGestureAccept('THUMBS_UP');
+                if (accepted) {
+                    lastAddedLetter = letter;
+                    lastDetectionTime = Date.now();
+                    return;
+                }
+            }
+
             if (letter === 'SPACE') {
                 if (!currentSentence.endsWith(' ')) {
                     currentSentence += ' ';
@@ -1127,11 +1137,16 @@ const speakSentenceBtn = document.getElementById('speak-sentence-btn');
 
 let currentSentence = "";
 
-function updateSentenceDisplay() {
+function updateSentenceDisplay(skipAutocomplete = false) {
     if (!sentenceDisplay) return;
     sentenceDisplay.innerHTML = "";
 
-    if (currentSentence.length === 0) return;
+    if (currentSentence.length === 0) {
+        if (window.predictiveEngine) {
+            window.predictiveEngine.clearSuggestions();
+        }
+        return;
+    }
 
     const words = currentSentence.split(' ');
     words.forEach((word) => {
@@ -1148,15 +1163,33 @@ function updateSentenceDisplay() {
 
     // Expose globally for Two-Way Room synchronization
     window.currentSentence = currentSentence;
+
+    // Stream live interim preview to connected partner
+    if (window.twoWayManager && window.twoWayManager.isConnected) {
+        window.twoWayManager.sendInterim(currentSentence.trim(), 'signing');
+    }
+
+    // Trigger Smart Predictive Autocomplete suggestions
+    if (!skipAutocomplete && window.predictiveEngine) {
+        window.predictiveEngine.updateSuggestions(currentSentence);
+    }
 }
 
 window.getCurrentSentence = () => currentSentence;
+window.setSentence = (newSentence) => {
+    currentSentence = newSentence;
+    window.currentSentence = newSentence;
+    updateSentenceDisplay(true);
+};
 
 if (clearSentenceBtn) {
     clearSentenceBtn.addEventListener('click', () => {
         currentSentence = "";
         window.currentSentence = "";
         updateSentenceDisplay();
+        if (window.predictiveEngine) {
+            window.predictiveEngine.clearSuggestions();
+        }
     });
 }
 
