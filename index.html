@@ -78,6 +78,15 @@
                         </svg>
                         <span>Sign Dictionary</span>
                     </button>
+                    <button id="open-two-way-btn" class="nav-link" type="button" aria-haspopup="dialog" style="background: transparent; border: 0;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Two-Way Room</span>
+                    </button>
                 </nav>
             </div>
         </header>
@@ -528,6 +537,13 @@
                             </svg>
                             <span>Type to App</span>
                         </button>
+                        <button id="send-to-room-btn" class="btn primary" title="Send interpreted sentence directly to connected two-way partner">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                            <span>Send to Room</span>
+                        </button>
                     </div>
 
                     <!-- Multi-Language Translation -->
@@ -937,12 +953,296 @@
             </div>
         </div>
 
+        <!-- ==================== TWO-WAY COMMUNICATION ROOM MODAL ==================== -->
+        <div class="dictionary-modal" id="two-way-modal" role="dialog" aria-modal="true" aria-labelledby="two-way-modal-title">
+            <div class="dictionary-card glass-panel two-way-card">
+                <!-- Header -->
+                <div class="dict-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="brand-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="dict-title" id="two-way-modal-title">Two-Way Speech &amp; Sign Room</h2>
+                            <p class="dict-subtitle">Connect with a partner across devices using a 6-character room code</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-dict" id="close-two-way-btn" aria-label="Close Two-Way Room">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- VIEW 1: ROOM SETUP (HOST / JOIN) -->
+                <div class="two-way-view" id="two-way-setup-view">
+                    <!-- Role Picker Bar -->
+                    <div class="two-way-role-bar">
+                        <span class="two-way-label">My Role:</span>
+                        <div class="two-way-role-pills" id="two-way-role-pills" role="radiogroup" aria-label="Communication Role">
+                            <button type="button" class="two-way-role-btn active" data-role="both" aria-checked="true">
+                                <span>Bidirectional (Both)</span>
+                            </button>
+                            <button type="button" class="two-way-role-btn" data-role="signing" aria-checked="false">
+                                <span>I am Signing (Deaf/Mute)</span>
+                            </button>
+                            <button type="button" class="two-way-role-btn" data-role="speaking" aria-checked="false">
+                                <span>I am Speaking (Hearing)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Setup Cards Grid -->
+                    <div class="two-way-setup-grid">
+                        <!-- Host Card -->
+                        <div class="two-way-card-box">
+                            <div class="two-way-box-header">
+                                <div class="two-way-box-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="two-way-box-title">Create a Room (Host)</h3>
+                                    <p class="two-way-box-desc">Generate a 6-character room code and share it with your partner.</p>
+                                </div>
+                            </div>
+
+                            <div class="two-way-host-content" id="two-way-host-idle">
+                                <button type="button" id="two-way-create-room-btn" class="btn primary" style="width: 100%; justify-content: center;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                    <span>Create New Session</span>
+                                </button>
+                            </div>
+
+                            <div class="two-way-host-content" id="two-way-host-active" style="display: none;">
+                                <div class="room-code-badge-wrap">
+                                    <span class="room-code-label">Your Shareable Room Code</span>
+                                    <div class="room-code-badge" id="host-room-code-display">ASL-XXX</div>
+                                </div>
+                                <div class="room-share-actions">
+                                    <button type="button" id="copy-room-code-btn" class="btn secondary sm" title="Copy Room Code">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <span id="copy-code-text">Copy Code</span>
+                                    </button>
+                                    <button type="button" id="copy-room-link-btn" class="btn secondary sm" title="Copy Direct Join Link">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                        </svg>
+                                        <span id="copy-link-text">Copy Link</span>
+                                    </button>
+                                </div>
+                                <div class="room-wait-status">
+                                    <span class="dot-indicator pulse"></span>
+                                    <span id="host-wait-text">Waiting for partner to enter code...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Join Card -->
+                        <div class="two-way-card-box">
+                            <div class="two-way-box-header">
+                                <div class="two-way-box-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                        <polyline points="10 17 15 12 10 7"></polyline>
+                                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="two-way-box-title">Join a Room (Guest)</h3>
+                                    <p class="two-way-box-desc">Enter the room code shared by your partner.</p>
+                                </div>
+                            </div>
+
+                            <div class="two-way-join-form">
+                                <div class="join-input-wrap">
+                                    <input type="text" id="two-way-join-input" placeholder="e.g. ASL-842" maxlength="12" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" class="join-code-input" aria-label="Room Code">
+                                </div>
+                                <button type="button" id="two-way-join-btn" class="btn primary" style="width: 100%; justify-content: center;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                    <span>Connect to Room</span>
+                                </button>
+                            </div>
+                            <div class="two-way-join-hint">
+                                Direct links with <code class="mono-code">?room=CODE</code> will prefill automatically.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: ACTIVE TWO-WAY CALL HUD (HIDDEN UNTIL CONNECTED) -->
+                <div class="two-way-view" id="two-way-active-view" style="display: none;">
+                    <!-- Active Session Control Bar -->
+                    <div class="two-way-active-bar">
+                        <div class="two-way-active-info">
+                            <span class="status-badge connected">
+                                <span class="dot"></span>
+                                <span id="two-way-session-code">ASL-XXX</span>
+                            </span>
+                            <span class="two-way-partner-badge" id="two-way-partner-badge">Partner: Connected</span>
+                        </div>
+                        <div class="two-way-active-actions">
+                            <button type="button" id="two-way-video-toggle-btn" class="btn secondary sm" title="Toggle Partner Video Stream">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                                </svg>
+                                <span id="two-way-video-btn-text">Video Call</span>
+                            </button>
+                            <button type="button" id="two-way-disconnect-btn" class="btn danger sm" title="Leave Session">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                                    <line x1="12" y1="2" x2="12" y2="12"></line>
+                                </svg>
+                                <span>Leave Room</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remote Video Frame (Collapsible) -->
+                    <div class="two-way-video-drawer" id="two-way-video-drawer" style="display: none;">
+                        <video id="two-way-remote-video" autoplay playsinline></video>
+                    </div>
+
+                    <!-- Dual Split Communication Canvas -->
+                    <div class="two-way-stream-grid">
+                        <!-- Partner Incoming Stream -->
+                        <div class="two-way-stream-box partner-stream">
+                            <div class="stream-box-header">
+                                <span class="stream-title">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                    <span>Partner's Stream (Incoming)</span>
+                                </span>
+                                <div class="stream-actions">
+                                    <button type="button" id="two-way-vocalize-btn" class="btn secondary sm" title="Speak text aloud">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                                        </svg>
+                                        <span>Speak Aloud</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="two-way-message-display" id="two-way-remote-text">
+                                <span class="transcript-placeholder">Waiting for partner to speak or sign...</span>
+                            </div>
+
+                            <!-- Animated Sign Player Card for incoming speech -->
+                            <div class="two-way-sign-stage" id="two-way-sign-stage" style="display: none;">
+                                <div class="active-sign-card">
+                                    <div class="active-sign-visual" id="two-way-active-visual">
+                                        <span class="active-sign-glyph" id="two-way-active-glyph">-</span>
+                                    </div>
+                                    <div class="active-sign-info">
+                                        <span class="active-sign-title" id="two-way-active-title">Listening...</span>
+                                        <span class="active-sign-desc" id="two-way-active-desc">Signs will play sequentially</span>
+                                    </div>
+                                </div>
+                                <div class="sign-sequence-timeline" id="two-way-active-timeline"></div>
+                            </div>
+                        </div>
+
+                        <!-- Local Outgoing Stream & Controls -->
+                        <div class="two-way-stream-box local-stream">
+                            <div class="stream-box-header">
+                                <span class="stream-title">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <span>My Outgoing Stream</span>
+                                </span>
+                                <span class="status-badge connected" id="two-way-local-status">Signing / Voice Ready</span>
+                            </div>
+
+                            <!-- Quick Voice Speak Button & Text Input -->
+                            <div class="two-way-voice-bar">
+                                <button type="button" id="two-way-speak-mic-btn" class="btn primary">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                                    </svg>
+                                    <span id="two-way-speak-mic-text">Speak to Partner</span>
+                                </button>
+                                <span class="voice-hint">Spoken voice translates to animated ASL signs on partner's screen</span>
+
+                                <div class="two-way-text-bar">
+                                    <input type="text" id="two-way-text-input" class="two-way-input" placeholder="Type text to convert to ASL signs..." />
+                                    <button type="button" id="two-way-send-text-btn" class="btn secondary sm" title="Translate text into ASL signs for partner">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                        </svg>
+                                        <span>Send</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Outgoing Message Preview -->
+                            <div class="two-way-outgoing-preview" id="two-way-outgoing-preview">
+                                <span class="transcript-placeholder">Signed sentences or spoken voice will appear here and send automatically...</span>
+                            </div>
+
+                            <div class="two-way-sign-bridge">
+                                <button type="button" id="two-way-send-current-sign-btn" class="btn secondary sm" style="width: 100%; justify-content: center; gap: 8px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14"></path>
+                                        <path d="m12 5 7 7-7 7"></path>
+                                    </svg>
+                                    <span>Send Current Interpreted Sentence</span>
+                                </button>
+                            </div>
+
+                            <!-- Quick Reaction Phrases Chips -->
+                            <div class="two-way-quick-phrases">
+                                <span class="os-section-subhead">Quick Response Chips</span>
+                                <div class="quick-phrase-row">
+                                    <button type="button" class="quick-phrase-chip" data-phrase="YES">Yes</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="NO">No</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="HELLO">Hello</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="THANK YOU">Thank You</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="PLEASE REPEAT">Please Repeat</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="WAIT A MINUTE">Wait a Minute</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="GOOD">Good</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
+    <!-- Peer-to-Peer WebRTC Runtime -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <script src="two_way.js"></script>
     <!-- Machine Learning Runtime -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script>
     <script src="dictionary.js"></script>
-    <script src="script.js?v=2.4.0"></script>
+    <script src="script.js?v=2.5.0"></script>
 </body>
 
 </html>

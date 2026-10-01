@@ -1145,11 +1145,17 @@ function updateSentenceDisplay() {
 
     // Auto-scroll to bottom of the display area if it gets overflowing
     sentenceDisplay.scrollTop = sentenceDisplay.scrollHeight;
+
+    // Expose globally for Two-Way Room synchronization
+    window.currentSentence = currentSentence;
 }
+
+window.getCurrentSentence = () => currentSentence;
 
 if (clearSentenceBtn) {
     clearSentenceBtn.addEventListener('click', () => {
         currentSentence = "";
+        window.currentSentence = "";
         updateSentenceDisplay();
     });
 }
@@ -1162,6 +1168,39 @@ if (speakSentenceBtn) {
             utterance.pitch = 1.0;
             utterance.rate = 0.9;
             synth.speak(utterance);
+
+            // Also broadcast to connected Two-Way Room partner
+            if (window.twoWayManager && window.twoWayManager.isConnected) {
+                window.twoWayManager.sendSign(currentSentence.trim());
+                console.log('[TwoWay] Broadcasted sentence to partner:', currentSentence.trim());
+            }
+        }
+    });
+}
+
+// Send to Two-Way Room Partner Button
+const sendToRoomBtn = document.getElementById('send-to-room-btn');
+if (sendToRoomBtn) {
+    sendToRoomBtn.addEventListener('click', () => {
+        const text = currentSentence.trim();
+        if (!text) {
+            alert('Sentence is empty. Form a sentence with sign gestures first.');
+            return;
+        }
+
+        if (!window.twoWayManager || !window.twoWayManager.isConnected) {
+            const modal = document.getElementById('two-way-modal');
+            if (modal) modal.classList.add('open');
+            alert('Please connect to a partner room code first to send your signed sentence.');
+            return;
+        }
+
+        window.twoWayManager.sendSign(text);
+        const originalSpan = sendToRoomBtn.querySelector('span');
+        if (originalSpan) {
+            const oldText = originalSpan.textContent;
+            originalSpan.textContent = 'Sent!';
+            setTimeout(() => { originalSpan.textContent = oldText; }, 2000);
         }
     });
 }
@@ -2179,7 +2218,7 @@ function initWindowsOSControl() {
     if (typeToWinBtn) {
         typeToWinBtn.addEventListener('click', () => {
             if (typeof currentSentence !== 'undefined' && currentSentence.length > 0) {
-                const textToType = currentSentence.join(' ');
+                const textToType = typeof currentSentence === 'string' ? currentSentence.trim() : (Array.isArray(currentSentence) ? currentSentence.join(' ') : String(currentSentence));
                 console.log(`[OS Injection] Typing sentence to active Windows app: "${textToType}"`);
                 const sent = osBridge.send({ action: 'type_text', text: textToType });
                 if (sent) {
