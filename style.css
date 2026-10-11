@@ -2379,3 +2379,404 @@ select option { color: var(--text-primary); background: var(--bg-surface-1); }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ======================================================================
+   Frontend Redesign — Pass 1
+   Visual-only refinements for the ASL Interpreter workspace.
+   Keep the existing HTML IDs and JavaScript integration unchanged.
+   ====================================================================== */
+
+:root {
+    /* Slightly stronger contrast for labels and panel boundaries. */
+    --text-primary: #f1f5f9;
+    --text-secondary: #b8c4d2;
+    --text-tertiary: #91a0b2;
+    --text-muted: #718096;
+    --border-subtle: rgba(159, 181, 214, 0.19);
+    --border-medium: rgba(159, 181, 214, 0.29);
+    --border-strong: rgba(177, 198, 232, 0.44);
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 16px;
+}
+
+/* More deliberate page framing without changing the configured max width. */
+.app-container {
+    padding-top: 18px;
+}
+
+.app-container > header.glass-panel {
+    min-height: 66px;
+    padding: 0 20px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    background: rgba(15, 22, 32, 0.88);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.header-titles h1 {
+    font-size: 1.06rem;
+    letter-spacing: -0.025em;
+}
+
+.header-titles p {
+    font-size: 0.76rem;
+    color: var(--text-tertiary);
+}
+
+.nav-menu {
+    gap: 5px;
+    padding: 5px;
+    background: rgba(8, 13, 21, 0.48);
+}
+
+.app-container > header .nav-link {
+    min-height: 36px;
+    padding: 8px 11px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.app-container > header .nav-link.active {
+    color: #f6f8ff;
+    background: rgba(138, 168, 255, 0.15);
+    border-color: rgba(138, 168, 255, 0.34);
+    box-shadow: none;
+}
+
+/* Keep the primary work area visually clear and balanced. */
+.vision-container {
+    gap: 26px;
+    padding-top: 22px;
+}
+
+.left-column,
+.side-panel {
+    gap: 18px;
+    min-width: 0;
+}
+
+.camera-wrapper {
+    border-radius: var(--radius-xl);
+    border-color: rgba(159, 181, 214, 0.3);
+    background: #080d14;
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.camera-status-bar {
+    top: 16px;
+    left: 16px;
+    gap: 8px;
+    font-size: 0.72rem;
+    letter-spacing: 0.015em;
+}
+
+.camera-badge {
+    padding: 6px 9px;
+    background: rgba(7, 12, 19, 0.82);
+    border-color: rgba(176, 194, 222, 0.24);
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.camera-perf-select {
+    padding: 5px 26px 5px 9px;
+    font-size: 0.72rem;
+}
+
+/* Recognition modes are easier to scan and have a clearer selected state. */
+.mode-selector-bar {
+    gap: 10px;
+    padding: 10px 12px;
+    margin-bottom: 0;
+    background: rgba(20, 28, 40, 0.88);
+    border-color: var(--border-subtle);
+    border-radius: 12px;
+}
+
+.mode-pills {
+    gap: 6px;
+}
+
+.mode-btn {
+    min-height: 34px;
+    padding: 7px 11px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 9px;
+}
+
+.mode-btn.active {
+    color: #0b1715;
+    background: #8bd2b0;
+    border-color: #8bd2b0;
+    box-shadow: 0 2px 8px rgba(118, 189, 155, 0.16);
+}
+
+.gesture-switch-hint {
+    font-size: 0.74rem;
+}
+
+/* Recognition result becomes a proper, readable status card. */
+.result-panel {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 18px;
+    padding: 16px 18px;
+    background: linear-gradient(135deg, rgba(26, 37, 52, 0.96), rgba(17, 25, 36, 0.96));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.letter-display {
+    border-radius: 12px;
+    background: linear-gradient(145deg, #26364b, #192434);
+}
+
+#detected-letter {
+    font-size: 2.55rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+}
+
+.section-title {
+    color: #b9c6d6;
+    font-size: 0.79rem;
+    font-weight: 700;
+    letter-spacing: 0.055em;
+}
+
+.confidence-bar {
+    height: 7px;
+    border-radius: 999px;
+}
+
+.confidence-fill {
+    border-radius: 999px;
+}
+
+.confidence-text {
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+/* Unify hardware, sentence, and calibration panels as one component family. */
+.vision-container .side-panel > .hardware-panel,
+.vision-container .side-panel > .sentence-panel,
+.vision-container .side-panel > .training-panel {
+    padding: 18px;
+    background: linear-gradient(155deg, rgba(22, 30, 42, 0.94), rgba(15, 22, 32, 0.94));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.vision-container .side-panel > .hardware-panel:hover,
+.vision-container .side-panel > .sentence-panel:hover,
+.vision-container .side-panel > .training-panel:hover {
+    border-color: var(--border-medium);
+}
+
+.vision-container .side-panel > .hardware-panel::before,
+.vision-container .side-panel > .sentence-panel::before,
+.vision-container .side-panel > .training-panel::before {
+    display: none;
+}
+
+.panel-header-row {
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    background: rgba(145, 160, 178, 0.09);
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    font-size: 0.68rem;
+    letter-spacing: 0.025em;
+}
+
+.status-badge.connected {
+    background: var(--accent-emerald-subtle);
+    border-color: var(--accent-emerald-border);
+}
+
+.data-grid {
+    border-top-color: var(--border-subtle);
+}
+
+.data-box {
+    padding-top: 12px;
+    padding-bottom: 10px;
+}
+
+.data-label {
+    font-size: 0.71rem;
+    letter-spacing: 0.045em;
+}
+
+.data-value {
+    font-size: 1.18rem;
+    font-weight: 600;
+}
+
+/* Sentence composition should be a comfortable reading and editing area. */
+#sentence-display {
+    min-height: 108px;
+    max-height: 190px;
+    padding: 14px;
+    gap: 6px 10px;
+    background: rgba(8, 13, 21, 0.7);
+    border-color: rgba(159, 181, 214, 0.22);
+    border-radius: 10px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.16);
+}
+
+#sentence-display .word-tag {
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.sentence-instructions {
+    color: var(--text-tertiary);
+    font-size: 0.76rem;
+    line-height: 1.65;
+}
+
+.sentence-instructions kbd,
+.gesture-switch-hint kbd {
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+/* Controls: more generous targets without changing their existing IDs/actions. */
+.vision-container .btn {
+    min-height: 39px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+.vision-container select {
+    min-height: 39px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+}
+
+.vision-container .translation-section {
+    gap: 10px;
+    margin-top: 8px;
+    padding-top: 17px;
+}
+
+.training-panel .desc {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.footer-status {
+    margin-top: 20px;
+    padding: 12px 2px 0;
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+}
+
+.footer-item strong {
+    color: #c2cddb;
+}
+
+/* Visible keyboard focus is important for an accessible communication tool. */
+.app-container a:focus-visible,
+.app-container button:focus-visible,
+.app-container select:focus-visible,
+.app-container textarea:focus-visible,
+.app-container input:focus-visible {
+    outline: 2px solid var(--accent-primary-light);
+    outline-offset: 3px;
+}
+
+/* Avoid navigation/control overflow on small screens. */
+@media (max-width: 1024px) {
+    .vision-container {
+        gap: 22px;
+    }
+
+    .vision-container .side-panel > .hardware-panel,
+    .vision-container .side-panel > .sentence-panel,
+    .vision-container .side-panel > .training-panel {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-container {
+        padding-top: 10px;
+    }
+
+    .app-container > header.glass-panel {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .nav-menu {
+        justify-content: flex-start;
+        overflow-x: auto;
+        max-width: 100%;
+        scrollbar-width: thin;
+    }
+
+    .app-container > header .nav-link {
+        flex: 0 0 auto;
+        min-height: 38px;
+        padding: 8px 10px;
+    }
+
+    .mode-selector-bar {
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .mode-pills {
+        width: 100%;
+    }
+
+    .mode-btn {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+
+    .gesture-switch-hint {
+        flex-wrap: wrap;
+    }
+
+    .result-panel {
+        grid-template-columns: 60px minmax(0, 1fr);
+        padding: 13px;
+    }
+
+    .letter-display {
+        width: 60px;
+        height: 60px;
+    }
+
+    #detected-letter {
+        font-size: 2.1rem;
+    }
+
+    .vision-container .side-panel > .hardware-panel,
+    .vision-container .side-panel > .sentence-panel,
+    .vision-container .side-panel > .training-panel {
+        padding: 15px;
+    }
+
+    .sentence-controls,
+    .translation-controls {
+        gap: 8px;
+    }
+}
