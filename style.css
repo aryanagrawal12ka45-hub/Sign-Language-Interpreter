@@ -2780,3 +2780,250 @@ select option { color: var(--text-primary); background: var(--bg-surface-1); }
         gap: 8px;
     }
 }
+
+/* ======================================================================
+   Frontend Redesign — Pass 2
+   Interpreter-workspace polish and sidebar overflow fixes.
+   CSS-only: keep all existing HTML IDs, components, and JavaScript intact.
+   ====================================================================== */
+
+/* Prevent wide children from forcing the grid column beyond its bounds. */
+.vision-container,
+.vision-container > .left-column,
+.vision-container > .side-panel,
+.vision-container .side-panel > * {
+    min-width: 0;
+}
+
+/* Give the camera stage a calmer, more finished frame without covering the feed. */
+.camera-wrapper {
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse at 50% 42%, rgba(27, 42, 61, 0.34), transparent 58%),
+        #080d14;
+    border-color: rgba(159, 181, 214, 0.32);
+    box-shadow:
+        0 18px 44px rgba(0, 0, 0, 0.26),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.018);
+}
+
+.output_canvas {
+    display: block;
+    max-width: 100%;
+}
+
+.camera-wrapper.detecting {
+    border-color: rgba(139, 210, 176, 0.78);
+    box-shadow:
+        0 0 0 1px rgba(139, 210, 176, 0.12),
+        0 18px 44px rgba(0, 0, 0, 0.26);
+}
+
+/* Make the selected recognition mode and its companion hint behave as a group. */
+.mode-selector-bar {
+    min-width: 0;
+    align-items: center;
+    row-gap: 9px;
+}
+
+.mode-pills {
+    min-width: 0;
+    flex: 1 1 540px;
+}
+
+.gesture-switch-hint {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    line-height: 1.5;
+}
+
+/* Keep the detected sign prominent, with enough room for confidence text. */
+.result-panel {
+    min-width: 0;
+    grid-template-columns: 76px minmax(0, 1fr);
+}
+
+.detection-info,
+.confidence-bar-wrapper {
+    min-width: 0;
+}
+
+.confidence-bar-wrapper {
+    gap: 12px;
+}
+
+/* Right-column cards must contain their controls at every desktop width. */
+.sentence-panel {
+    min-width: 0;
+    gap: 12px;
+}
+
+#sentence-display {
+    width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.sentence-instructions {
+    overflow-wrap: anywhere;
+    font-size: 0.74rem;
+    line-height: 1.6;
+}
+
+/* The old single-row button group can exceed the sentence card's inner width.
+   A balanced 2 x 2 grid gives each action a reliable, touch-friendly target. */
+.sentence-panel .sentence-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+}
+
+.sentence-panel .sentence-controls > .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding: 8px 10px;
+    white-space: normal;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.sentence-panel .sentence-controls .danger,
+.sentence-panel .sentence-controls .success {
+    flex: initial;
+}
+
+/* Translation row: let the language selector absorb the available space. */
+.sentence-panel .translation-section {
+    min-width: 0;
+    margin-top: 4px;
+    padding-top: 16px;
+}
+
+.sentence-panel .translation-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 42px;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+}
+
+.sentence-panel .translation-controls select {
+    width: 100%;
+    min-width: 0;
+}
+
+.sentence-panel .translation-controls .btn {
+    min-width: 0;
+    padding-inline: 10px;
+}
+
+.sentence-panel .translation-controls #speak-translated-btn {
+    width: 42px;
+    padding-inline: 0;
+}
+
+#translated-output {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Hardware and calibration controls should never widen their parent cards. */
+.hardware-panel .hardware-controls,
+.training-panel .train-controls,
+.training-panel .storage-controls,
+.training-panel .stats {
+    min-width: 0;
+}
+
+.hardware-panel .hardware-controls .btn,
+.training-panel .train-controls > *,
+.training-panel .storage-controls .btn {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.training-panel .train-controls select {
+    width: 100%;
+}
+
+/* Slightly clearer section separation, without adding decorative clutter. */
+.vision-container .side-panel > .hardware-panel,
+.vision-container .side-panel > .sentence-panel,
+.vision-container .side-panel > .training-panel {
+    box-shadow:
+        0 12px 26px rgba(0, 0, 0, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.045);
+}
+
+.vision-container .side-panel > .sentence-panel {
+    border-color: rgba(159, 181, 214, 0.25);
+    background: linear-gradient(155deg, rgba(24, 33, 47, 0.98), rgba(15, 22, 32, 0.98));
+}
+
+@media (max-width: 1024px) {
+    .mode-pills {
+        flex-basis: 100%;
+    }
+
+    .gesture-switch-hint {
+        justify-content: flex-start;
+    }
+
+    .vision-container .side-panel > .sentence-panel {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 640px) {
+    .sentence-panel .sentence-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sentence-panel .translation-controls {
+        grid-template-columns: minmax(0, 1fr) auto 42px;
+    }
+
+    .camera-status-bar {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .camera-badge,
+    .camera-perf-select {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .sentence-panel .sentence-controls {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sentence-panel .translation-controls {
+        grid-template-columns: minmax(0, 1fr) 42px;
+    }
+
+    .sentence-panel .translation-controls #translate-btn {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+
+    .sentence-panel .translation-controls #speak-translated-btn {
+        grid-column: 2;
+        grid-row: 1;
+    }
+}
