@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=2.4.0">
+    <link rel="stylesheet" href="style.css?v=3.2.0">
 
     <!-- MediaPipe Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -106,10 +106,21 @@
                     <div class="camera-status-bar">
                         <div class="camera-badge"><span class="dot"></span> Camera input</div>
                         <div class="camera-badge" id="fps-badge">FPS: --</div>
+                        <select id="camera-device-select" class="camera-perf-select" title="Select Webcam Device" aria-label="Select Webcam Device">
+                            <option value="">Default Camera</option>
+                        </select>
                         <select id="camera-perf-mode" class="camera-perf-select" title="Performance Profile" aria-label="Performance Profile">
                             <option value="fast" selected>Fast (30+ FPS)</option>
                             <option value="hd">HD Precision (720p)</option>
                         </select>
+                        <button type="button" id="camera-mirror-btn" class="camera-ctrl-btn active" title="Toggle Mirror Mode" aria-label="Toggle Mirror Mode">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3m8-18h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/></svg>
+                            <span>Mirror</span>
+                        </button>
+                        <button type="button" id="camera-restart-btn" class="camera-ctrl-btn" title="Restart / Retry Camera" aria-label="Restart / Retry Camera">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                            <span>Retry</span>
+                        </button>
                     </div>
 
                     <!-- Gesture Hold Switch Indicator -->
@@ -123,6 +134,25 @@
                             <div class="hold-meter-fill" id="gesture-hold-meter"></div>
                         </div>
                         <span class="gesture-hold-text" id="gesture-hold-text">Switching Mode...</span>
+                    </div>
+
+                                        <!-- Camera Error & Diagnostic Overlay -->
+                    <div class="camera-error-overlay hidden" id="camera-error-overlay">
+                        <div class="camera-error-icon">⚠️</div>
+                        <h3 class="camera-error-title" id="camera-error-title">Camera Unavailable</h3>
+                        <p class="camera-error-desc" id="camera-error-desc">Unable to access your webcam.</p>
+                        <div class="camera-error-troubleshoot" id="camera-error-troubleshoot">
+                            <strong>Quick Fix Checklist:</strong>
+                            <ul id="camera-troubleshoot-list">
+                                <li>Check browser permissions (click 🔒 Lock or 🎥 Camera icon in address bar -> Allow).</li>
+                                <li>Ensure no other application (Zoom, Teams, Skype, OBS) is using the webcam.</li>
+                                <li>If multiple cameras exist, select a different device from the dropdown.</li>
+                            </ul>
+                        </div>
+                        <div class="camera-error-actions">
+                            <button type="button" id="camera-retry-action-btn" class="btn primary sm">Retry Camera</button>
+                            <button type="button" id="camera-dismiss-err-btn" class="btn secondary sm">Dismiss</button>
+                        </div>
                     </div>
 
                     <!-- Loading / Initialization Overlay -->
@@ -757,8 +787,9 @@
                         <button type="button" class="dict-tab" data-dict-cat="alphabet" role="tab" aria-selected="false">Letters A–Z (26)</button>
                         <button type="button" class="dict-tab" data-dict-cat="numbers" role="tab" aria-selected="false">Numbers 0–9 (10)</button>
                         <button type="button" class="dict-tab" data-dict-cat="signs" role="tab" aria-selected="false">Common Signs (10)</button>
+                        <button type="button" class="dict-tab" data-dict-cat="chart" role="tab" aria-selected="false" style="color: var(--accent-primary-light);">Full Reference Chart</button>
                     </div>
-                    <div class="dict-search-box">
+                    <div class="dict-search-box" id="dict-search-container">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -769,7 +800,42 @@
 
                 <!-- Dictionary Grid of Cards -->
                 <div class="dict-grid scroll-container" id="dict-cards-grid">
-                    <!-- Cards injected dynamically by script.js -->
+                    <!-- Cards injected dynamically by dictionary.js -->
+                </div>
+
+                <!-- Reference Chart View -->
+                <div class="dict-chart-view scroll-container" id="dict-chart-view" style="display: none; padding: 20px; overflow-y: auto;">
+                    <!-- Full Alphabet Chart -->
+                    <div style="max-width: 940px; margin: 0 auto 24px; background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h3 style="font-size: 1.15rem; color: var(--text-primary); margin: 0; font-weight: 700;">American Sign Language Alphabet Chart (A–Z)</h3>
+                                <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 3px 0 0;">Visual finger-spelling formation reference for all 26 manual alphabet letters.</p>
+                            </div>
+                            <a href="assets/signs/asl_alphabet_reference.jpg" target="_blank" class="btn secondary" style="font-size: 0.75rem; text-decoration: none; padding: 6px 14px;">
+                                Open Full Size
+                            </a>
+                        </div>
+                        <div style="background: #ffffff; border-radius: var(--radius-md); padding: 10px; display: flex; justify-content: center;">
+                            <img src="assets/signs/asl_alphabet_reference.jpg" alt="ASL Full Alphabet Reference Chart" style="max-width: 100%; height: auto; display: block; border-radius: 4px;" />
+                        </div>
+                    </div>
+
+                    <!-- Full Numbers Chart -->
+                    <div style="max-width: 940px; margin: 0 auto; background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h3 style="font-size: 1.15rem; color: var(--text-primary); margin: 0; font-weight: 700;">American Sign Language Numbers Chart (0–9)</h3>
+                                <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 3px 0 0;">Standard manual counting hand shapes from 0 through 9.</p>
+                            </div>
+                            <a href="assets/signs/asl_numbers_reference.png" target="_blank" class="btn secondary" style="font-size: 0.75rem; text-decoration: none; padding: 6px 14px;">
+                                Open Full Size
+                            </a>
+                        </div>
+                        <div style="background: #ffffff; border-radius: var(--radius-md); padding: 10px; display: flex; justify-content: center;">
+                            <img src="assets/signs/asl_numbers_reference.png" alt="ASL Numbers Reference Chart" style="max-width: 100%; height: auto; display: block; border-radius: 4px;" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1246,7 +1312,7 @@
     <script src="two_way.js"></script>
     <!-- Machine Learning Runtime -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script>
-    <script src="dictionary.js"></script>
+    <script src="dictionary.js?v=3.2.0"></script>
     <script src="predictive.js"></script>
     <script src="script.js?v=2.6.0"></script>
 </body>
