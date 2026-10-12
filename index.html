@@ -8,13 +8,13 @@
     <meta name="description"
         content="Real-time American Sign Language detection and multi-language translation powered by MediaPipe, TensorFlow.js, and IoT Smart Glove integration.">
 
-    <!-- Typography -->
+    <!-- Typography: Plus Jakarta Sans, Inter, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=3.2.0">
+    <link rel="stylesheet" href="style.css?v=4.0.0">
 
     <!-- MediaPipe Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -30,11 +30,11 @@
     <div class="app-container">
 
         <!-- ==================== HEADER ==================== -->
-        <header class="glass-panel">
+        <header class="app-header">
             <div class="header-inner">
-                <div class="header-left">
-                    <div class="brand-badge">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <a href="landing.html" class="header-left brand-link" title="Return to Overview">
+                    <div class="brand-mark">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
                             <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
                             <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
@@ -42,44 +42,49 @@
                         </svg>
                     </div>
                     <div class="header-titles">
-                        <h1>ASL <span class="highlight">Interpreter</span> <span class="version-pill">v2.4</span></h1>
-                        <p>Alphabet detection and sentence output</p>
+                        <div class="brand-title-row">
+                            <h1 class="brand-title">Sign Language <span class="brand-title-accent">Studio</span></h1>
+                            <span class="engine-badge"><span class="engine-status-dot"></span> Neural Vision v4.0</span>
+                        </div>
+                        <p class="brand-caption">Computer Vision Lab &bull; Real-time ASL alphabet recognition &amp; continuous interpreter</p>
                     </div>
-                </div>
+                </a>
                 <nav class="nav-menu" aria-label="Primary Navigation">
+                    <a href="landing.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Overview</span>
+                    </a>
                     <a href="index.html" class="nav-link active" aria-current="page">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                             <circle cx="12" cy="13" r="4"></circle>
                         </svg>
-                        <span>Alphabet Detector</span>
+                        <span>Detector</span>
                     </a>
                     <a href="quiz.html" class="nav-link">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                            <path d="M4 22h16"></path>
-                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                         </svg>
-                        <span>Practice Academy</span>
+                        <span>Practice Lab</span>
                     </a>
                     <a href="chat.html" class="nav-link">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
-                        <span>Gesture assistant</span>
+                        <span>Gesture Assistant</span>
                     </a>
-                    <button id="open-dictionary-btn" class="nav-link" type="button" aria-haspopup="dialog" style="background: transparent; border: 0;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <button id="open-dictionary-btn" class="nav-link nav-btn-modal" type="button" aria-haspopup="dialog">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                         </svg>
-                        <span>Sign Dictionary</span>
+                        <span>Sign Library</span>
                     </button>
-                    <button id="open-two-way-btn" class="nav-link" type="button" aria-haspopup="dialog" style="background: transparent; border: 0;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <button id="open-two-way-btn" class="nav-link nav-btn-modal" type="button" aria-haspopup="dialog">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
                             <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -787,7 +792,7 @@
                         <button type="button" class="dict-tab" data-dict-cat="alphabet" role="tab" aria-selected="false">Letters A–Z (26)</button>
                         <button type="button" class="dict-tab" data-dict-cat="numbers" role="tab" aria-selected="false">Numbers 0–9 (10)</button>
                         <button type="button" class="dict-tab" data-dict-cat="signs" role="tab" aria-selected="false">Common Signs (10)</button>
-                        <button type="button" class="dict-tab" data-dict-cat="chart" role="tab" aria-selected="false" style="color: var(--accent-primary-light);">Full Reference Chart</button>
+                        <button type="button" class="dict-tab" data-dict-cat="chart" role="tab" aria-selected="false">Reference Chart</button>
                     </div>
                     <div class="dict-search-box" id="dict-search-container">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

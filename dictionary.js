@@ -97,7 +97,7 @@ function injectDictionaryModalHTML() {
                     <button type="button" class="dict-tab" data-dict-cat="alphabet" role="tab" aria-selected="false">Letters A–Z (26)</button>
                     <button type="button" class="dict-tab" data-dict-cat="numbers" role="tab" aria-selected="false">Numbers 0–9 (10)</button>
                     <button type="button" class="dict-tab" data-dict-cat="signs" role="tab" aria-selected="false">Common Signs (10)</button>
-                    <button type="button" class="dict-tab" data-dict-cat="chart" role="tab" aria-selected="false" style="color: var(--accent-primary-light);">Full Reference Chart</button>
+                    <button type="button" class="dict-tab" data-dict-cat="chart" role="tab" aria-selected="false">Reference Chart</button>
                 </div>
                 <div class="dict-search-box" id="dict-search-container">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -175,7 +175,8 @@ function initSignDictionary() {
     if (!lightboxEl) {
         lightboxEl = document.createElement('div');
         lightboxEl.id = 'dict-lightbox-modal';
-        lightboxEl.className = 'dict-lightbox';
+        lightboxEl.className = 'dict-lightbox-modal';
+        lightboxEl.style.display = 'none'; // Guard against any flash or unstyled render
         lightboxEl.innerHTML = `
             <div class="dict-lightbox-card">
                 <button type="button" class="dict-lightbox-close" id="dict-lightbox-close-btn" aria-label="Close Preview">
@@ -200,7 +201,10 @@ function initSignDictionary() {
         `;
         document.body.appendChild(lightboxEl);
 
-        const closeLightbox = () => lightboxEl.classList.remove('open');
+        const closeLightbox = () => {
+            lightboxEl.classList.remove('open');
+            lightboxEl.style.display = 'none';
+        };
         lightboxEl.querySelector('#dict-lightbox-close-btn').addEventListener('click', closeLightbox);
         lightboxEl.addEventListener('click', (e) => {
             if (e.target === lightboxEl) closeLightbox();
@@ -231,6 +235,7 @@ function initSignDictionary() {
         if (badge) badge.textContent = item.badge;
         if (id) id.textContent = item.id;
 
+        lightboxEl.style.display = 'flex';
         lightboxEl.classList.add('open');
     }
 

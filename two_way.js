@@ -523,6 +523,15 @@ function initTwoWayUI() {
         });
     }
 
+    // Auto-open modal if URL hash is #two-way or if room param is present
+    function checkTwoWayUrlTrigger() {
+        if (window.location.hash === '#two-way' || window.location.search.includes('modal=two-way') || window.location.search.includes('room=')) {
+            openModal();
+        }
+    }
+    checkTwoWayUrlTrigger();
+    window.addEventListener('hashchange', checkTwoWayUrlTrigger);
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal && modal.classList.contains('open')) {
             closeModal();

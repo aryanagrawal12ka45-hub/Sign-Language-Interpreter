@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>Sign Language Studio — Real-Time Sign Language Intelligence</title>
+    <meta name="description" content="Production-grade 21-landmark neural computer vision, sub-15ms edge inference, and bidirectional WebRTC communication for American Sign Language.">
+
+    <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Global Design System -->
+    <link rel="stylesheet" href="style.css?v=4.0.0">
+</head>
+
+<body class="landing-body">
+    <!-- Ambient 60fps Neural Constellation Canvas -->
+    <canvas id="neural-bg-canvas"></canvas>
+
+    <!-- Sub-pixel Grid & Ambient Horizon Overlay -->
+    <div class="landing-grid-overlay" aria-hidden="true"></div>
+
+    <!-- Single-Viewport Non-Scrollable Content Shell -->
+    <div class="landing-viewport">
+
+        <!-- ==================== STUDIO HEADER ==================== -->
+        <header class="app-header landing-header" role="banner">
+            <div class="header-inner">
+                <a href="landing.html" class="header-left brand-link" title="Sign Language Studio">
+                    <div class="brand-mark">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                            <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                        </svg>
+                    </div>
+                    <div class="header-titles">
+                        <div class="brand-title-row">
+                            <h1 class="brand-title">Sign Language <span class="brand-title-accent">Studio</span></h1>
+                            <span class="engine-badge"><span class="engine-status-dot"></span> Research Lab v4.0</span>
+                        </div>
+                        <p class="brand-caption">Neural Vision &bull; Real-time ASL recognition &amp; multimodal accessibility</p>
+                    </div>
+                </a>
+
+                <nav class="nav-menu" aria-label="Primary Navigation">
+                    <a href="landing.html" class="nav-link active" aria-current="page">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Overview</span>
+                    </a>
+                    <a href="index.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span>Detector</span>
+                    </a>
+                    <a href="quiz.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>Practice Lab</span>
+                    </a>
+                    <a href="chat.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>Gesture Assistant</span>
+                    </a>
+                    <a href="index.html#two-way" class="nav-link nav-btn-modal" id="open-two-way-btn" title="Open Two-Way Speech & Sign Room">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Two-Way Room</span>
+                    </a>
+                    <button id="open-dictionary-btn" class="nav-link nav-btn-modal" type="button" aria-haspopup="dialog">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span>Sign Library</span>
+                    </button>
+                    <a href="index.html" class="btn primary sm" style="margin-left: 6px;">
+                        <span>Launch Studio</span>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ==================== HERO STAGE (NON-SCROLL SPLIT) ==================== -->
+        <main class="landing-hero-stage">
+
+            <!-- LEFT: Core Narrative & Actions -->
+            <div class="landing-left">
+                <div class="landing-status-chip">
+                    <span class="engine-status-dot" style="background: var(--accent-emerald);"></span>
+                    <span>Neural Hand Landmark Pipeline &bull; VisionOS v4.0</span>
+                </div>
+
+                <h1 class="landing-title">
+                    <span>Real-Time Sign Language</span><br>
+                    <span class="text-gradient-silver">Intelligence for Modern Teams.</span>
+                </h1>
+
+                <p class="landing-subtitle">
+                    Enterprise-grade 21-landmark neural computer vision, sub-15ms on-device inference, and bidirectional WebRTC communication. Bridging deaf and hearing interaction from first principles.
+                </p>
+
+                <div class="landing-cta-group">
+                    <a href="index.html" class="btn primary" id="cta-detector-btn">
+                        <span>Launch Studio Detector</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+
+                    <a href="quiz.html" class="btn secondary" id="cta-quiz-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>Practice Lab</span>
+                    </a>
+
+                    <a href="index.html#two-way" class="btn secondary" id="cta-two-way-btn">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Two-Way Room</span>
+                    </a>
+                </div>
+
+                <!-- Technical Specification Metrics -->
+                <div class="landing-specs-row">
+                    <div class="landing-spec-item">
+                        <span class="landing-spec-val">21 Points</span>
+                        <span class="landing-spec-lbl">3D Landmarks</span>
+                    </div>
+                    <div class="landing-spec-item">
+                        <span class="landing-spec-val">&lt; 14 ms</span>
+                        <span class="landing-spec-lbl">Edge Latency</span>
+                    </div>
+                    <div class="landing-spec-item">
+                        <span class="landing-spec-val">46 Classes</span>
+                        <span class="landing-spec-lbl">Signs &amp; Gestures</span>
+                    </div>
+                    <div class="landing-spec-item">
+                        <span class="landing-spec-val">100% Client</span>
+                        <span class="landing-spec-lbl">Zero Data Ingestion</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Research Dossier Technical Showcase Card -->
+            <div class="landing-right">
+                <div class="landing-showcase-card">
+                    <div class="landing-card-header">
+                        <div class="landing-card-title">
+                            <span class="engine-status-dot" style="background: var(--accent-emerald);"></span>
+                            <span>Topology Matrix &bull; MediaPipe Hands</span>
+                        </div>
+                        <span class="config-label" style="font-size: 0.68rem; padding: 2px 7px;">60 FPS Active</span>
+                    </div>
+
+                    <!-- SVG 3D Hand Articulated Skeleton -->
+                    <div class="landing-hand-canvas-wrap">
+                        <svg class="landing-hand-svg" viewBox="0 0 320 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Palm Bones -->
+                            <path d="M160 190 L110 135 L135 90 L160 85 L185 92 L210 140 Z" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" stroke-dasharray="3 3"/>
+                            
+                            <!-- Finger Rays -->
+                            <!-- Thumb -->
+                            <polyline points="160 190 120 160 90 145 70 130 55 115" stroke="rgba(228,228,231,0.4)" stroke-width="1.5"/>
+                            <!-- Index -->
+                            <polyline points="160 190 135 125 125 85 120 50 115 25" stroke="rgba(228,228,231,0.55)" stroke-width="1.5"/>
+                            <!-- Middle -->
+                            <polyline points="160 190 160 120 160 75 160 40 160 15" stroke="rgba(228,228,231,0.55)" stroke-width="1.5"/>
+                            <!-- Ring -->
+                            <polyline points="160 190 185 125 190 80 195 50 200 28" stroke="rgba(228,228,231,0.5)" stroke-width="1.5"/>
+                            <!-- Pinky -->
+                            <polyline points="160 190 210 140 225 105 235 80 245 60" stroke="rgba(228,228,231,0.4)" stroke-width="1.5"/>
+
+                            <!-- Landmark Nodes (21 Keypoints) -->
+                            <!-- Wrist (0) -->
+                            <circle cx="160" cy="190" r="4.5" fill="#f4f4f5" stroke="#10b981" stroke-width="2"/>
+                            
+                            <!-- Thumb (1-4) -->
+                            <circle cx="120" cy="160" r="3" fill="#e4e4e7"/>
+                            <circle cx="90" cy="145" r="3" fill="#e4e4e7"/>
+                            <circle cx="70" cy="130" r="3" fill="#e4e4e7"/>
+                            <circle cx="55" cy="115" r="4" fill="#10b981"/>
+
+                            <!-- Index (5-8) -->
+                            <circle cx="135" cy="125" r="3" fill="#e4e4e7"/>
+                            <circle cx="125" cy="85" r="3" fill="#e4e4e7"/>
+                            <circle cx="120" cy="50" r="3" fill="#e4e4e7"/>
+                            <circle cx="115" cy="25" r="4" fill="#10b981"/>
+
+                            <!-- Middle (9-12) -->
+                            <circle cx="160" cy="120" r="3" fill="#e4e4e7"/>
+                            <circle cx="160" cy="75" r="3" fill="#e4e4e7"/>
+                            <circle cx="160" cy="40" r="3" fill="#e4e4e7"/>
+                            <circle cx="160" cy="15" r="4" fill="#10b981"/>
+
+                            <!-- Ring (13-16) -->
+                            <circle cx="185" cy="125" r="3" fill="#e4e4e7"/>
+                            <circle cx="190" cy="80" r="3" fill="#e4e4e7"/>
+                            <circle cx="195" cy="50" r="3" fill="#e4e4e7"/>
+                            <circle cx="200" cy="28" r="4" fill="#10b981"/>
+
+                            <!-- Pinky (17-20) -->
+                            <circle cx="210" cy="140" r="3" fill="#e4e4e7"/>
+                            <circle cx="225" cy="105" r="3" fill="#e4e4e7"/>
+                            <circle cx="235" cy="80" r="3" fill="#e4e4e7"/>
+                            <circle cx="245" cy="60" r="4" fill="#10b981"/>
+                        </svg>
+                    </div>
+
+                    <!-- Live Capabilities Matrix -->
+                    <div class="landing-features-matrix">
+                        <div class="landing-matrix-box">
+                            <span class="landing-matrix-label">Neural Engine</span>
+                            <span class="landing-matrix-value">TensorFlow.js WebGL</span>
+                        </div>
+                        <div class="landing-matrix-box">
+                            <span class="landing-matrix-label">Hardware Fusion</span>
+                            <span class="landing-matrix-value">BLE Glove Telemetry</span>
+                        </div>
+                        <div class="landing-matrix-box">
+                            <span class="landing-matrix-label">Two-Way Room</span>
+                            <span class="landing-matrix-value">WebRTC Peer-to-Peer</span>
+                        </div>
+                        <div class="landing-matrix-box">
+                            <span class="landing-matrix-label">OS Desktop Bridge</span>
+                            <span class="landing-matrix-value">PyAutoGUI Controller</span>
+                        </div>
+                    </div>
+
+                    <a href="index.html" class="landing-card-action">
+                        <span>Launch Studio Detector &bull; Live Camera Feed</span>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- ==================== STUDIO FOOTER STRIP ==================== -->
+        <footer class="landing-footer-strip" role="contentinfo">
+            <div>
+                <span>Sign Language Studio &bull; Independent Accessibility Research</span>
+            </div>
+            <div class="landing-footer-chips">
+                <span class="landing-footer-chip">
+                    <span class="engine-status-dot" style="width: 5px; height: 5px; background: var(--accent-emerald);"></span>
+                    MediaPipe 21-pt
+                </span>
+                <span>&bull;</span>
+                <span class="landing-footer-chip">TensorFlow.js</span>
+                <span>&bull;</span>
+                <span class="landing-footer-chip">WebRTC P2P</span>
+                <span>&bull;</span>
+                <span class="landing-footer-chip">Web Bluetooth</span>
+            </div>
+            <div>
+                <span class="mono-code" style="font-size: 0.68rem;">v4.0.0-prod &bull; Nominal</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Background Animation & Global Dictionary Modal -->
+    <script src="landing_bg.js"></script>
+    <script src="dictionary.js?v=4.0.0"></script>
+</body>
+
+</html>

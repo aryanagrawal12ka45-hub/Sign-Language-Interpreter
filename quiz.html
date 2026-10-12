@@ -8,13 +8,13 @@
     <meta name="description"
         content="Interactive sign language learning game and real-time speed quiz with pose validation powered by MediaPipe and TensorFlow.js.">
 
-    <!-- Typography -->
+    <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=3.2.0">
+    <link rel="stylesheet" href="style.css?v=4.0.0">
 
     <!-- MediaPipe Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -30,55 +30,68 @@
     <div class="app-container">
 
         <!-- ==================== HEADER ==================== -->
-        <header class="glass-panel">
+        <header class="app-header">
             <div class="header-inner">
-                <div class="header-left">
-                    <div class="brand-badge">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                            <path d="M4 22h16"></path>
-                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                <a href="landing.html" class="header-left brand-link" title="Return to Overview">
+                    <div class="brand-mark">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                            <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
                         </svg>
                     </div>
                     <div class="header-titles">
-                        <h1>ASL <span class="highlight">Academy</span> <span class="version-pill">v2.4</span></h1>
-                        <p>Interactive gesture practice & real-time speed quiz</p>
+                        <div class="brand-title-row">
+                            <h1 class="brand-title">Sign Language <span class="brand-title-accent">Studio</span></h1>
+                            <span class="engine-badge"><span class="engine-status-dot"></span> Neural Vision v4.0</span>
+                        </div>
+                        <p class="brand-caption">Practice Laboratory &bull; Real-time gesture pose verification &amp; speed evaluation</p>
                     </div>
-                </div>
+                </a>
+
                 <nav class="nav-menu" aria-label="Primary Navigation">
+                    <a href="landing.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Overview</span>
+                    </a>
                     <a href="index.html" class="nav-link">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                             <circle cx="12" cy="13" r="4"></circle>
                         </svg>
-                        <span>Alphabet Detector</span>
+                        <span>Detector</span>
                     </a>
                     <a href="quiz.html" class="nav-link active" aria-current="page">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                            <path d="M4 22h16"></path>
-                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                         </svg>
-                        <span>Practice Academy</span>
+                        <span>Practice Lab</span>
                     </a>
                     <a href="chat.html" class="nav-link">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
-                        <span>Gesture assistant</span>
+                        <span>Gesture Assistant</span>
                     </a>
-                    <button id="open-dictionary-btn" class="nav-link" type="button" aria-haspopup="dialog" style="background: transparent; border: 0; cursor: pointer;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <a href="index.html#two-way" class="nav-link nav-btn-modal" id="open-two-way-btn" title="Open Two-Way Speech &amp; Sign Room">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Two-Way Room</span>
+                    </a>
+                    <button id="open-dictionary-btn" class="nav-link nav-btn-modal" type="button" aria-haspopup="dialog">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                         </svg>
-                        <span>Sign Dictionary</span>
+                        <span>Sign Library</span>
                     </button>
                 </nav>
             </div>
@@ -87,47 +100,49 @@
         <!-- ==================== MAIN WORKSPACE ==================== -->
         <main class="vision-container">
 
-            <!-- ===== LEFT COLUMN (Webcam & Target HUD) ===== -->
+            <!-- ===== LEFT COLUMN (Vision Viewport & Pose Target) ===== -->
             <div class="left-column">
 
                 <!-- Camera Feed Viewport -->
-                <div class="camera-wrapper glass-panel" id="camera-container">
+                <div class="camera-wrapper" id="camera-container">
                     <video id="webcam" autoplay playsinline muted></video>
                     <canvas class="output_canvas" id="output_canvas"></canvas>
 
                     <!-- Camera Telemetry Overlay -->
                     <div class="camera-status-bar">
-                        <div class="camera-badge"><span class="dot"></span> Camera Input</div>
+                        <div class="camera-badge"><span class="dot"></span> Camera Stream</div>
                         <div class="camera-badge" id="fps-badge">FPS: --</div>
                         <select id="camera-device-select" class="camera-perf-select" title="Select Webcam Device" aria-label="Select Webcam Device">
-                            <option value="">Default Camera</option>
+                            <option value="">Default Capture Device</option>
                         </select>
                         <button type="button" id="camera-mirror-btn" class="camera-ctrl-btn active" title="Toggle Mirror Mode" aria-label="Toggle Mirror Mode">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3m8-18h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/></svg>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3m8-18h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/></svg>
                             <span>Mirror</span>
                         </button>
                         <button type="button" id="camera-restart-btn" class="camera-ctrl-btn" title="Restart / Retry Camera" aria-label="Restart / Retry Camera">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
                             <span>Retry</span>
                         </button>
                     </div>
 
-                                        <!-- Camera Error & Diagnostic Overlay -->
+                    <!-- Camera Error & Diagnostic Overlay -->
                     <div class="camera-error-overlay hidden" id="camera-error-overlay">
-                        <div class="camera-error-icon">⚠️</div>
-                        <h3 class="camera-error-title" id="camera-error-title">Camera Unavailable</h3>
-                        <p class="camera-error-desc" id="camera-error-desc">Unable to access your webcam.</p>
+                        <div class="camera-error-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        </div>
+                        <h3 class="camera-error-title" id="camera-error-title">Capture Device Inaccessible</h3>
+                        <p class="camera-error-desc" id="camera-error-desc">Unable to establish video stream from local camera device.</p>
                         <div class="camera-error-troubleshoot" id="camera-error-troubleshoot">
-                            <strong>Quick Fix Checklist:</strong>
+                            <strong>Diagnostic Checklist:</strong>
                             <ul id="camera-troubleshoot-list">
-                                <li>Check browser permissions (click 🔒 Lock or 🎥 Camera icon in address bar -> Allow).</li>
-                                <li>Ensure no other application (Zoom, Teams, Skype, OBS) is using the webcam.</li>
-                                <li>If multiple cameras exist, select a different device from the dropdown.</li>
+                                <li>Verify browser camera permissions in address bar settings.</li>
+                                <li>Ensure other applications (Teams, Zoom, Discord, OBS) have released the device lock.</li>
+                                <li>Select an alternate input device from the selector menu.</li>
                             </ul>
                         </div>
                         <div class="camera-error-actions">
-                            <button type="button" id="camera-simulate-btn" class="btn primary sm" style="background: linear-gradient(135deg, #10b981, #059669); border: 0;">🎮 Start Simulation Mode</button>
-                            <button type="button" id="camera-retry-action-btn" class="btn secondary sm">Retry Camera</button>
+                            <button type="button" id="camera-simulate-btn" class="btn primary sm">Enable Virtual Simulator</button>
+                            <button type="button" id="camera-retry-action-btn" class="btn secondary sm">Reconnect Camera</button>
                             <button type="button" id="camera-dismiss-err-btn" class="btn secondary sm">Dismiss</button>
                         </div>
                     </div>
@@ -135,22 +150,23 @@
                     <!-- Loading / Initialization Overlay -->
                     <div class="status-overlay" id="status-overlay">
                         <div class="loader"></div>
-                        <p id="status-text">Preparing camera and gesture engine…</p>
+                        <p id="status-text">Initializing neural landmark pipeline &amp; camera hardware…</p>
                     </div>
                 </div>
 
                 <!-- Target Sign & Pose Hold HUD -->
-                <div class="quiz-target-hud glass-panel" id="quiz-target-hud">
+                <div class="quiz-target-hud" id="quiz-target-hud">
                     <div class="quiz-target-card" id="quiz-target-card">
                         <!-- Circular Hold Progress SVG -->
                         <svg class="hold-ring-svg" viewBox="0 0 140 140">
                             <circle class="hold-ring-bg" cx="70" cy="70" r="64"></circle>
                             <circle class="hold-ring-progress" id="hold-ring-progress" cx="70" cy="70" r="64"></circle>
                         </svg>
-                        <span class="target-badge">Target</span>
+                        <span class="target-badge">Target Sign</span>
                         <span class="target-glyph" id="target-glyph">A</span>
                         <span class="target-subtext" id="target-subtext">Letter A</span>
                     </div>
+
                     <div class="target-details">
                         <div class="target-instructions-title">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -158,12 +174,12 @@
                                 <line x1="12" y1="16" x2="12" y2="12"></line>
                                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
                             </svg>
-                            <span>Pose Instructions</span>
+                            <span>Pose Specification</span>
                         </div>
                         <div class="target-instructions-text" id="target-hint">
                             Make a closed fist with thumb resting vertically along the side of index finger.
                         </div>
-                        <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+                        <div class="target-meta-row">
                             <span class="target-hints-box" id="target-category-badge">Category: Alphabet</span>
                             <span class="target-hints-box" id="target-hold-status">Hold pose for 0.4s</span>
                         </div>
@@ -172,17 +188,17 @@
 
             </div>
 
-            <!-- ===== RIGHT COLUMN (Academy Hub & Telemetry) ===== -->
+            <!-- ===== RIGHT COLUMN (Integrated Telemetry & Controls) ===== -->
             <div class="side-panel">
 
-                <!-- Academy Scorecard & Live HUD -->
-                <div class="sentence-panel glass-panel">
+                <!-- Unified Telemetry Deck -->
+                <div class="telemetry-deck">
                     <div class="panel-header-row">
                         <h2 class="section-title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                             </svg>
-                            <span>Live Performance</span>
+                            <span>Session Telemetry</span>
                         </h2>
                         <span id="quiz-status-badge" class="status-badge connected">Practice Mode</span>
                     </div>
@@ -191,12 +207,12 @@
                     <div class="quiz-stats-grid">
                         <div class="quiz-stat-card">
                             <span class="quiz-stat-label">Score</span>
-                            <span class="quiz-stat-value highlight-blue" id="quiz-score">0</span>
+                            <span class="quiz-stat-value" id="quiz-score">0</span>
                         </div>
                         <div class="quiz-stat-card">
                             <span class="quiz-stat-label">Streak</span>
                             <div class="streak-container">
-                                <svg class="flame-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="flame-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
                                 </svg>
                                 <span class="quiz-stat-value highlight-green" id="quiz-streak">0</span>
@@ -209,25 +225,25 @@
                     </div>
 
                     <!-- Timer Bar for Speed Run -->
-                    <div id="quiz-timer-container" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 2px;">
-                            <span>Time Remaining</span>
-                            <span id="quiz-timer-text" style="font-family: var(--font-mono); font-weight: 600; color: var(--text-primary);">60s</span>
+                    <div id="quiz-timer-container" class="quiz-timer-block" style="display: none;">
+                        <div class="timer-meta-row">
+                            <span>Round Countdown</span>
+                            <span id="quiz-timer-text" class="timer-value">60s</span>
                         </div>
                         <div class="timer-track-quiz">
                             <div class="timer-fill-quiz" id="quiz-timer-fill" style="width: 100%;"></div>
                         </div>
                     </div>
 
-                    <!-- Action Controls -->
+                    <!-- Primary Action Controls -->
                     <div class="sentence-controls">
-                        <button id="primary-action-btn" class="btn primary">
+                        <button id="primary-action-btn" class="btn primary" type="button">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
                             </svg>
                             <span id="primary-action-text">Start Speed Run</span>
                         </button>
-                        <button id="skip-target-btn" class="btn secondary">
+                        <button id="skip-target-btn" class="btn secondary" type="button">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="5 4 15 12 5 20 5 4"></polygon>
                                 <line x1="19" y1="5" x2="19" y2="19"></line>
@@ -236,42 +252,13 @@
                         </button>
                     </div>
 
-                    <!-- Camera-Free Testing Mode Controls -->
-                    <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 0.70rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); font-weight: 700;">
-                                Camera-Free Testing Mode
-                            </span>
-                            <span style="font-size: 0.68rem; color: var(--accent-emerald); font-weight: 600;">Shortcuts: [Space] Match, [W] Wrong</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <button type="button" id="sim-correct-btn" class="btn secondary sm" style="border-color: rgba(16, 185, 129, 0.4); color: var(--accent-emerald);">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Simulate Match</span>
-                            </button>
-                            <button type="button" id="sim-wrong-btn" class="btn secondary sm" style="border-color: rgba(244, 63, 94, 0.4); color: var(--accent-rose);">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                <span>Simulate Wrong</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Challenge Configuration -->
-                <div class="training-panel glass-panel">
-                    <h2 class="section-title">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                        </svg>
-                        <span>Challenge Setup</span>
-                    </h2>
-
+                    <!-- Challenge Configuration -->
+                    <div class="telemetry-section-divider"></div>
                     <div class="quiz-config-section">
                         <!-- Mode Selector -->
                         <div class="config-group">
-                            <span class="config-label">Practice Type</span>
-                            <div class="pill-group" id="quiz-mode-pills">
+                            <span class="config-label">Practice Mode</span>
+                            <div class="pill-group segmented-control" id="quiz-mode-pills" role="radiogroup" aria-label="Practice Mode">
                                 <button type="button" class="pill-btn active" data-qmode="practice">Free Practice</button>
                                 <button type="button" class="pill-btn" data-qmode="speed">60s Speed Run</button>
                             </div>
@@ -280,71 +267,75 @@
                         <!-- Category Selector -->
                         <div class="config-group">
                             <span class="config-label">Vocabulary Category</span>
-                            <div class="pill-group" id="quiz-category-pills">
-                                <button type="button" class="pill-btn active" data-qcat="all">Mixed All</button>
+                            <div class="pill-group segmented-control" id="quiz-category-pills" role="radiogroup" aria-label="Vocabulary Category">
+                                <button type="button" class="pill-btn active" data-qcat="all">All Signs</button>
                                 <button type="button" class="pill-btn" data-qcat="alphabet">Letters (A–Z)</button>
                                 <button type="button" class="pill-btn" data-qcat="numbers">Numbers (0–9)</button>
-                                <button type="button" class="pill-btn" data-qcat="signs">Common Signs</button>
+                                <button type="button" class="pill-btn" data-qcat="signs">Gestures</button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Career Records & Progress -->
-                <div class="hardware-panel glass-panel">
-                    <h2 class="section-title">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="8" r="7"></circle>
-                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                        </svg>
-                        <span>Personal Records</span>
-                    </h2>
-                    <div class="data-grid">
-                        <div class="data-box">
-                            <div class="data-header">
-                                <span class="data-label">High Score</span>
-                            </div>
-                            <span class="data-value" id="record-high-score">0</span>
+                    <!-- Career Records Matrix -->
+                    <div class="telemetry-section-divider"></div>
+                    <div class="records-section">
+                        <div class="records-header">
+                            <span class="config-label">Personal Records</span>
                         </div>
-                        <div class="data-box">
-                            <div class="data-header">
-                                <span class="data-label">Best Streak</span>
-                            </div>
-                            <span class="data-value" id="record-best-streak">0</span>
-                        </div>
-                    </div>
-                    <div class="debug-divider">
                         <div class="data-grid">
-                            <div class="data-box small">
+                            <div class="data-box">
+                                <span class="data-label">High Score</span>
+                                <span class="data-value" id="record-high-score">0</span>
+                            </div>
+                            <div class="data-box">
+                                <span class="data-label">Best Streak</span>
+                                <span class="data-value" id="record-best-streak">0</span>
+                            </div>
+                            <div class="data-box">
                                 <span class="data-label">Signs Solved</span>
                                 <span class="data-value" id="record-total-signs">0</span>
                             </div>
-                            <div class="data-box small">
-                                <span class="data-label">Speed Runs</span>
+                            <div class="data-box">
+                                <span class="data-label">Speed Rounds</span>
                                 <span class="data-value" id="record-total-rounds">0</span>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Virtual Testing / Simulation Deck -->
+                    <div class="telemetry-section-divider"></div>
+                    <div class="sim-utility-deck">
+                        <div class="sim-header-row">
+                            <span class="config-label">Simulation &amp; Shortcuts</span>
+                            <span class="sim-shortcut-badge">[Space] Match · [W] Wrong · [S] Skip</span>
+                        </div>
+                        <div class="sim-btn-row">
+                            <button type="button" id="sim-correct-btn" class="btn secondary sm sim-correct-action">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Simulate Match</span>
+                            </button>
+                            <button type="button" id="sim-wrong-btn" class="btn secondary sm sim-wrong-action">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                <span>Simulate Wrong</span>
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
         </main>
 
         <!-- Round Summary Modal -->
-        <div class="quiz-summary-modal" id="quiz-summary-modal" role="dialog" aria-modal="true">
+        <div class="quiz-summary-modal" id="quiz-summary-modal" role="dialog" aria-modal="true" aria-labelledby="modal-summary-title">
             <div class="summary-card">
                 <div class="summary-trophy">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                        <path d="M4 22h16"></path>
-                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
-                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
-                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                     </svg>
                 </div>
-                <h3 class="summary-title" id="modal-summary-title">Round Complete!</h3>
-                <p class="summary-subtitle" id="modal-summary-subtitle">Great performance on your sign recognition speed run.</p>
+                <h3 class="summary-title" id="modal-summary-title">Round Complete</h3>
+                <p class="summary-subtitle" id="modal-summary-subtitle">Speed run performance evaluation &amp; accuracy metrics.</p>
 
                 <div class="summary-grid">
                     <div class="summary-metric">
@@ -365,19 +356,19 @@
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 10px; margin-top: 6px;">
-                    <button id="modal-play-again-btn" class="btn primary" style="flex: 1;">
-                        <span>Play Again</span>
+                <div class="summary-actions-row">
+                    <button id="modal-play-again-btn" class="btn primary" type="button" style="flex: 1;">
+                        <span>Start New Round</span>
                     </button>
-                    <button id="modal-close-btn" class="btn secondary" style="flex: 1;">
-                        <span>Close</span>
+                    <button id="modal-close-btn" class="btn secondary" type="button" style="flex: 1;">
+                        <span>Return to Practice</span>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- System status footer -->
-        <footer class="footer-status glass-panel" role="contentinfo">
+        <footer class="footer-status" role="contentinfo">
             <div class="footer-item">
                 <span class="dot-indicator" id="footer-camera-dot"></span>
                 <span>Camera: <strong id="footer-camera-status">Initializing</strong></span>
@@ -385,7 +376,7 @@
             <span class="footer-separator"></span>
             <div class="footer-item">
                 <span class="dot-indicator" id="footer-model-dot"></span>
-                <span>Engine: <strong id="footer-model-status">Loading</strong></span>
+                <span>Inference: <strong id="footer-model-status">Loading</strong></span>
             </div>
             <span class="footer-separator"></span>
             <div class="footer-item">
@@ -400,8 +391,8 @@
     </div>
 
     <!-- Sign Dictionary & Quiz Engine -->
-    <script src="dictionary.js?v=3.2.0"></script>
-    <script src="quiz.js?v=3.2.0"></script>
+    <script src="dictionary.js?v=4.0.0"></script>
+    <script src="quiz.js?v=4.0.0"></script>
 </body>
 
 </html>

@@ -349,13 +349,17 @@ function pickNextTarget() {
         quizTargetCard.classList.remove('matched', 'mismatched');
     }
     if (targetGlyphEl) {
+        targetGlyphEl.classList.remove('target-change-anim');
+        void targetGlyphEl.offsetWidth; // Force reflow to replay entrance animation
         targetGlyphEl.textContent = currentTarget.glyph;
-        targetGlyphEl.style.fontSize = currentTarget.glyph.length > 2 ? '2.4rem' : '3.8rem';
+        targetGlyphEl.style.fontSize = currentTarget.glyph.length > 2 ? '2.1rem' : '3.8rem';
+        targetGlyphEl.classList.add('target-change-anim');
     }
     if (targetSubtextEl) targetSubtextEl.textContent = currentTarget.label;
     if (targetHintEl) targetHintEl.textContent = currentTarget.hint;
     if (targetCategoryBadge) {
-        targetCategoryBadge.textContent = `Category: ${currentTarget.category.toUpperCase()}`;
+        const catName = currentTarget.category.charAt(0).toUpperCase() + currentTarget.category.slice(1);
+        targetCategoryBadge.textContent = `Category: ${catName}`;
     }
     if (targetHoldStatusEl) {
         targetHoldStatusEl.textContent = 'Hold pose for 0.4s';
@@ -678,13 +682,12 @@ function onSignSolved() {
         targetHoldStatusEl.textContent = `Matched! +${earned} pts (${multiplier.toFixed(1)}x)`;
     }
 
-    // Flash animation on target card
+    // Visual confirmation state on target card
     if (quizTargetCard) {
         quizTargetCard.classList.add('matched');
-        quizTargetCard.style.transform = 'scale(1.08)';
         setTimeout(() => {
-            if (quizTargetCard) quizTargetCard.style.transform = '';
-        }, 220);
+            if (quizTargetCard) quizTargetCard.classList.remove('matched');
+        }, 260);
     }
 
     // Advance to next target after brief celebration pause
@@ -891,6 +894,15 @@ if (modalCloseBtn) {
     });
 }
 
+if (summaryModal) {
+    summaryModal.addEventListener('click', (e) => {
+        if (e.target === summaryModal) {
+            summaryModal.classList.remove('open');
+            setGameMode('practice');
+        }
+    });
+}
+
 // --- Camera-Free Simulation & Practice Testing Suite ---
 let isSimulatingHold = false;
 
@@ -947,15 +959,15 @@ if (cameraSimulateBtn) {
         const rect = canvasElement.getBoundingClientRect();
         canvasElement.width = rect.width || 640;
         canvasElement.height = rect.height || 480;
-        canvasCtx.fillStyle = '#0b1017';
+        canvasCtx.fillStyle = '#060608';
         canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
         canvasCtx.fillStyle = '#10b981';
-        canvasCtx.font = '600 16px Inter, sans-serif';
+        canvasCtx.font = '600 16px "Plus Jakarta Sans", sans-serif';
         canvasCtx.textAlign = 'center';
-        canvasCtx.fillText('🎮 Virtual Camera Simulator Mode Active', canvasElement.width / 2, canvasElement.height / 2 - 12);
-        canvasCtx.fillStyle = '#94a3b8';
+        canvasCtx.fillText('Virtual Neural Simulator Active', canvasElement.width / 2, canvasElement.height / 2 - 12);
+        canvasCtx.fillStyle = '#a1a1aa';
         canvasCtx.font = '13px Inter, sans-serif';
-        canvasCtx.fillText('Use buttons or [Space] / [W] / [S] to practice and test signs!', canvasElement.width / 2, canvasElement.height / 2 + 16);
+        canvasCtx.fillText('Simulate pose inputs via UI controls or shortcuts: [Space] Match · [W] Wrong · [S] Skip', canvasElement.width / 2, canvasElement.height / 2 + 16);
         
         if (footerCameraStatus) footerCameraStatus.textContent = 'Simulator (Active)';
         if (footerCameraDot) footerCameraDot.style.background = 'var(--accent-emerald)';
@@ -966,6 +978,11 @@ if (cameraSimulateBtn) {
 // Global Keyboard Shortcuts for Camera-Free Practice
 document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+    if (e.key === 'Escape' && summaryModal && summaryModal.classList.contains('open')) {
+        summaryModal.classList.remove('open');
+        setGameMode('practice');
+        return;
+    }
     if (summaryModal && summaryModal.classList.contains('open')) return;
 
     if (e.code === 'Space' || e.key === 'Enter') {
