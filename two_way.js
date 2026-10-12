@@ -710,9 +710,9 @@ function initTwoWayUI() {
                 if (current.type === 'SPACE') {
                     activeGlyph.innerHTML = `<span style="font-size: 0.8rem; font-weight: 700; color: var(--text-tertiary);">PAUSE</span>`;
                 } else {
-                    const imgPath = `assets/signs/${current.glyph}.svg`;
+                    const imgPath = `assets/signs/${current.glyph}.png?v=3.2.0`;
                     activeGlyph.innerHTML = `
-                        <img src="${imgPath}" alt="${current.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="width:100%; height:100%; object-fit:contain; display:block;" />
+                        <img src="${imgPath}" alt="${current.name}" onerror="this.onerror=null; this.src='assets/signs/${current.glyph}.svg'; if(!this.complete){this.style.display='none'; this.nextElementSibling.style.display='block';}" style="width:100%; height:100%; object-fit:contain; display:block;" />
                         <span style="display:none; font-size:1.1rem; font-weight:800; color:var(--text-primary); text-align:center;">${current.glyph}</span>
                     `;
                 }
