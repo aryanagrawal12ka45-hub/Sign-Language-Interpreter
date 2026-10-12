@@ -41,14 +41,23 @@ class WindowsBridgeServer:
         client_addr = websocket.remote_address
         logger.info(f"Client connected: {client_addr}")
 
-        # Send initial status handshake
+        # Send initial status handshake & telemetry
+        status_data = self.controller.get_status()
         initial_status = {
             "type": "handshake",
             "status": "connected",
-            "server": "SignLanguage_WindowsBridge_v1.0",
-            "telemetry": self.controller.get_status()
+            "server": "SignLanguage_WindowsBridge_v2.5",
+            "telemetry": status_data,
+            **status_data
         }
         await websocket.send(json.dumps(initial_status))
+
+        # Also send explicit type: "telemetry" so client HUD sets up immediately
+        initial_telemetry = {
+            "type": "telemetry",
+            **status_data
+        }
+        await websocket.send(json.dumps(initial_telemetry))
 
         try:
             async for message in websocket:
@@ -69,112 +78,170 @@ class WindowsBridgeServer:
 
     async def process_command(self, websocket, data: dict):
         cmd_type = data.get("type")
+        action = data.get("action")
+        command = data.get("command")
 
-        if cmd_type == "mouse_move":
+        # 1. Cursor Movement
+        if cmd_type == "mouse_move" or action == "move":
             x = data.get("x", 0.5)
             y = data.get("y", 0.5)
             self.controller.move_mouse(x, y)
+            return
 
-        elif cmd_type == "mouse_click":
+        # 2. Mouse Clicks & Buttons
+        if cmd_type == "mouse_click" or action in ("left_click", "right_click", "double_click"):
             btn = data.get("button", "left")
-            if btn == "left":
+            if action == "left_click" or (cmd_type == "mouse_click" and btn == "left"):
                 self.controller.left_click()
-            elif btn == "right":
+                logger.info("[OS Action] Left Click executed")
+            elif action == "right_click" or (cmd_type == "mouse_click" and btn == "right"):
                 self.controller.right_click()
-            elif btn == "double":
+                logger.info("[OS Action] Right Click executed")
+            elif action == "double_click" or (cmd_type == "mouse_click" and btn == "double"):
                 self.controller.double_click()
+                logger.info("[OS Action] Double Click executed")
+            return
 
-        elif cmd_type == "mouse_drag":
-            action = data.get("action", "start")
-            if action == "start":
+        # 3. Mouse Drag & Drop
+        if cmd_type == "mouse_drag" or action in ("mouse_down", "mouse_up", "start_drag", "end_drag"):
+            drag_action = action or data.get("action")
+            if cmd_type == "mouse_drag":
+                drag_action = "start" if data.get("action") == "start" else "end"
+            if drag_action in ("start", "mouse_down", "start_drag"):
                 self.controller.start_drag()
+                logger.info("[OS Action] Drag START (MouseDown)")
             else:
                 self.controller.end_drag()
+                logger.info("[OS Action] Drag END (MouseUp)")
+            return
 
-        elif cmd_type == "scroll":
-            dy = data.get("dy", 0)
+        # 4. Scroll
+        if cmd_type == "scroll" or action == "scroll":
+            dy = data.get("dy") if data.get("dy") is not None else data.get("clicks", 0)
             self.controller.scroll(dy)
+            return
 
-        elif cmd_type == "volume":
-            action = data.get("action")
-            if action == "set":
-                val = self.controller.set_volume(data.get("value", 50))
-            elif action == "delta":
-                val = self.controller.change_volume(data.get("delta", 0))
-            elif action == "mute":
+        # 5. Master Volume
+        if cmd_type == "volume" or action in ("set_volume", "volume", "toggle_mute", "mute"):
+            vol_val = data.get("percent") if data.get("percent") is not None else data.get("value")
+            if vol_val is not None:
+                new_vol = self.controller.set_volume(float(vol_val))
+                logger.info(f"[OS Action] Volume set to {new_vol}%")
+            elif data.get("delta") is not None:
+                new_vol = self.controller.change_volume(float(data.get("delta")))
+                logger.info(f"[OS Action] Volume changed to {new_vol}%")
+            elif action in ("toggle_mute", "mute") or data.get("action") == "mute":
                 is_muted = self.controller.toggle_mute()
-            # Respond with updated volume
+                logger.info(f"[OS Action] Mute toggled: {is_muted}")
+
+            # Respond with updated volume telemetry
             resp = {
-                "type": "volume_update",
+                "type": "telemetry",
                 "volume": self.controller.get_volume(),
-                "is_muted": self.controller.is_muted()
+                "is_muted": self.controller.is_muted(),
+                "last_action": f"Volume {int(self.controller.get_volume())}%"
             }
             await websocket.send(json.dumps(resp))
+            return
 
-        elif cmd_type == "brightness":
-            action = data.get("action")
-            if action == "set":
-                val = self.controller.set_brightness(data.get("value", 100))
-            elif action == "delta":
-                val = self.controller.change_brightness(data.get("delta", 0))
+        # 6. Screen Brightness
+        if cmd_type == "brightness" or action in ("set_brightness", "brightness"):
+            bri_val = data.get("percent") if data.get("percent") is not None else data.get("value")
+            if bri_val is not None:
+                new_bri = self.controller.set_brightness(int(bri_val))
+                logger.info(f"[OS Action] Brightness set to {new_bri}%")
+            elif data.get("delta") is not None:
+                new_bri = self.controller.change_brightness(int(data.get("delta")))
+                logger.info(f"[OS Action] Brightness changed to {new_bri}%")
+
             resp = {
-                "type": "brightness_update",
-                "brightness": self.controller.get_brightness()
+                "type": "telemetry",
+                "brightness": self.controller.get_brightness(),
+                "last_action": f"Brightness {int(self.controller.get_brightness())}%"
             }
             await websocket.send(json.dumps(resp))
+            return
 
-        elif cmd_type == "action":
-            action_name = data.get("command")
+        # 7. System Tools & Actions
+        target_action = command or action
+        if cmd_type == "action" or target_action in (
+            "screenshot", "snip", "desktop", "minimize_all", "explorer",
+            "taskmgr", "task_manager", "osk", "lock", "alt_tab",
+            "close_window", "maximize", "snap_left", "snap_right", "browser"
+        ):
             result = None
-            if action_name == "screenshot":
+            if target_action == "screenshot":
                 result = self.controller.take_screenshot()
-            elif action_name == "snip":
+                logger.info(f"[OS Action] Screenshot captured: {result.get('filename') if isinstance(result, dict) else result}")
+            elif target_action == "snip":
                 self.controller.open_snipping_tool()
-            elif action_name == "minimize_all":
+                logger.info("[OS Action] Snipping Tool launched (Win+Shift+S)")
+            elif target_action in ("desktop", "minimize_all"):
                 self.controller.minimize_all()
-            elif action_name == "alt_tab":
-                self.controller.alt_tab()
-            elif action_name == "close_window":
-                self.controller.close_active_window()
-            elif action_name == "snap_left":
-                self.controller.snap_window_left()
-            elif action_name == "snap_right":
-                self.controller.snap_window_right()
-            elif action_name == "maximize":
-                self.controller.maximize_window()
-            elif action_name == "explorer":
+                logger.info("[OS Action] Show Desktop triggered (Win+D)")
+            elif target_action == "explorer":
                 self.controller.open_file_explorer()
-            elif action_name == "browser":
+                logger.info("[OS Action] File Explorer opened (Win+E)")
+            elif target_action in ("taskmgr", "task_manager"):
+                self.controller.open_task_manager()
+                logger.info("[OS Action] Task Manager opened (Ctrl+Shift+Esc)")
+            elif target_action == "osk":
+                self.controller.open_on_screen_keyboard()
+                logger.info("[OS Action] On-Screen Keyboard opened")
+            elif target_action == "lock":
+                self.controller.lock_workstation()
+                logger.info("[OS Action] Workstation locked (Win+L)")
+            elif target_action == "alt_tab":
+                self.controller.alt_tab()
+                logger.info("[OS Action] Alt+Tab triggered")
+            elif target_action == "close_window":
+                self.controller.close_active_window()
+                logger.info("[OS Action] Close window triggered (Alt+F4)")
+            elif target_action == "maximize":
+                self.controller.maximize_window()
+                logger.info("[OS Action] Maximize window triggered (Win+Up)")
+            elif target_action == "snap_left":
+                self.controller.snap_window_left()
+                logger.info("[OS Action] Snap left triggered (Win+Left)")
+            elif target_action == "snap_right":
+                self.controller.snap_window_right()
+                logger.info("[OS Action] Snap right triggered (Win+Right)")
+            elif target_action == "browser":
                 url = data.get("url", "https://www.google.com")
                 self.controller.open_browser(url)
-            elif action_name == "task_manager":
-                self.controller.open_task_manager()
-            elif action_name == "osk":
-                self.controller.open_on_screen_keyboard()
-            elif action_name == "lock":
-                self.controller.lock_workstation()
+                logger.info(f"[OS Action] Browser opened: {url}")
 
             resp = {
                 "type": "action_result",
-                "command": action_name,
+                "command": target_action,
                 "data": result or {"status": "executed"}
             }
             await websocket.send(json.dumps(resp))
+            return
 
-        elif cmd_type == "type_text":
+        # 8. Virtual Typing & Keyboard
+        if cmd_type == "type_text" or action == "type_text":
             text = data.get("text", "")
             self.controller.type_text(text)
+            logger.info(f"[OS Action] Virtual Typing: '{text}'")
+            return
 
-        elif cmd_type == "send_key":
+        if cmd_type == "send_key" or action == "send_key":
             key_name = data.get("key", "")
             self.controller.send_key(key_name)
+            logger.info(f"[OS Action] Key pressed: {key_name}")
+            return
 
-        elif cmd_type == "get_status":
+        # 9. Status Query
+        if cmd_type in ("get_status", "status") or action == "get_status":
             resp = {
-                "type": "status",
-                "telemetry": self.controller.get_status()
+                "type": "telemetry",
+                **self.controller.get_status()
             }
             await websocket.send(json.dumps(resp))
+            return
+
+        logger.warning(f"[WindowsBridge] Unhandled message payload: {data}")
 
     async def start(self):
         logger.info(f"Starting Windows OS Bridge Server on ws://{self.host}:{self.port}...")

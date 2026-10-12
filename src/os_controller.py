@@ -108,41 +108,66 @@ class WindowsOSController:
     def left_click(self):
         """Executes a left mouse click."""
         try:
-            pyautogui.click(button='left')
-        except Exception as e:
-            print(f"[OSController] Click error: {e}")
+            ctypes.windll.user32.mouse_event(0x0002, 0, 0, 0, 0)  # MOUSEEVENTF_LEFTDOWN
+            time.sleep(0.015)
+            ctypes.windll.user32.mouse_event(0x0004, 0, 0, 0, 0)  # MOUSEEVENTF_LEFTUP
+        except Exception:
+            try:
+                pyautogui.click(button='left')
+            except Exception as e:
+                print(f"[OSController] Click error: {e}")
 
     def right_click(self):
         """Executes a right mouse click."""
         try:
-            pyautogui.click(button='right')
-        except Exception as e:
-            print(f"[OSController] Right click error: {e}")
+            ctypes.windll.user32.mouse_event(0x0008, 0, 0, 0, 0)  # MOUSEEVENTF_RIGHTDOWN
+            time.sleep(0.015)
+            ctypes.windll.user32.mouse_event(0x0010, 0, 0, 0, 0)  # MOUSEEVENTF_RIGHTUP
+        except Exception:
+            try:
+                pyautogui.click(button='right')
+            except Exception as e:
+                print(f"[OSController] Right click error: {e}")
 
     def double_click(self):
         """Executes a double mouse click."""
         try:
-            pyautogui.doubleClick()
-        except Exception as e:
-            print(f"[OSController] Double click error: {e}")
+            ctypes.windll.user32.mouse_event(0x0002, 0, 0, 0, 0)
+            ctypes.windll.user32.mouse_event(0x0004, 0, 0, 0, 0)
+            time.sleep(0.04)
+            ctypes.windll.user32.mouse_event(0x0002, 0, 0, 0, 0)
+            ctypes.windll.user32.mouse_event(0x0004, 0, 0, 0, 0)
+        except Exception:
+            try:
+                pyautogui.doubleClick()
+            except Exception as e:
+                print(f"[OSController] Double click error: {e}")
 
     def start_drag(self):
         """Presses and holds the left mouse button for dragging."""
         if not self.is_dragging:
             try:
-                pyautogui.mouseDown(button='left')
+                ctypes.windll.user32.mouse_event(0x0002, 0, 0, 0, 0)  # MOUSEEVENTF_LEFTDOWN
                 self.is_dragging = True
-            except Exception as e:
-                print(f"[OSController] Drag start error: {e}")
+            except Exception:
+                try:
+                    pyautogui.mouseDown(button='left')
+                    self.is_dragging = True
+                except Exception as e:
+                    print(f"[OSController] Drag start error: {e}")
 
     def end_drag(self):
         """Releases the left mouse button after dragging."""
         if self.is_dragging:
             try:
-                pyautogui.mouseUp(button='left')
+                ctypes.windll.user32.mouse_event(0x0004, 0, 0, 0, 0)  # MOUSEEVENTF_LEFTUP
                 self.is_dragging = False
-            except Exception as e:
-                print(f"[OSController] Drag end error: {e}")
+            except Exception:
+                try:
+                    pyautogui.mouseUp(button='left')
+                    self.is_dragging = False
+                except Exception as e:
+                    print(f"[OSController] Drag end error: {e}")
 
     def scroll(self, amount: int):
         """
@@ -154,9 +179,14 @@ class WindowsOSController:
             return
         self.last_scroll_time = now
         try:
-            pyautogui.scroll(int(amount))
-        except Exception as e:
-            print(f"[OSController] Scroll error: {e}")
+            # 120 units per standard wheel click on Windows (MOUSEEVENTF_WHEEL = 0x0800)
+            wheel_delta = int(amount) * 120
+            ctypes.windll.user32.mouse_event(0x0800, 0, 0, wheel_delta, 0)
+        except Exception:
+            try:
+                pyautogui.scroll(int(amount) * 100)
+            except Exception as e:
+                print(f"[OSController] Scroll error: {e}")
 
     # =========================================================================
     # AUDIO CONTROLS

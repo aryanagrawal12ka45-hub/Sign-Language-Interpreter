@@ -36,12 +36,25 @@ The custom Bluetooth Low Energy (BLE) sensor glove (ESP32 micro-controller and M
 
 Almost all users will not have this custom hardware, and the system is designed to work fully without it. All primary features (alphabet finger-spelling, numerical counting, dynamic gestures, practice quizzes, sign dictionary, and two-way rooms) function with 100% capability using any standard laptop webcam or mobile camera alone via MediaPipe computer vision.
 
-### Note on Windows OS Gesture Controls (Experimental Preview)
-The Windows OS Controller module includes a real-time vision classifier designed to recognize desktop control gestures such as cursor pointing, pinch clicks, drag-and-drop, scrolling, and volume adjustment dials.
+### Windows OS Gesture Automation & Companion Bridge
+The Windows OS Controller connects in-browser hand tracking directly to native Windows operating system automation via an ultra-low-latency WebSocket bridge (`ws://127.0.0.1:8765`).
 
-**Please note that native desktop execution and operating system injection is an experimental research preview that is not fully operational yet.**
+**Native desktop execution is fully functional and operational.**
+- **Steer Cursor:** Point index finger towards camera (smooth sub-pixel exponential moving average filter).
+- **Left Click & Double Click:** Quick thumb-index pinch (<380ms). Double pinch within 320ms for double click.
+- **Drag & Drop:** Pinch and hold thumb + index for >380ms to lock mouse-down, drag, and release to drop.
+- **Right Click (Context Menu):** Pinch thumb and middle finger tips together.
+- **Smooth Scrolling:** Two fingers upright side-by-side (index + middle), move hand up or down.
+- **Master Volume:** Discrete thumbs up / thumbs down gestures (±5% steps) or horizontal thumb-index aperture caliper dial.
+- **Screen Brightness:** 3 fingers upright ('W' / '3' pose), elevate hand up/down to adjust hardware display brightness.
+- **Snipping Tool:** Hold "L" pose for 1.2s to trigger Windows Snipping Tool (`Win+Shift+S`).
+- **Virtual Typing Injection:** One-click inject interpreted sign sentences into any focused active Windows app.
 
-Gesture detection is active within the vision pipeline, and full operating system automation and virtual HID injection will be completed in an upcoming release.
+To activate OS control, simply launch the companion bridge via:
+```bash
+python run_os_control.py
+```
+Or use the standalone 1-click companion executable.
 
 ---
 

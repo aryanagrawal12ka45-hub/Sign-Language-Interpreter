@@ -612,12 +612,12 @@
                     </div>
                 </div>
 
-                <!-- Bridge Connection Notice & Manual Reconnect -->
+                <!-- Bridge Connection Notice & Companion Launcher -->
                 <div class="os-bridge-alert" id="os-bridge-alert">
                     <div class="os-bridge-alert-text">
-                        <strong>Local Python Bridge:</strong> Start controller via <code class="mono-code">python scripts/windows_bridge.py</code>
+                        <strong>Native Companion Bridge:</strong> Start controller via <code class="mono-code">python run_os_control.py</code> or launch <a href="https://github.com/rudy-07/Sign-Language-Interpreter/releases" target="_blank" class="accent-link" style="color: var(--accent-cyan); text-decoration: underline;">SignLanguageOSBridge.exe</a> to enable gesture controls from both localhost &amp; Netlify.
                     </div>
-                    <button type="button" id="os-reconnect-btn" class="btn secondary sm">
+                    <button type="button" id="os-reconnect-btn" class="btn secondary sm" title="Retry connection to local WebSocket bridge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="23 4 23 10 17 10"></polyline>
                             <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
@@ -674,14 +674,6 @@
                                 <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
                             </svg>
                             <span>Snip Tool</span>
-                        </button>
-                        <button type="button" class="btn secondary sm os-quick-btn" data-os-action="desktop" title="Show Desktop (Win+D)">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                <line x1="8" y1="21" x2="16" y2="21"></line>
-                                <line x1="12" y1="17" x2="12" y2="21"></line>
-                            </svg>
-                            <span>Desktop</span>
                         </button>
                         <button type="button" class="btn secondary sm os-quick-btn" data-os-action="explorer" title="Open File Explorer (Win+E)">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1005,21 +997,6 @@
                             <span class="os-guide-badge">Utility</span>
                             <p class="os-guide-desc">Form an <strong>"L" sign (Thumb + Index at 90°)</strong> and hold steady for 1.2s to trigger Windows Snipping Tool (<kbd>Win+Shift+S</kbd>) or full screenshot saved to Pictures.</p>
                             <span class="os-guide-tip">Tips: Progress circle animates around reticle while holding.</span>
-                        </div>
-                    </div>
-
-                    <div class="os-guide-card">
-                        <div class="os-guide-icon-badge">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                                <line x1="8" y1="21" x2="16" y2="21"></line>
-                            </svg>
-                        </div>
-                        <div class="os-guide-info">
-                            <span class="os-guide-gesture-name">Show Desktop</span>
-                            <span class="os-guide-badge">Window</span>
-                            <p class="os-guide-desc">Push your <strong>Flat Open Palm downward</strong> rapidly towards bottom edge of the frame to minimize all windows and show desktop (<kbd>Win+D</kbd>).</p>
-                            <span class="os-guide-tip">Tips: Perform the gesture again to restore windows.</span>
                         </div>
                     </div>
 
