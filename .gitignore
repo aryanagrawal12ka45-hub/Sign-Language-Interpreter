@@ -20,7 +20,8 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-downloads/
+downloads/*
+!downloads/SignLanguageOSBridge.exe
 eggs/
 .eggs/
 lib/

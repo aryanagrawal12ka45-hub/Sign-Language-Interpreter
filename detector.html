@@ -171,6 +171,57 @@
                         </div>
                     </div>
 
+                    <!-- OS Controls Companion Setup Overlay (Camera Area) -->
+                    <div class="os-companion-overlay hidden" id="os-companion-overlay">
+                        <div class="os-companion-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="8" height="8"></rect>
+                                <rect x="13" y="3" width="8" height="8"></rect>
+                                <rect x="3" y="13" width="8" height="8"></rect>
+                                <rect x="13" y="13" width="8" height="8"></rect>
+                            </svg>
+                        </div>
+                        <h3 class="os-companion-title">Windows OS Gesture Companion Required</h3>
+                        <p class="os-companion-desc">
+                            Web browsers run in a secure sandbox. To let hand gestures steer your real mouse, drag windows, adjust volume, and inject typing, download and run the lightweight companion app.
+                        </p>
+                        <div class="os-compatibility-badge">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <span><strong>Platform Notice:</strong> Built exclusively for Windows 10 &amp; 11. Does not support Linux, Android, macOS, or mobile devices for now.</span>
+                        </div>
+                        <div class="os-companion-card">
+                            <strong>Quick Setup (3 Simple Steps):</strong>
+                            <ul>
+                                <li><strong>1. Download:</strong> Click below to download <code class="mono-code">SignLanguageOSBridge.exe</code>.</li>
+                                <li><strong>2. Launch:</strong> Double-click the file to run it in the background (runs securely on 127.0.0.1).</li>
+                                <li><strong>3. Control:</strong> Click <em>"Launch &amp; Connect"</em> - this tab connects and takes control!</li>
+                            </ul>
+                        </div>
+                        <div class="os-companion-actions">
+                            <a href="downloads/SignLanguageOSBridge.exe" download="SignLanguageOSBridge.exe" id="os-download-exe-btn" class="btn primary sm" style="text-decoration: none;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                                <span>Download Companion (.exe)</span>
+                            </a>
+                            <button type="button" id="os-launch-connect-btn" class="btn secondary sm">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                <span id="os-launch-connect-label">Already Downloaded? Launch &amp; Connect</span>
+                            </button>
+                            <button type="button" id="os-companion-dismiss-btn" class="btn secondary sm" title="Preview camera feed without host OS automation">
+                                <span>Dismiss</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Loading / Initialization Overlay -->
                     <div class="status-overlay" id="status-overlay">
                         <div class="loader"></div>
@@ -612,10 +663,10 @@
                     </div>
                 </div>
 
-                <!-- Bridge Connection Notice & Companion Launcher -->
+                <!-- Bridge Connection Status Bar -->
                 <div class="os-bridge-alert" id="os-bridge-alert">
                     <div class="os-bridge-alert-text">
-                        <strong>Native Companion Bridge:</strong> Start controller via <code class="mono-code">python run_os_control.py</code> or launch <a href="https://github.com/rudy-07/Sign-Language-Interpreter/releases" target="_blank" class="accent-link" style="color: var(--accent-cyan); text-decoration: underline;">SignLanguageOSBridge.exe</a> to enable gesture controls from both localhost &amp; Netlify.
+                        <strong>Native Windows Companion:</strong> Launch the companion app to enable gesture controls on localhost &amp; Netlify.
                     </div>
                     <button type="button" id="os-reconnect-btn" class="btn secondary sm" title="Retry connection to local WebSocket bridge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

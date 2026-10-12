@@ -43,7 +43,17 @@ def build():
         "--hidden-import=comtypes",
         "--hidden-import=screen_brightness_control",
         "--hidden-import=ctypes",
-        "--hidden-import=PIL",
+        "--exclude-module=numpy",
+        "--exclude-module=tkinter",
+        "--exclude-module=tcl",
+        "--exclude-module=tk",
+        "--exclude-module=matplotlib",
+        "--exclude-module=scipy",
+        "--exclude-module=PyQt5",
+        "--exclude-module=PyQt6",
+        "--exclude-module=torch",
+        "--exclude-module=cv2",
+        "--exclude-module=pandas",
         f"--paths={ROOT_DIR}",
         entry_point
     ]
@@ -53,10 +63,16 @@ def build():
 
     if result.returncode == 0:
         exe_path = os.path.join(dist_dir, "SignLanguageOSBridge.exe")
+        downloads_dir = os.path.join(ROOT_DIR, "downloads")
+        os.makedirs(downloads_dir, exist_ok=True)
+        downloads_exe = os.path.join(downloads_dir, "SignLanguageOSBridge.exe")
+        import shutil
+        shutil.copy2(exe_path, downloads_exe)
         size_mb = os.path.getsize(exe_path) / (1024 * 1024) if os.path.exists(exe_path) else 0
         print("\n" + "=" * 72)
         print(" [+] BUILD SUCCESSFUL: Standalone Companion Executable created!")
         print(f" [+] Output: {exe_path} ({size_mb:.1f} MB)")
+        print(f" [+] Copied to: {downloads_exe}")
         print(" [+] Users can double-click this executable to activate real-time")
         print("     Windows OS gesture controls from both localhost and Netlify!")
         print("=" * 72)

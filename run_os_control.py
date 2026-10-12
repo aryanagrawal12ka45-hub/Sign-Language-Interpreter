@@ -98,7 +98,31 @@ def print_banner(ws_port, http_port):
     print()
 
 
+def register_url_protocol():
+    """Registers signlanguage-bridge:// protocol handler in Windows registry (HKCU) for direct browser launch."""
+    if sys.platform != "win32":
+        return
+    try:
+        import winreg
+        if getattr(sys, 'frozen', False):
+            exe_target = f'"{sys.executable}" --no-browser'
+        else:
+            script_path = os.path.abspath(__file__)
+            exe_target = f'"{sys.executable}" "{script_path}" --no-browser'
+
+        key_path = r"Software\Classes\signlanguage-bridge"
+        with winreg.CreateKey(winreg.HKEY_CURRENT_USER, key_path) as key:
+            winreg.SetValue(key, "", winreg.REG_SZ, "URL:SignLanguageBridge Protocol")
+            winreg.SetValueEx(key, "URL Protocol", 0, winreg.REG_SZ, "")
+            with winreg.CreateKey(key, r"shell\open\command") as cmd_key:
+                winreg.SetValue(cmd_key, "", winreg.REG_SZ, exe_target)
+        print(" [+] URL Protocol:                      signlanguage-bridge:// (Registered)")
+    except Exception:
+        pass
+
+
 def main():
+    register_url_protocol()
     parser = argparse.ArgumentParser(description="ASL Windows OS Gesture Controller Launcher")
     parser.add_argument("--port", type=int, default=8765, help="WebSocket bridge port (default: 8765)")
     parser.add_argument("--http-port", type=int, default=8000, help="Local HTTP server port (default: 8000)")

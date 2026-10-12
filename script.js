@@ -44,13 +44,23 @@ function setRecognitionMode(mode) {
         osPanel.style.display = (mode === 'os_control') ? 'flex' : 'none';
     }
 
+    const osCompanionOverlay = document.getElementById('os-companion-overlay');
     if (mode === 'os_control') {
         if (typeof osBridge !== 'undefined' && !osBridge.isConnected) {
             osBridge.connect();
+            // Prompt in camera area if bridge is offline
+            if (osCompanionOverlay && osCompanionOverlay.dataset.dismissed !== 'true') {
+                osCompanionOverlay.classList.remove('hidden');
+            }
+        } else if (osCompanionOverlay) {
+            osCompanionOverlay.classList.add('hidden');
         }
         if (detectedLetterEl) detectedLetterEl.textContent = 'OS';
         updateConfidenceUI(1.0);
     } else {
+        if (osCompanionOverlay) {
+            osCompanionOverlay.classList.add('hidden');
+        }
         if (typeof osControlState !== 'undefined' && osControlState.isDragging) {
             if (typeof osBridge !== 'undefined') osBridge.send({ action: 'mouse_up', button: 'left' });
             osControlState.isDragging = false;
@@ -2496,9 +2506,19 @@ function initWindowsOSControl() {
     const briDisplay = document.getElementById('os-brightness-display');
     const briBar = document.getElementById('os-brightness-bar');
 
+    const osCompanionOverlay = document.getElementById('os-companion-overlay');
+    const osLaunchConnectBtn = document.getElementById('os-launch-connect-btn');
+    const osLaunchConnectLabel = document.getElementById('os-launch-connect-label');
+    const osCompanionDismissBtn = document.getElementById('os-companion-dismiss-btn');
+    const osDownloadExeBtn = document.getElementById('os-download-exe-btn');
+
     // Telemetry updates
     osBridge.onStatusChange((connected) => {
         if (connected) {
+            if (osCompanionOverlay) {
+                osCompanionOverlay.classList.add('hidden');
+                osCompanionOverlay.dataset.dismissed = 'false';
+            }
             if (osBridgeStatusBadge) {
                 osBridgeStatusBadge.className = 'status-badge connected';
                 osBridgeStatusBadge.textContent = 'Bridge Online';
@@ -2517,6 +2537,9 @@ function initWindowsOSControl() {
                 `;
             }
         } else {
+            if (currentRecognitionMode === 'os_control' && osCompanionOverlay && osCompanionOverlay.dataset.dismissed !== 'true') {
+                osCompanionOverlay.classList.remove('hidden');
+            }
             if (osBridgeStatusBadge) {
                 osBridgeStatusBadge.className = 'status-badge disconnected';
                 osBridgeStatusBadge.textContent = 'Bridge Offline';
@@ -2530,7 +2553,7 @@ function initWindowsOSControl() {
                 osBridgeAlert.className = 'os-bridge-alert';
                 osBridgeAlert.innerHTML = `
                     <div class="os-bridge-alert-text">
-                        <strong>Native Companion Bridge:</strong> Start controller via <code class="mono-code">python run_os_control.py</code> or launch <a href="https://github.com/rudy-07/Sign-Language-Interpreter/releases" target="_blank" class="accent-link" style="color: var(--accent-cyan); text-decoration: underline;">SignLanguageOSBridge.exe</a> to enable OS controls on localhost &amp; Netlify.
+                        <strong>Native Companion Bridge:</strong> Launch <a href="downloads/SignLanguageOSBridge.exe" download="SignLanguageOSBridge.exe" class="accent-link" style="color: var(--accent-cyan); text-decoration: underline;">SignLanguageOSBridge.exe</a> to enable OS controls on your desktop.
                     </div>
                     <button type="button" id="os-reconnect-btn-dynamic" class="btn secondary sm" title="Retry bridge connection">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2545,6 +2568,115 @@ function initWindowsOSControl() {
             }
         }
     });
+
+    // Custom protocol and connection trigger
+    function attemptProtocolLaunch() {
+        try {
+            const protoFrame = document.createElement('iframe');
+            protoFrame.style.display = 'none';
+            protoFrame.src = 'signlanguage-bridge://launch';
+            document.body.appendChild(protoFrame);
+            setTimeout(() => {
+                if (protoFrame.parentNode) protoFrame.parentNode.removeChild(protoFrame);
+            }, 2000);
+        } catch (e) {
+            console.warn('[OS Bridge] Protocol launch attempted:', e);
+        }
+    }
+
+    let isConnectingCompanion = false;
+    let connectPollInterval = null;
+
+    if (osLaunchConnectBtn) {
+        osLaunchConnectBtn.addEventListener('click', () => {
+            if (isConnectingCompanion) return;
+            isConnectingCompanion = true;
+
+            if (osLaunchConnectLabel) {
+                osLaunchConnectLabel.innerHTML = 'Connecting to Companion...';
+            }
+            osLaunchConnectBtn.disabled = true;
+
+            // Attempt custom URL protocol launch
+            attemptProtocolLaunch();
+
+            // Attempt WebSocket connection
+            osBridge.connect();
+
+            let attempts = 0;
+            const maxAttempts = 12;
+
+            if (connectPollInterval) clearInterval(connectPollInterval);
+            connectPollInterval = setInterval(() => {
+                attempts++;
+                if (osBridge.isConnected) {
+                    clearInterval(connectPollInterval);
+                    connectPollInterval = null;
+                    isConnectingCompanion = false;
+                    if (osLaunchConnectLabel) {
+                        osLaunchConnectLabel.innerHTML = '✓ Connected! Opening Controls...';
+                    }
+                    playDetectionSound();
+                    setTimeout(() => {
+                        if (osCompanionOverlay) {
+                            osCompanionOverlay.classList.add('hidden');
+                            osCompanionOverlay.dataset.dismissed = 'false';
+                        }
+                        if (osLaunchConnectLabel) {
+                            osLaunchConnectLabel.innerHTML = 'Already Downloaded? Launch &amp; Connect';
+                        }
+                        if (osLaunchConnectBtn) osLaunchConnectBtn.disabled = false;
+                    }, 400);
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(connectPollInterval);
+                    connectPollInterval = null;
+                    isConnectingCompanion = false;
+                    if (osLaunchConnectBtn) osLaunchConnectBtn.disabled = false;
+                    if (osLaunchConnectLabel) {
+                        osLaunchConnectLabel.innerHTML = 'Retry Launch &amp; Connect';
+                    }
+                    const card = osCompanionOverlay ? osCompanionOverlay.querySelector('.os-companion-card') : null;
+                    if (card) {
+                        let hint = card.querySelector('.os-conn-hint');
+                        if (!hint) {
+                            hint = document.createElement('div');
+                            hint.className = 'os-conn-hint';
+                            hint.style.cssText = 'margin-top: 8px; color: var(--accent-rose); font-weight: 500; font-size: 0.74rem;';
+                            card.appendChild(hint);
+                        }
+                        hint.textContent = 'Companion not running yet. Please double-click SignLanguageOSBridge.exe in your Downloads folder, then click Retry.';
+                    }
+                } else {
+                    osBridge.connect();
+                }
+            }, 500);
+        });
+    }
+
+    if (osCompanionDismissBtn) {
+        osCompanionDismissBtn.addEventListener('click', () => {
+            if (osCompanionOverlay) {
+                osCompanionOverlay.classList.add('hidden');
+                osCompanionOverlay.dataset.dismissed = 'true';
+            }
+        });
+    }
+
+    if (osDownloadExeBtn) {
+        osDownloadExeBtn.addEventListener('click', () => {
+            const card = osCompanionOverlay ? osCompanionOverlay.querySelector('.os-companion-card') : null;
+            if (card) {
+                let hint = card.querySelector('.os-conn-hint');
+                if (!hint) {
+                    hint = document.createElement('div');
+                    hint.className = 'os-conn-hint';
+                    hint.style.cssText = 'margin-top: 8px; color: var(--accent-cyan); font-weight: 500; font-size: 0.74rem;';
+                    card.appendChild(hint);
+                }
+                hint.textContent = 'Download started! Once downloaded, open SignLanguageOSBridge.exe and click "Launch & Connect".';
+            }
+        });
+    }
 
     osBridge.onTelemetry((t) => {
         if (coordsDisplay) coordsDisplay.textContent = `X: ${t.mouseX}, Y: ${t.mouseY}`;
@@ -2636,7 +2768,7 @@ function initWindowsOSControl() {
                     setOSActionHUD('Text Injected', `Typed: "${textToType}"`);
                     playDetectionSound();
                 } else {
-                    alert('Windows Bridge is offline. Start the bridge first with: python scripts/windows_bridge.py');
+                    alert('Windows OS Bridge is offline. Please launch the SignLanguageOSBridge.exe companion app.');
                 }
             } else {
                 alert('No sentence tokens detected yet to type.');
