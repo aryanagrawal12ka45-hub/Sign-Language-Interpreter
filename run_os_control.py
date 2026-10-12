@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ASL Interpreter — Windows OS Gesture Controller Runner
+ASL Interpreter - Windows OS Gesture Controller Runner
 ======================================================
 Unified launcher for the Real-time Hand Gesture Windows Controller.
 Starts both the WebSocket native automation bridge (port 8765) and
@@ -31,6 +31,12 @@ class QuietHTTPRequestHandler(SimpleHTTPRequestHandler):
     """Custom HTTP handler serving the workspace with suppressed standard GET logs."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=ROOT_DIR, **kwargs)
+
+    def translate_path(self, path):
+        # Route root '/' or empty path to index.html (Overview / Landing page)
+        if path == "/" or path == "":
+            path = "/index.html"
+        return super().translate_path(path)
 
     def log_message(self, format, *args):
         # Only log 4xx and 5xx errors to keep terminal output clean
@@ -72,7 +78,7 @@ def print_banner(ws_port, http_port):
     print(" [+] Native Windows Automation Engine: ACTIVE")
     print(f" [+] WebSocket Bridge:                 ws://127.0.0.1:{ws_port}")
     if http_port:
-        print(f" [+] Web Application:                  http://localhost:{http_port}/index.html")
+        print(f" [+] Web Application:                  http://localhost:{http_port}/")
     print("-" * 72)
     print(" GESTURE CONTROLS QUICK CHEATSHEET:")
     print("   - Steer Cursor:      Point Index Finger (Landmark 8)")
@@ -106,7 +112,7 @@ def main():
 
     if not args.no_browser and actual_http_port:
         time.sleep(0.5)
-        app_url = f"http://localhost:{actual_http_port}/index.html"
+        app_url = f"http://localhost:{actual_http_port}/"
         print(f"[*] Opening browser: {app_url}")
         try:
             webbrowser.open(app_url)

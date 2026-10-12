@@ -12,7 +12,7 @@ This document provides the complete wiring schematic, pin connection tables, and
 | **GND** | **GND** | Power Ground | $0\text{V}$ Reference | Common ground reference |
 | **SCL** | **GPIO 22** | I2C Clock | $3.3\text{V}$ Open-drain | Serial Clock line (Hardware I2C0 SCL) |
 | **SDA** | **GPIO 21** | I2C Data | $3.3\text{V}$ Open-drain | Serial Data line (Hardware I2C0 SDA) |
-| **XDA / XCL** | *No Connection* | Auxiliary I2C | — | Secondary I2C master bus (unused) |
+| **XDA / XCL** | *No Connection* | Auxiliary I2C | - | Secondary I2C master bus (unused) |
 | **AD0** | **GND** (or *Floating*) | Address Select | Logic LOW ($0\text{V}$) | Sets default I2C slave address to `0x68` |
 | **INT** | *No Connection* | Interrupt | $3.3\text{V}$ Push-pull / OD | Data Ready interrupt (polling used in firmware) |
 

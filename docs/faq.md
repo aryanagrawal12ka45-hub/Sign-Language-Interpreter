@@ -5,7 +5,7 @@
 ### 1. General & Capabilities
 
 #### Can I use the system without the ESP32 smart glove?
-**Yes.** The vision-based ASL Alphabet Detector runs completely standalone in your browser. You can spell all static letters (A–Z) using just your laptop webcam. The ESP32 smart glove is optional; when connected, it provides hardware sensor fusion to disambiguate dynamic and orientation-dependent signs ('J', 'Z', 'YES', 'HELLO', and 'SPACE').
+**Yes.** The vision-based ASL Alphabet Detector runs completely standalone in your browser. You can spell all static letters (A-Z) using just your laptop webcam. The ESP32 smart glove is optional; when connected, it provides hardware sensor fusion to disambiguate dynamic and orientation-dependent signs ('J', 'Z', 'YES', 'HELLO', and 'SPACE').
 
 #### How many sign language gestures are currently supported?
 The current prototype supports the **26 standard letters of the American Sign Language (ASL) alphabet** (A through Z) plus **5 motion-fused gestures** ('J' scoop, 'Z' trajectory, 'YES' nod, 'HELLO' salute sweep, and 'SPACE' flat palm).
@@ -21,7 +21,7 @@ The current prototype is configured for single-hand detection (`maxNumHands: 1`)
 You can use the **Manual Training** panel on the right side of the interface:
 1. Select the problematic letter from the dropdown (e.g., 'E' or 'M').
 2. Hold your hand in the target pose in front of the camera.
-3. Click **📸 Capture Frame** 3–5 times from slight variations.
+3. Click **📸 Capture Frame** 3-5 times from slight variations.
 4. The system will immediately use an active k-NN override whenever that hand formation is recognized.
 5. Click **💾 Save** to persist your overrides across browser sessions in `localStorage`.
 

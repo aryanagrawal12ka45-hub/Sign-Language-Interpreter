@@ -10,7 +10,7 @@ The **Sign Language Interpreter** is engineered as a modern, zero-install, clien
 | :--- | :--- | :--- | :--- |
 | **Frontend UI** | HTML5 / Vanilla Modern CSS3 | Standard | Glassmorphic, responsive, high-framerate UI |
 | **Client Scripting** | Vanilla JavaScript (ES2022+) | Modern ES | Event loop, DOM rendering, audio/speech logic |
-| **Hand Landmark Detection** | Google MediaPipe Hands | `@mediapipe/hands` | 21 3D hand keypoint extraction at 30–60 FPS |
+| **Hand Landmark Detection** | Google MediaPipe Hands | `@mediapipe/hands` | 21 3D hand keypoint extraction at 30-60 FPS |
 | **Deep Learning Runtime** | TensorFlow.js | `tfjs@latest` | WebGL-accelerated client-side neural inference |
 | **Active Learning** | TF.js k-NN Classifier | `@tensorflow-models/knn-classifier` | Instant on-device calibration and sign overrides |
 | **Hardware Communication** | Web Bluetooth API | W3C Standard | Low-latency wireless BLE GATT connection |

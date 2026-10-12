@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASL Academy — Interactive Practice & Speed Quiz</title>
+    <title>Sign Language Studio - Practice Laboratory</title>
     <meta name="description"
         content="Interactive sign language learning game and real-time speed quiz with pose validation powered by MediaPipe and TensorFlow.js.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,9 +35,9 @@
         <!-- ==================== HEADER ==================== -->
         <header class="app-header">
             <div class="header-inner">
-                <a href="landing.html" class="header-left brand-link" title="Return to Overview">
+                <a href="index.html" class="header-left brand-link" title="Return to Overview">
                     <div class="brand-mark">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
                             <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
                             <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
@@ -51,14 +54,14 @@
                 </a>
 
                 <nav class="nav-menu" aria-label="Primary Navigation">
-                    <a href="landing.html" class="nav-link">
+                    <a href="index.html" class="nav-link">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
                         </svg>
                         <span>Overview</span>
                     </a>
-                    <a href="index.html" class="nav-link">
+                    <a href="detector.html" class="nav-link">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                             <circle cx="12" cy="13" r="4"></circle>
@@ -77,7 +80,7 @@
                         </svg>
                         <span>Gesture Assistant</span>
                     </a>
-                    <a href="index.html#two-way" class="nav-link nav-btn-modal" id="open-two-way-btn" title="Open Two-Way Speech &amp; Sign Room">
+                    <a href="detector.html#two-way" class="nav-link nav-btn-modal" id="open-two-way-btn" title="Open Two-Way Speech &amp; Sign Room">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
@@ -93,6 +96,14 @@
                         </svg>
                         <span>Sign Library</span>
                     </button>
+                    <a href="about.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>About</span>
+                    </a>
                 </nav>
             </div>
         </header>
@@ -119,9 +130,9 @@
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3m8-18h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/></svg>
                             <span>Mirror</span>
                         </button>
-                        <button type="button" id="camera-restart-btn" class="camera-ctrl-btn" title="Restart / Retry Camera" aria-label="Restart / Retry Camera">
+                        <button type="button" id="camera-restart-btn" class="camera-ctrl-btn" title="Refresh Camera Feed" aria-label="Refresh Camera Feed">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                            <span>Retry</span>
+                            <span>Refresh</span>
                         </button>
                     </div>
 
@@ -142,7 +153,7 @@
                         </div>
                         <div class="camera-error-actions">
                             <button type="button" id="camera-simulate-btn" class="btn primary sm">Enable Virtual Simulator</button>
-                            <button type="button" id="camera-retry-action-btn" class="btn secondary sm">Reconnect Camera</button>
+                            <button type="button" id="camera-retry-action-btn" class="btn secondary sm">Refresh Camera</button>
                             <button type="button" id="camera-dismiss-err-btn" class="btn secondary sm">Dismiss</button>
                         </div>
                     </div>
@@ -269,8 +280,8 @@
                             <span class="config-label">Vocabulary Category</span>
                             <div class="pill-group segmented-control" id="quiz-category-pills" role="radiogroup" aria-label="Vocabulary Category">
                                 <button type="button" class="pill-btn active" data-qcat="all">All Signs</button>
-                                <button type="button" class="pill-btn" data-qcat="alphabet">Letters (A–Z)</button>
-                                <button type="button" class="pill-btn" data-qcat="numbers">Numbers (0–9)</button>
+                                <button type="button" class="pill-btn" data-qcat="alphabet">Letters (A-Z)</button>
+                                <button type="button" class="pill-btn" data-qcat="numbers">Numbers (0-9)</button>
                                 <button type="button" class="pill-btn" data-qcat="signs">Gestures</button>
                             </div>
                         </div>

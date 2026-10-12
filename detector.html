@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Studio - Real-Time ASL Detector</title>
+    <meta name="description"
+        content="Real-time American Sign Language detection and multi-language translation powered by MediaPipe, TensorFlow.js, and IoT Smart Glove integration.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Typography: Plus Jakarta Sans, Inter, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=4.0.0">
+
+    <!-- MediaPipe Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+    <!-- TensorFlow.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- ==================== HEADER ==================== -->
+        <header class="app-header">
+            <div class="header-inner">
+                <a href="index.html" class="header-left brand-link" title="Return to Overview">
+                    <div class="brand-mark">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                            <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                        </svg>
+                    </div>
+                    <div class="header-titles">
+                        <div class="brand-title-row">
+                            <h1 class="brand-title">Sign Language <span class="brand-title-accent">Studio</span></h1>
+                            <span class="engine-badge"><span class="engine-status-dot"></span> Neural Vision v4.0</span>
+                        </div>
+                        <p class="brand-caption">Computer Vision Lab &bull; Real-time ASL alphabet recognition &amp; continuous interpreter</p>
+                    </div>
+                </a>
+                <nav class="nav-menu" aria-label="Primary Navigation">
+                    <a href="index.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Overview</span>
+                    </a>
+                    <a href="detector.html" class="nav-link active" aria-current="page">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span>Detector</span>
+                    </a>
+                    <a href="quiz.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>Practice Lab</span>
+                    </a>
+                    <a href="chat.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>Gesture Assistant</span>
+                    </a>
+                    <button id="open-two-way-btn" class="nav-link nav-btn-modal" type="button" aria-haspopup="dialog" title="Open Two-Way Speech &amp; Sign Room">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Two-Way Room</span>
+                    </button>
+                    <button id="open-dictionary-btn" class="nav-link nav-btn-modal" type="button" aria-haspopup="dialog">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span>Sign Library</span>
+                    </button>
+                    <a href="about.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>About</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ==================== MAIN WORKSPACE ==================== -->
+        <main class="vision-container">
+
+            <!-- ===== LEFT COLUMN (Primary Workspace) ===== -->
+            <div class="left-column">
+
+                <!-- Camera Feed Viewport -->
+                <div class="camera-wrapper glass-panel" id="camera-container">
+                    <video id="webcam" autoplay playsinline muted></video>
+                    <canvas class="output_canvas" id="output_canvas"></canvas>
+
+                    <!-- Camera Telemetry Overlay -->
+                    <div class="camera-status-bar">
+                        <div class="camera-badge"><span class="dot"></span> Camera input</div>
+                        <div class="camera-badge" id="fps-badge">FPS: --</div>
+                        <select id="camera-device-select" class="camera-perf-select" title="Select Webcam Device" aria-label="Select Webcam Device">
+                            <option value="">Default Camera</option>
+                        </select>
+                        <select id="camera-perf-mode" class="camera-perf-select" title="Performance Profile" aria-label="Performance Profile">
+                            <option value="fast" selected>Fast (30+ FPS)</option>
+                            <option value="hd">HD Precision (720p)</option>
+                        </select>
+                        <button type="button" id="camera-mirror-btn" class="camera-ctrl-btn active" title="Toggle Mirror Mode" aria-label="Toggle Mirror Mode">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3m8-18h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/></svg>
+                            <span>Mirror</span>
+                        </button>
+                        <button type="button" id="camera-restart-btn" class="camera-ctrl-btn" title="Refresh Camera Feed" aria-label="Refresh Camera Feed">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                            <span>Refresh</span>
+                        </button>
+                    </div>
+
+                    <!-- Gesture Hold Switch Indicator -->
+                    <div class="gesture-hold-indicator" id="gesture-hold-indicator">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                        </svg>
+                        <div class="hold-meter-track">
+                            <div class="hold-meter-fill" id="gesture-hold-meter"></div>
+                        </div>
+                        <span class="gesture-hold-text" id="gesture-hold-text">Switching Mode...</span>
+                    </div>
+
+                                        <!-- Camera Error & Diagnostic Overlay -->
+                    <div class="camera-error-overlay hidden" id="camera-error-overlay">
+                        <div class="camera-error-icon">⚠️</div>
+                        <h3 class="camera-error-title" id="camera-error-title">Camera Unavailable</h3>
+                        <p class="camera-error-desc" id="camera-error-desc">Unable to access your webcam.</p>
+                        <div class="camera-error-troubleshoot" id="camera-error-troubleshoot">
+                            <strong>Quick Fix Checklist:</strong>
+                            <ul id="camera-troubleshoot-list">
+                                <li>Check browser permissions (click 🔒 Lock or 🎥 Camera icon in address bar -> Allow).</li>
+                                <li>Ensure no other application (Zoom, Teams, Skype, OBS) is using the webcam.</li>
+                                <li>If multiple cameras exist, select a different device from the dropdown.</li>
+                            </ul>
+                        </div>
+                        <div class="camera-error-actions">
+                            <button type="button" id="camera-retry-action-btn" class="btn primary sm">Refresh Camera</button>
+                            <button type="button" id="camera-dismiss-err-btn" class="btn secondary sm">Dismiss</button>
+                        </div>
+                    </div>
+
+                    <!-- Loading / Initialization Overlay -->
+                    <div class="status-overlay" id="status-overlay">
+                        <div class="loader"></div>
+                        <p id="status-text">Preparing camera and recognition model…</p>
+                    </div>
+                </div>
+
+                <!-- Recognition Mode Selector Bar -->
+                <div class="mode-selector-bar">
+                    <div class="mode-pills" id="mode-pills" role="radiogroup" aria-label="Recognition Mode">
+                        <button type="button" class="mode-btn active" data-mode="alphabet" id="mode-btn-alphabet" aria-checked="true">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                                <line x1="9" y1="20" x2="15" y2="20"></line>
+                                <line x1="12" y1="4" x2="12" y2="20"></line>
+                            </svg>
+                            <span>Letters (A-Z)</span>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="numbers" id="mode-btn-numbers" aria-checked="false">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="9" x2="20" y2="9"></line>
+                                <line x1="4" y1="15" x2="20" y2="15"></line>
+                                <line x1="10" y1="3" x2="8" y2="21"></line>
+                                <line x1="16" y1="3" x2="14" y2="21"></line>
+                            </svg>
+                            <span>Numbers (0-9)</span>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="signs" id="mode-btn-signs" aria-checked="false">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                                <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                                <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                                <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                            </svg>
+                            <span>Common Signs</span>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="unified" id="mode-btn-unified" aria-checked="false">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                            <span>Unified</span>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="os_control" id="mode-btn-os" aria-checked="false" title="Control Windows OS with hand gestures">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="8" height="8"></rect>
+                                <rect x="13" y="3" width="8" height="8"></rect>
+                                <rect x="3" y="13" width="8" height="8"></rect>
+                                <rect x="13" y="13" width="8" height="8"></rect>
+                            </svg>
+                            <span>OS Control</span>
+                        </button>
+                    </div>
+                    <div class="gesture-switch-hint" title="Hold the Horns gesture for 2 seconds to switch modes hands-free">
+                        <span>Gesture switch:</span>
+                        <kbd>Horns Hold 2s</kbd>
+                    </div>
+                </div>
+
+                <!-- Detected Sign & Confidence HUD -->
+                <div class="result-panel glass-panel">
+                    <div class="letter-display" id="letter-display-el">
+                        <span id="detected-letter">-</span>
+                    </div>
+                    <div class="detection-info">
+                        <div class="detection-header">
+                            <h2 class="section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <circle cx="12" cy="12" r="6"></circle>
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                </svg>
+                                <span>Detected Sign</span>
+                            </h2>
+                        </div>
+                        <div class="confidence-bar-wrapper">
+                            <div class="confidence-bar" aria-label="Confidence level">
+                                <div class="confidence-fill" id="confidence-fill"></div>
+                            </div>
+                            <span class="confidence-text" id="confidence-text">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-Way Communication: Speech-to-Sign Panel -->
+                <div class="speech-to-sign-panel glass-panel">
+                    <div class="panel-header-row">
+                        <h2 class="section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            <span>Two-Way: Speech to Sign</span>
+                        </h2>
+                        <span id="speech-status-badge" class="status-badge disconnected">Mic Inactive</span>
+                    </div>
+                    <p class="desc">Hearing partner speaks into microphone &rarr; system visualizes corresponding sign sequence.</p>
+
+                    <div class="speech-controls-row">
+                        <button type="button" id="toggle-speech-rec-btn" class="btn primary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            <span id="speech-rec-btn-text">Listen to Voice</span>
+                        </button>
+                        <button type="button" id="replay-sign-btn" class="btn secondary" disabled title="Replay current sign sequence">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="1 4 1 10 7 10"></polyline>
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                            </svg>
+                            <span>Replay</span>
+                        </button>
+                        <select id="sign-playback-speed" class="speed-select" aria-label="Sign playback speed">
+                            <option value="1200">0.75x Speed</option>
+                            <option value="800" selected>1.0x Speed</option>
+                            <option value="500">1.5x Speed</option>
+                        </select>
+                    </div>
+
+                    <!-- Spoken Transcript Box -->
+                    <div class="speech-transcript-box" id="speech-transcript-box">
+                        <span class="transcript-placeholder" id="transcript-placeholder">Click &ldquo;Listen to Voice&rdquo; and speak into your microphone...</span>
+                        <span id="speech-transcript-text" class="transcript-text"></span>
+                    </div>
+
+                    <!-- Visual Sign Display Card & Sequence Timeline -->
+                    <div class="sign-player-container" id="sign-player-container" style="display: none;">
+                        <div class="active-sign-card" id="active-sign-card">
+                            <div class="active-sign-visual" id="active-sign-visual">
+                                <span class="active-sign-glyph" id="active-sign-glyph">-</span>
+                            </div>
+                            <div class="active-sign-info">
+                                <span class="active-sign-title" id="active-sign-title">Ready</span>
+                                <span class="active-sign-desc" id="active-sign-desc">Sign instruction will appear here</span>
+                            </div>
+                        </div>
+                        <!-- Sequence token stream -->
+                        <div class="sign-sequence-timeline" id="sign-sequence-timeline" role="region" aria-label="Sign token stream">
+                            <!-- Tokens injected by script.js -->
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- ===== RIGHT COLUMN (Telemetry, Controls & Translation) ===== -->
+            <div class="side-panel">
+
+                <!-- Smart Glove IoT Telemetry Panel -->
+                <div class="hardware-panel glass-panel">
+                    <div class="panel-header-row">
+                        <h2 class="section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                                <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                            </svg>
+                            <span>Smart glove</span>
+                        </h2>
+                        <span id="ble-status" class="status-badge disconnected">Disconnected</span>
+                    </div>
+                    <div class="hardware-controls">
+                        <button id="connect-ble-btn" class="btn primary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"></polyline>
+                            </svg>
+                            <span>Connect Glove BLE</span>
+                        </button>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-box">
+                            <div class="data-header">
+                                <span class="data-label">Roll</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                                </svg>
+                            </div>
+                            <span class="data-value" id="glove-roll">0.0°</span>
+                        </div>
+                        <div class="data-box">
+                            <div class="data-header">
+                                <span class="data-label">Pitch</span>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                                </svg>
+                            </div>
+                            <span class="data-value" id="glove-pitch">0.0°</span>
+                        </div>
+                    </div>
+                    <div class="debug-divider">
+                        <div class="data-grid">
+                            <div class="data-box small">
+                                <span class="data-label">Pitch &Delta;</span>
+                                <span class="data-value" id="debug-pitch-delta">0.0°</span>
+                            </div>
+                            <div class="data-box small">
+                                <span class="data-label">Roll &Delta;</span>
+                                <span class="data-value" id="debug-roll-delta">0.0°</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sentence Stream Builder -->
+                <div class="sentence-panel glass-panel">
+                    <h2 class="section-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>Interpreted sentence</span>
+                    </h2>
+
+                    <div id="sentence-display" aria-label="Detected Word Tokens" role="region">
+                        <!-- Dynamic word tags rendered by script.js -->
+                    </div>
+
+                    <!-- Smart Predictive Autocomplete Suggestions -->
+                    <div id="autocomplete-dropdown" class="autocomplete-dropdown" style="display: none;" role="listbox" aria-label="Autocomplete suggestions">
+                        <!-- Dynamic autocomplete chips injected by predictive.js -->
+                    </div>
+
+                    <div class="sentence-instructions">
+                        <span>Continuous Token Stream &bull; Drop hand briefly for double characters.<br>
+                        Shortcuts: <kbd>Space</kbd> Space &bull; <kbd>Backspace</kbd> Delete &bull; <kbd>1-5</kbd>/<kbd>Tab</kbd> Accept &bull; <kbd>Esc</kbd> Dismiss &bull; <kbd>Enter</kbd> Commit</span>
+                    </div>
+
+                    <div class="sentence-controls">
+                        <button id="clear-sentence-btn" class="btn danger">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            <span>Clear</span>
+                        </button>
+                        <button id="speak-sentence-btn" class="btn success">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                            <span>Speak Text</span>
+                        </button>
+                        <button id="type-to-windows-btn" class="btn secondary" title="Inject interpreted sentence directly into active Windows application">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                                <line x1="6" y1="8" x2="6.01" y2="8"></line>
+                                <line x1="10" y1="8" x2="10.01" y2="8"></line>
+                                <line x1="14" y1="8" x2="14.01" y2="8"></line>
+                                <line x1="18" y1="8" x2="18.01" y2="8"></line>
+                                <line x1="6" y1="12" x2="6.01" y2="12"></line>
+                                <line x1="18" y1="12" x2="18.01" y2="12"></line>
+                                <line x1="10" y1="16" x2="14" y2="16"></line>
+                            </svg>
+                            <span>Type to App</span>
+                        </button>
+                        <button id="send-to-room-btn" class="btn primary" title="Send interpreted sentence directly to connected two-way partner">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                            <span>Send to Room</span>
+                        </button>
+                    </div>
+
+                    <!-- Multi-Language Translation -->
+                    <div class="translation-section">
+                        <h3 class="section-title">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                            <span>Translation and voice</span>
+                        </h3>
+                        <div class="translation-controls">
+                            <select id="translate-lang" aria-label="Select Target Translation Language">
+                                <option value="ta">Tamil (ta)</option>
+                                <option value="hi">Hindi (hi)</option>
+                                <option value="es">Spanish (es)</option>
+                                <option value="fr">French (fr)</option>
+                                <option value="de">German (de)</option>
+                                <option value="ja">Japanese (ja)</option>
+                                <option value="ko">Korean (ko)</option>
+                                <option value="zh-CN">Chinese (zh-CN)</option>
+                                <option value="ar">Arabic (ar)</option>
+                                <option value="pt">Portuguese (pt)</option>
+                                <option value="ru">Russian (ru)</option>
+                                <option value="te">Telugu (te)</option>
+                                <option value="ml">Malayalam (ml)</option>
+                                <option value="kn">Kannada (kn)</option>
+                            </select>
+                            <button id="translate-btn" class="btn translate-btn">
+                                <span>Translate</span>
+                            </button>
+                            <button id="speak-translated-btn" class="btn success" aria-label="Speak Translated Output">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="translated-output" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Manual Calibration & KNN Overrides -->
+                <div class="training-panel glass-panel">
+                    <h2 class="section-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                            <rect x="9" y="9" width="6" height="6"></rect>
+                            <line x1="9" y1="1" x2="9" y2="4"></line>
+                            <line x1="15" y1="1" x2="15" y2="4"></line>
+                            <line x1="9" y1="20" x2="9" y2="23"></line>
+                            <line x1="15" y1="20" x2="15" y2="23"></line>
+                            <line x1="20" y1="9" x2="23" y2="9"></line>
+                            <line x1="20" y1="14" x2="23" y2="14"></line>
+                            <line x1="1" y1="9" x2="4" y2="9"></line>
+                            <line x1="1" y1="14" x2="4" y2="14"></line>
+                        </svg>
+                        <span>Calibration</span>
+                    </h2>
+                    <p class="desc">Add examples when a gesture is consistently misread. Changes stay on this device.</p>
+
+                    <div class="train-controls">
+                        <select id="train-class" aria-label="Select Target Class for Training">
+                            <optgroup label="Letters (A-Z)">
+                                <option value="A">Letter A</option>
+                                <option value="B">Letter B</option>
+                                <option value="C">Letter C</option>
+                                <option value="D">Letter D</option>
+                                <option value="E">Letter E</option>
+                                <option value="F">Letter F</option>
+                                <option value="G">Letter G</option>
+                                <option value="H">Letter H</option>
+                                <option value="I">Letter I</option>
+                                <option value="J">Letter J</option>
+                                <option value="K">Letter K</option>
+                                <option value="L">Letter L</option>
+                                <option value="M">Letter M</option>
+                                <option value="N">Letter N</option>
+                                <option value="O">Letter O</option>
+                                <option value="P">Letter P</option>
+                                <option value="Q">Letter Q</option>
+                                <option value="R">Letter R</option>
+                                <option value="S">Letter S</option>
+                                <option value="T">Letter T</option>
+                                <option value="U">Letter U</option>
+                                <option value="V">Letter V</option>
+                                <option value="W">Letter W</option>
+                                <option value="X">Letter X</option>
+                                <option value="Y">Letter Y</option>
+                                <option value="Z">Letter Z</option>
+                            </optgroup>
+                            <optgroup label="Numbers (0-9)">
+                                <option value="0">Number 0</option>
+                                <option value="1">Number 1</option>
+                                <option value="2">Number 2</option>
+                                <option value="3">Number 3</option>
+                                <option value="4">Number 4</option>
+                                <option value="5">Number 5</option>
+                                <option value="6">Number 6</option>
+                                <option value="7">Number 7</option>
+                                <option value="8">Number 8</option>
+                                <option value="9">Number 9</option>
+                            </optgroup>
+                            <optgroup label="Common Signs">
+                                <option value="THUMBS_UP">Thumbs Up (Good)</option>
+                                <option value="THUMBS_DOWN">Thumbs Down (Bad)</option>
+                                <option value="PEACE">Peace / Victory</option>
+                                <option value="OK">OK Sign</option>
+                                <option value="I_LOVE_YOU">I Love You (ILY)</option>
+                                <option value="ROCK_ON">Rock On / Horns</option>
+                                <option value="OPEN_PALM">Open Palm / Stop</option>
+                                <option value="FIST">Fist</option>
+                            </optgroup>
+                        </select>
+                        <button id="add-example-btn" class="btn primary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <span>Capture Gesture Frame</span>
+                        </button>
+                    </div>
+
+                    <div class="stats">
+                        <span>Active Overrides: <strong><span id="example-count">0</span></strong> frames</span>
+                        <button id="clear-data-btn" class="btn danger">Clear</button>
+                    </div>
+
+                    <div class="storage-controls">
+                        <button id="save-model-btn" class="btn secondary">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            <span>Save</span>
+                        </button>
+                        <button id="load-model-btn" class="btn secondary">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>Load</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Windows OS Native Gesture Controller HUD (Expanded Full Width) -->
+            <div class="os-control-panel glass-panel" id="os-control-panel" style="display: none;">
+                <div class="panel-header-row">
+                    <h2 class="section-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="8" height="8"></rect>
+                            <rect x="13" y="3" width="8" height="8"></rect>
+                            <rect x="3" y="13" width="8" height="8"></rect>
+                            <rect x="13" y="13" width="8" height="8"></rect>
+                        </svg>
+                        <span>Windows OS Controller</span>
+                    </h2>
+                    <div class="os-header-actions">
+                        <span id="os-bridge-status" class="status-badge disconnected">Bridge Offline</span>
+                        <button type="button" id="open-os-guide-btn" class="btn secondary sm" title="View Gesture Cheatsheet">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <span>Cheatsheet</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bridge Connection Notice & Manual Reconnect -->
+                <div class="os-bridge-alert" id="os-bridge-alert">
+                    <div class="os-bridge-alert-text">
+                        <strong>Local Python Bridge:</strong> Start controller via <code class="mono-code">python scripts/windows_bridge.py</code>
+                    </div>
+                    <button type="button" id="os-reconnect-btn" class="btn secondary sm">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        <span>Connect</span>
+                    </button>
+                </div>
+
+                <!-- Live OS Telemetry HUD Grid -->
+                <div class="os-hud-grid">
+                    <div class="os-hud-card">
+                        <div class="os-hud-label">Current Action</div>
+                        <div class="os-hud-value" id="os-action-display">Tracking Standby</div>
+                        <div class="os-hud-sub" id="os-action-detail">Point index finger to steer cursor</div>
+                    </div>
+                    <div class="os-hud-card">
+                        <div class="os-hud-label">Virtual Cursor</div>
+                        <div class="os-hud-value mono" id="os-coords-display">X: --, Y: --</div>
+                        <div class="os-hud-sub" id="os-screen-display">Screen: Ready</div>
+                    </div>
+                    <div class="os-hud-card">
+                        <div class="os-hud-label">System Volume</div>
+                        <div class="os-hud-value" id="os-volume-display">--%</div>
+                        <div class="meter-bar-track">
+                            <div class="meter-bar-fill" id="os-volume-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="os-hud-card">
+                        <div class="os-hud-label">Screen Brightness</div>
+                        <div class="os-hud-value" id="os-brightness-display">--%</div>
+                        <div class="meter-bar-track">
+                            <div class="meter-bar-fill" id="os-brightness-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick OS Controls Bar -->
+                <div class="os-quick-actions-section">
+                    <span class="os-section-subhead">Quick System Actions</span>
+                    <div class="os-quick-btn-row">
+                        <button type="button" class="btn secondary sm os-quick-btn" data-os-action="screenshot" title="Capture active screen (Saved to Pictures/Screenshots)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <span>Screenshot</span>
+                        </button>
+                        <button type="button" class="btn secondary sm os-quick-btn" data-os-action="snip" title="Launch Windows Snipping Tool (Win+Shift+S)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="6" cy="6" r="3"></circle>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                                <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                                <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+                            </svg>
+                            <span>Snip Tool</span>
+                        </button>
+                        <button type="button" class="btn secondary sm os-quick-btn" data-os-action="desktop" title="Show Desktop (Win+D)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span>Desktop</span>
+                        </button>
+                        <button type="button" class="btn secondary sm os-quick-btn" data-os-action="explorer" title="Open File Explorer (Win+E)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            <span>Explorer</span>
+                        </button>
+                        <button type="button" class="btn secondary sm os-quick-btn" data-os-action="taskmgr" title="Open Task Manager (Ctrl+Shift+Esc)">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                            <span>Task Manager</span>
+                        </button>
+                        <button type="button" class="btn secondary sm os-quick-btn" data-os-action="osk" title="Open On-Screen Virtual Keyboard">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                                <line x1="6" y1="8" x2="6.01" y2="8"></line>
+                                <line x1="10" y1="8" x2="10.01" y2="8"></line>
+                                <line x1="14" y1="8" x2="14.01" y2="8"></line>
+                                <line x1="18" y1="8" x2="18.01" y2="8"></line>
+                                <line x1="6" y1="12" x2="6.01" y2="12"></line>
+                                <line x1="18" y1="12" x2="18.01" y2="12"></line>
+                                <line x1="10" y1="16" x2="14" y2="16"></line>
+                            </svg>
+                            <span>OSK Keyboard</span>
+                        </button>
+                        <button type="button" class="btn secondary sm os-quick-btn" data-os-action="toggle_mute" title="Toggle System Mute">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <line x1="23" y1="9" x2="17" y2="15"></line>
+                                <line x1="17" y1="9" x2="23" y2="15"></line>
+                            </svg>
+                            <span>Mute</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cursor & Tracking Settings Controls -->
+                <div class="os-settings-drawer">
+                    <div class="os-setting-item">
+                        <div class="os-setting-header">
+                            <label for="os-sensitivity-slider">Sensitivity / Speed:</label>
+                            <span id="os-sensitivity-val" class="os-setting-badge">1.8x</span>
+                        </div>
+                        <input type="range" id="os-sensitivity-slider" min="0.5" max="3.5" step="0.1" value="1.8" class="os-range-input">
+                    </div>
+                    <div class="os-setting-item">
+                        <div class="os-setting-header">
+                            <label for="os-smoothing-slider">Motion Smoothing (EMA):</label>
+                            <span id="os-smoothing-val" class="os-setting-badge">0.65</span>
+                        </div>
+                        <input type="range" id="os-smoothing-slider" min="0.1" max="0.95" step="0.05" value="0.65" class="os-range-input">
+                    </div>
+                    <div class="os-setting-item">
+                        <div class="os-setting-header">
+                            <label for="os-drag-slider">Drag Hold Threshold:</label>
+                            <span id="os-drag-val" class="os-setting-badge">380ms</span>
+                        </div>
+                        <input type="range" id="os-drag-slider" min="200" max="800" step="20" value="380" class="os-range-input">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- System status -->
+        <footer class="footer-status glass-panel" role="contentinfo">
+            <div class="footer-item">
+                <span class="dot-indicator" id="footer-camera-dot"></span>
+                <span>Camera: <strong id="footer-camera-status">Initializing</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span class="dot-indicator" id="footer-model-dot"></span>
+                <span>Neural Model: <strong id="footer-model-status">Loading</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span>FPS: <strong id="footer-fps">--</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span class="dot-indicator disconnected" id="footer-glove-dot"></span>
+                <span>Glove BLE: <strong id="footer-glove-status">Disconnected</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span class="dot-indicator disconnected" id="footer-bridge-dot"></span>
+                <span>OS Bridge: <strong id="footer-bridge-status">Offline</strong></span>
+            </div>
+        </footer>
+
+        <!-- ==================== SIGN DICTIONARY MODAL ==================== -->
+        <div class="dictionary-modal" id="dictionary-modal" role="dialog" aria-modal="true" aria-labelledby="dict-modal-title">
+            <div class="dictionary-card glass-panel">
+                <div class="dict-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="brand-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="dict-title" id="dict-modal-title">Visual Sign Dictionary &amp; Reference Guide</h2>
+                            <p class="dict-subtitle">Visual guide for all 26 Letters, 10 Numbers, and Common Signs</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-dict" id="close-dictionary-btn" aria-label="Close Dictionary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Category Filters & Search -->
+                <div class="dict-toolbar">
+                    <div class="dict-tabs" id="dict-category-tabs" role="tablist">
+                        <button type="button" class="dict-tab active" data-dict-cat="all" role="tab" aria-selected="true">All (46)</button>
+                        <button type="button" class="dict-tab" data-dict-cat="alphabet" role="tab" aria-selected="false">Letters A-Z (26)</button>
+                        <button type="button" class="dict-tab" data-dict-cat="numbers" role="tab" aria-selected="false">Numbers 0-9 (10)</button>
+                        <button type="button" class="dict-tab" data-dict-cat="signs" role="tab" aria-selected="false">Common Signs (10)</button>
+                        <button type="button" class="dict-tab" data-dict-cat="chart" role="tab" aria-selected="false">Reference Chart</button>
+                    </div>
+                    <div class="dict-search-box" id="dict-search-container">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" id="dict-search-input" placeholder="Search letters, numbers, signs..." aria-label="Search dictionary">
+                    </div>
+                </div>
+
+                <!-- Dictionary Grid of Cards -->
+                <div class="dict-grid scroll-container" id="dict-cards-grid">
+                    <!-- Cards injected dynamically by dictionary.js -->
+                </div>
+
+                <!-- Reference Chart View -->
+                <div class="dict-chart-view scroll-container" id="dict-chart-view" style="display: none; padding: 20px; overflow-y: auto;">
+                    <!-- Full Alphabet Chart -->
+                    <div style="max-width: 940px; margin: 0 auto 24px; background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h3 style="font-size: 1.15rem; color: var(--text-primary); margin: 0; font-weight: 700;">American Sign Language Alphabet Chart (A-Z)</h3>
+                                <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 3px 0 0;">Visual finger-spelling formation reference for all 26 manual alphabet letters.</p>
+                            </div>
+                            <a href="assets/signs/asl_alphabet_reference.jpg" target="_blank" class="btn secondary" style="font-size: 0.75rem; text-decoration: none; padding: 6px 14px;">
+                                Open Full Size
+                            </a>
+                        </div>
+                        <div style="background: #ffffff; border-radius: var(--radius-md); padding: 10px; display: flex; justify-content: center;">
+                            <img src="assets/signs/asl_alphabet_reference.jpg" alt="ASL Full Alphabet Reference Chart" style="max-width: 100%; height: auto; display: block; border-radius: 4px;" />
+                        </div>
+                    </div>
+
+                    <!-- Full Numbers Chart -->
+                    <div style="max-width: 940px; margin: 0 auto; background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                            <div>
+                                <h3 style="font-size: 1.15rem; color: var(--text-primary); margin: 0; font-weight: 700;">American Sign Language Numbers Chart (0-9)</h3>
+                                <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 3px 0 0;">Standard manual counting hand shapes from 0 through 9.</p>
+                            </div>
+                            <a href="assets/signs/asl_numbers_reference.png" target="_blank" class="btn secondary" style="font-size: 0.75rem; text-decoration: none; padding: 6px 14px;">
+                                Open Full Size
+                            </a>
+                        </div>
+                        <div style="background: #ffffff; border-radius: var(--radius-md); padding: 10px; display: flex; justify-content: center;">
+                            <img src="assets/signs/asl_numbers_reference.png" alt="ASL Numbers Reference Chart" style="max-width: 100%; height: auto; display: block; border-radius: 4px;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== OS GESTURE CHEATSHEET MODAL ==================== -->
+        <div class="dictionary-modal" id="os-guide-modal" role="dialog" aria-modal="true" aria-labelledby="os-guide-title">
+            <div class="dictionary-card glass-panel" style="max-width: 920px;">
+                <div class="dict-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="brand-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="8" height="8"></rect>
+                                <rect x="13" y="3" width="8" height="8"></rect>
+                                <rect x="3" y="13" width="8" height="8"></rect>
+                                <rect x="13" y="13" width="8" height="8"></rect>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="dict-title" id="os-guide-title">Windows OS Gesture Controls Cheatsheet</h2>
+                            <p class="dict-subtitle">Full gesture guide for real-time mouse, scroll, media, window, and desktop control</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-dict" id="close-os-guide-btn" aria-label="Close Cheatsheet">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="os-guide-grid scroll-container">
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+                                <path d="M13 13l6 6"></path>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Cursor Steering</span>
+                            <span class="os-guide-badge">Mouse</span>
+                            <p class="os-guide-desc">Point your <strong>Index finger</strong> towards the camera. The cursor smoothly follows your fingertip across all monitors.</p>
+                            <span class="os-guide-tip">Tips: Keep other fingers comfortably relaxed or curled.</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 12l2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Left Click &amp; Double Click</span>
+                            <span class="os-guide-badge">Mouse</span>
+                            <p class="os-guide-desc">Quickly <strong>pinch Thumb and Index finger tips together</strong> and release within 350ms. Pinch twice quickly for Double Click.</p>
+                            <span class="os-guide-tip">Tips: A green reticle flash confirms the left click.</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="9" y1="3" x2="9" y2="21"></line>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Left Drag &amp; Drop</span>
+                            <span class="os-guide-badge">Mouse</span>
+                            <p class="os-guide-desc"><strong>Pinch and hold Thumb + Index for &gt;380ms</strong>. The cursor locks in mouse-down state. Move your hand to drag windows or files, then release to drop.</p>
+                            <span class="os-guide-tip">Tips: The action badge turns amber and displays "DRAGGING".</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Right Click (Context Menu)</span>
+                            <span class="os-guide-badge">Mouse</span>
+                            <p class="os-guide-desc">Pinch your <strong>Thumb tip and Middle finger tip</strong> together. Opens context menus on desktop, files, and web pages.</p>
+                            <span class="os-guide-tip">Tips: Distinct from Left Click to eliminate accidental clicks.</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <polyline points="19 12 12 19 5 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Smooth Scrolling</span>
+                            <span class="os-guide-badge">Navigation</span>
+                            <p class="os-guide-desc">Extend both <strong>Index and Middle fingers upright side-by-side</strong> (peace sign closed) and move your hand up or down to scroll web pages and documents.</p>
+                            <span class="os-guide-tip">Tips: Continuous fluid motion smoothly rotates the mouse wheel.</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Master Volume Control</span>
+                            <span class="os-guide-badge">Media</span>
+                            <p class="os-guide-desc">Adjust distance between <strong>Thumb and Index tips</strong> (aperture dial) to set volume 0-100%, or hold <strong>Thumb Up / Thumb Down</strong> for incremental steps.</p>
+                            <span class="os-guide-tip">Tips: Real-time volume percentage is reflected in the HUD.</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Screen Brightness Level</span>
+                            <span class="os-guide-badge">Display</span>
+                            <p class="os-guide-desc">Hold <strong>3 fingers upright (Index, Middle, Ring - like 'W' / '3')</strong> and elevate hand up or down to adjust your monitor's hardware brightness level.</p>
+                            <span class="os-guide-tip">Tips: Higher hand position raises brightness, lower lowers it.</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Instant Screenshot &amp; Snip</span>
+                            <span class="os-guide-badge">Utility</span>
+                            <p class="os-guide-desc">Form an <strong>"L" sign (Thumb + Index at 90°)</strong> and hold steady for 1.2s to trigger Windows Snipping Tool (<kbd>Win+Shift+S</kbd>) or full screenshot saved to Pictures.</p>
+                            <span class="os-guide-tip">Tips: Progress circle animates around reticle while holding.</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Show Desktop</span>
+                            <span class="os-guide-badge">Window</span>
+                            <p class="os-guide-desc">Push your <strong>Flat Open Palm downward</strong> rapidly towards bottom edge of the frame to minimize all windows and show desktop (<kbd>Win+D</kbd>).</p>
+                            <span class="os-guide-tip">Tips: Perform the gesture again to restore windows.</span>
+                        </div>
+                    </div>
+
+                    <div class="os-guide-card">
+                        <div class="os-guide-icon-badge">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                                <line x1="10" y1="16" x2="14" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div class="os-guide-info">
+                            <span class="os-guide-gesture-name">Virtual Keyboard Typing</span>
+                            <span class="os-guide-badge">Input</span>
+                            <p class="os-guide-desc">Click <strong>OSK Keyboard</strong> on the HUD or use the letter recognizer to type into any active Windows application, text field, or notepad.</p>
+                            <span class="os-guide-tip">Tips: Direct text injection sends keystrokes with 0 delay.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TWO-WAY COMMUNICATION ROOM MODAL ==================== -->
+        <div class="dictionary-modal" id="two-way-modal" role="dialog" aria-modal="true" aria-labelledby="two-way-modal-title">
+            <div class="dictionary-card glass-panel two-way-card">
+                <!-- Header -->
+                <div class="dict-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="brand-badge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="dict-title" id="two-way-modal-title">Two-Way Speech &amp; Sign Room</h2>
+                            <p class="dict-subtitle">Connect with a partner across devices using a 6-character room code</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-dict" id="close-two-way-btn" aria-label="Close Two-Way Room">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- VIEW 1: ROOM SETUP (HOST / JOIN) -->
+                <div class="two-way-view" id="two-way-setup-view">
+                    <!-- Role Picker Bar -->
+                    <div class="two-way-role-bar">
+                        <span class="two-way-label">My Role:</span>
+                        <div class="two-way-role-pills" id="two-way-role-pills" role="radiogroup" aria-label="Communication Role">
+                            <button type="button" class="two-way-role-btn active" data-role="both" aria-checked="true">
+                                <span>Bidirectional (Both)</span>
+                            </button>
+                            <button type="button" class="two-way-role-btn" data-role="signing" aria-checked="false">
+                                <span>I am Signing (Deaf/Mute)</span>
+                            </button>
+                            <button type="button" class="two-way-role-btn" data-role="speaking" aria-checked="false">
+                                <span>I am Speaking (Hearing)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Setup Cards Grid -->
+                    <div class="two-way-setup-grid">
+                        <!-- Host Card -->
+                        <div class="two-way-card-box">
+                            <div class="two-way-box-header">
+                                <div class="two-way-box-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="two-way-box-title">Create a Room (Host)</h3>
+                                    <p class="two-way-box-desc">Generate a 6-character room code and share it with your partner.</p>
+                                </div>
+                            </div>
+
+                            <div class="two-way-host-content" id="two-way-host-idle">
+                                <button type="button" id="two-way-create-room-btn" class="btn primary" style="width: 100%; justify-content: center;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                    <span>Create New Session</span>
+                                </button>
+                            </div>
+
+                            <div class="two-way-host-content" id="two-way-host-active" style="display: none;">
+                                <div class="room-code-badge-wrap">
+                                    <span class="room-code-label">Your Shareable Room Code</span>
+                                    <div class="room-code-badge" id="host-room-code-display">ASL-XXX</div>
+                                </div>
+                                <div class="room-share-actions">
+                                    <button type="button" id="copy-room-code-btn" class="btn secondary sm" title="Copy Room Code">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                        <span id="copy-code-text">Copy Code</span>
+                                    </button>
+                                    <button type="button" id="copy-room-link-btn" class="btn secondary sm" title="Copy Direct Join Link">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                        </svg>
+                                        <span id="copy-link-text">Copy Link</span>
+                                    </button>
+                                </div>
+                                <div class="room-wait-status">
+                                    <span class="dot-indicator pulse"></span>
+                                    <span id="host-wait-text">Waiting for partner to enter code...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Join Card -->
+                        <div class="two-way-card-box">
+                            <div class="two-way-box-header">
+                                <div class="two-way-box-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                        <polyline points="10 17 15 12 10 7"></polyline>
+                                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="two-way-box-title">Join a Room (Guest)</h3>
+                                    <p class="two-way-box-desc">Enter the room code shared by your partner.</p>
+                                </div>
+                            </div>
+
+                            <div class="two-way-join-form">
+                                <div class="join-input-wrap">
+                                    <input type="text" id="two-way-join-input" placeholder="e.g. ASL-842" maxlength="12" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" class="join-code-input" aria-label="Room Code">
+                                </div>
+                                <button type="button" id="two-way-join-btn" class="btn primary" style="width: 100%; justify-content: center;">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                    <span>Connect to Room</span>
+                                </button>
+                            </div>
+                            <div class="two-way-join-hint">
+                                Direct links with <code class="mono-code">?room=CODE</code> will prefill automatically.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: ACTIVE TWO-WAY CALL HUD (HIDDEN UNTIL CONNECTED) -->
+                <div class="two-way-view" id="two-way-active-view" style="display: none;">
+                    <!-- Active Session Control Bar -->
+                    <div class="two-way-active-bar">
+                        <div class="two-way-active-info">
+                            <span class="status-badge connected">
+                                <span class="dot"></span>
+                                <span id="two-way-session-code">ASL-XXX</span>
+                            </span>
+                            <span class="two-way-partner-badge" id="two-way-partner-badge">Partner: Connected</span>
+                        </div>
+                        <div class="two-way-active-actions">
+                            <button type="button" id="two-way-video-toggle-btn" class="btn secondary sm" title="Toggle Partner Video Stream">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                                </svg>
+                                <span id="two-way-video-btn-text">Video Call</span>
+                            </button>
+                            <button type="button" id="two-way-disconnect-btn" class="btn danger sm" title="Leave Session">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                                    <line x1="12" y1="2" x2="12" y2="12"></line>
+                                </svg>
+                                <span>Leave Room</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remote Video Frame (Collapsible) -->
+                    <div class="two-way-video-drawer" id="two-way-video-drawer" style="display: none;">
+                        <video id="two-way-remote-video" autoplay playsinline></video>
+                    </div>
+
+                    <!-- Dual Split Communication Canvas -->
+                    <div class="two-way-stream-grid">
+                        <!-- Partner Incoming Stream -->
+                        <div class="two-way-stream-box partner-stream">
+                            <div class="stream-box-header">
+                                <span class="stream-title">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                    <span>Partner's Stream (Incoming)</span>
+                                </span>
+                                <div class="stream-actions">
+                                    <button type="button" id="two-way-vocalize-btn" class="btn secondary sm" title="Speak text aloud">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                                        </svg>
+                                        <span>Speak Aloud</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="two-way-message-display" id="two-way-remote-text">
+                                <span class="transcript-placeholder">Waiting for partner to speak or sign...</span>
+                            </div>
+
+                            <!-- Animated Sign Player Card for incoming speech -->
+                            <div class="two-way-sign-stage" id="two-way-sign-stage" style="display: none;">
+                                <div class="active-sign-card">
+                                    <div class="active-sign-visual" id="two-way-active-visual">
+                                        <span class="active-sign-glyph" id="two-way-active-glyph">-</span>
+                                    </div>
+                                    <div class="active-sign-info">
+                                        <span class="active-sign-title" id="two-way-active-title">Listening...</span>
+                                        <span class="active-sign-desc" id="two-way-active-desc">Signs will play sequentially</span>
+                                    </div>
+                                </div>
+                                <div class="sign-sequence-timeline" id="two-way-active-timeline"></div>
+                            </div>
+                        </div>
+
+                        <!-- Local Outgoing Stream & Controls -->
+                        <div class="two-way-stream-box local-stream">
+                            <div class="stream-box-header">
+                                <span class="stream-title">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                    <span>My Outgoing Stream</span>
+                                </span>
+                                <span class="status-badge connected" id="two-way-local-status">Signing / Voice Ready</span>
+                            </div>
+
+                            <!-- Quick Voice Speak Button & Text Input -->
+                            <div class="two-way-voice-bar">
+                                <button type="button" id="two-way-speak-mic-btn" class="btn primary">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                                    </svg>
+                                    <span id="two-way-speak-mic-text">Speak to Partner</span>
+                                </button>
+                                <span class="voice-hint">Spoken voice translates to animated ASL signs on partner's screen</span>
+
+                                <div class="two-way-text-bar">
+                                    <input type="text" id="two-way-text-input" class="two-way-input" placeholder="Type text to convert to ASL signs..." />
+                                    <button type="button" id="two-way-send-text-btn" class="btn secondary sm" title="Translate text into ASL signs for partner">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                        </svg>
+                                        <span>Send</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Outgoing Message Preview -->
+                            <div class="two-way-outgoing-preview" id="two-way-outgoing-preview">
+                                <span class="transcript-placeholder">Signed sentences or spoken voice will appear here and send automatically...</span>
+                            </div>
+
+                            <div class="two-way-sign-bridge">
+                                <button type="button" id="two-way-send-current-sign-btn" class="btn secondary sm" style="width: 100%; justify-content: center; gap: 8px;">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14"></path>
+                                        <path d="m12 5 7 7-7 7"></path>
+                                    </svg>
+                                    <span>Send Current Interpreted Sentence</span>
+                                </button>
+                            </div>
+
+                            <!-- Quick Reaction Phrases Chips -->
+                            <div class="two-way-quick-phrases">
+                                <span class="os-section-subhead">Quick Response Chips</span>
+                                <div class="quick-phrase-row">
+                                    <button type="button" class="quick-phrase-chip" data-phrase="YES">Yes</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="NO">No</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="HELLO">Hello</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="THANK YOU">Thank You</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="PLEASE REPEAT">Please Repeat</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="WAIT A MINUTE">Wait a Minute</button>
+                                    <button type="button" class="quick-phrase-chip" data-phrase="GOOD">Good</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Peer-to-Peer WebRTC Runtime -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <script src="two_way.js"></script>
+    <!-- Machine Learning Runtime -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/knn-classifier"></script>
+    <script src="dictionary.js?v=3.2.0"></script>
+    <script src="predictive.js"></script>
+    <script src="script.js?v=2.6.0"></script>
+</body>
+
+</html>

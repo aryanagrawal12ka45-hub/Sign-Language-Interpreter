@@ -41,7 +41,7 @@ function setRecognitionMode(mode) {
 
     const osPanel = document.getElementById('os-control-panel');
     if (osPanel) {
-        osPanel.style.display = (mode === 'os_control') ? 'block' : 'none';
+        osPanel.style.display = (mode === 'os_control') ? 'flex' : 'none';
     }
 
     if (mode === 'os_control') {
@@ -396,7 +396,7 @@ class CameraManager {
                 'Close Zoom, Microsoft Teams, Discord, Skype, OBS, or other video chat apps.',
                 'Close any other browser tabs that might be using the camera.',
                 'Unplug and re-plug your USB webcam if using an external device.',
-                'Click "Retry Camera" once other applications are closed.'
+                'Click "Refresh Camera" once other applications are closed.'
             ];
         } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
             title = 'No Webcam Detected';
@@ -565,7 +565,7 @@ async function connectToBluetooth() {
         console.log('BLE Connection Established and Listening!');
     } catch (error) {
         if (error.name === 'NotFoundError') {
-            // User cancelled the Bluetooth device chooser — not a real error
+            // User cancelled the Bluetooth device chooser: not a real error
             console.log('Bluetooth pairing was cancelled by the user.');
         } else {
             console.error('BLE Connection error:', error);

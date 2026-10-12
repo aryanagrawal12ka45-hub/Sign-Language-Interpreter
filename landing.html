@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
-    <title>Sign Language Studio — Real-Time Sign Language Intelligence</title>
-    <meta name="description" content="Production-grade 21-landmark neural computer vision, sub-15ms edge inference, and bidirectional WebRTC communication for American Sign Language.">
+    <title>Sign Language Studio - Neural Vision & Multimodal Accessibility</title>
+    <meta name="description" content="Production-grade 21-landmark neural computer vision, ~400ms recognition lock-in, and bidirectional WebRTC communication for American Sign Language.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,9 +33,9 @@
         <!-- ==================== STUDIO HEADER ==================== -->
         <header class="app-header landing-header" role="banner">
             <div class="header-inner">
-                <a href="landing.html" class="header-left brand-link" title="Sign Language Studio">
+                <a href="index.html" class="header-left brand-link" title="Sign Language Studio">
                     <div class="brand-mark">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
                             <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
                             <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
@@ -49,14 +52,14 @@
                 </a>
 
                 <nav class="nav-menu" aria-label="Primary Navigation">
-                    <a href="landing.html" class="nav-link active" aria-current="page">
+                    <a href="index.html" class="nav-link active" aria-current="page">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
                         </svg>
                         <span>Overview</span>
                     </a>
-                    <a href="index.html" class="nav-link">
+                    <a href="detector.html" class="nav-link">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                             <circle cx="12" cy="13" r="4"></circle>
@@ -75,7 +78,7 @@
                         </svg>
                         <span>Gesture Assistant</span>
                     </a>
-                    <a href="index.html#two-way" class="nav-link nav-btn-modal" id="open-two-way-btn" title="Open Two-Way Speech & Sign Room">
+                    <a href="detector.html#two-way" class="nav-link nav-btn-modal" id="open-two-way-btn" title="Open Two-Way Speech &amp; Sign Room">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
@@ -91,12 +94,13 @@
                         </svg>
                         <span>Sign Library</span>
                     </button>
-                    <a href="index.html" class="btn primary sm" style="margin-left: 6px;">
-                        <span>Launch Studio</span>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
+                    <a href="about.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
                         </svg>
+                        <span>About</span>
                     </a>
                 </nav>
             </div>
@@ -118,11 +122,11 @@
                 </h1>
 
                 <p class="landing-subtitle">
-                    Enterprise-grade 21-landmark neural computer vision, sub-15ms on-device inference, and bidirectional WebRTC communication. Bridging deaf and hearing interaction from first principles.
+                    Client-side 21-landmark neural computer vision, ~400ms debounced recognition lock-in, and bidirectional WebRTC communication. Bridging deaf and hearing interaction from first principles.
                 </p>
 
                 <div class="landing-cta-group">
-                    <a href="index.html" class="btn primary" id="cta-detector-btn">
+                    <a href="detector.html" class="btn primary" id="cta-detector-btn">
                         <span>Launch Studio Detector</span>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -137,7 +141,7 @@
                         <span>Practice Lab</span>
                     </a>
 
-                    <a href="index.html#two-way" class="btn secondary" id="cta-two-way-btn">
+                    <a href="detector.html#two-way" class="btn secondary" id="cta-two-way-btn">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
@@ -155,8 +159,8 @@
                         <span class="landing-spec-lbl">3D Landmarks</span>
                     </div>
                     <div class="landing-spec-item">
-                        <span class="landing-spec-val">&lt; 14 ms</span>
-                        <span class="landing-spec-lbl">Edge Latency</span>
+                        <span class="landing-spec-val">~400 ms</span>
+                        <span class="landing-spec-lbl">Recognition Lock-in</span>
                     </div>
                     <div class="landing-spec-item">
                         <span class="landing-spec-val">46 Classes</span>
@@ -177,7 +181,7 @@
                             <span class="engine-status-dot" style="background: var(--accent-emerald);"></span>
                             <span>Topology Matrix &bull; MediaPipe Hands</span>
                         </div>
-                        <span class="config-label" style="font-size: 0.68rem; padding: 2px 7px;">60 FPS Active</span>
+                        <span class="config-label" style="font-size: 0.68rem; padding: 2px 7px;">30-60 FPS Active</span>
                     </div>
 
                     <!-- SVG 3D Hand Articulated Skeleton -->
@@ -254,7 +258,7 @@
                         </div>
                     </div>
 
-                    <a href="index.html" class="landing-card-action">
+                    <a href="detector.html" class="landing-card-action">
                         <span>Launch Studio Detector &bull; Live Camera Feed</span>
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="9 18 15 12 9 6"></polyline>

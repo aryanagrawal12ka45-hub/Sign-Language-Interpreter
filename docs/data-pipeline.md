@@ -1,6 +1,6 @@
 # Data Pipeline & Processing Flow
 
-This document details the complete end-to-end data transformation pipeline—tracing raw physical inputs (optical photons and MEMS gravitational accelerations) through landmark extraction, mathematical normalization, neural classification, heuristic sensor fusion, and multi-modal output generation.
+This document details the complete end-to-end data transformation pipeline: tracing raw physical inputs (optical photons and MEMS gravitational accelerations) through landmark extraction, mathematical normalization, neural classification, heuristic sensor fusion, and multi-modal output generation.
 
 ---
 

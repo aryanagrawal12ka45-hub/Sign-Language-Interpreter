@@ -1313,7 +1313,7 @@ class CameraManager {
                 'Close Zoom, Microsoft Teams, Discord, Skype, OBS, or other video chat apps.',
                 'Close any other browser tabs that might be using the camera.',
                 'Unplug and re-plug your USB webcam if using an external device.',
-                'Click "Retry Camera" once other applications are closed.'
+                'Click "Refresh Camera" once other applications are closed.'
             ];
         } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
             title = 'No Webcam Detected';

@@ -94,8 +94,8 @@ function injectDictionaryModalHTML() {
             <div class="dict-toolbar">
                 <div class="dict-tabs" id="dict-category-tabs" role="tablist">
                     <button type="button" class="dict-tab active" data-dict-cat="all" role="tab" aria-selected="true">All (46)</button>
-                    <button type="button" class="dict-tab" data-dict-cat="alphabet" role="tab" aria-selected="false">Letters A–Z (26)</button>
-                    <button type="button" class="dict-tab" data-dict-cat="numbers" role="tab" aria-selected="false">Numbers 0–9 (10)</button>
+                    <button type="button" class="dict-tab" data-dict-cat="alphabet" role="tab" aria-selected="false">Letters A-Z (26)</button>
+                    <button type="button" class="dict-tab" data-dict-cat="numbers" role="tab" aria-selected="false">Numbers 0-9 (10)</button>
                     <button type="button" class="dict-tab" data-dict-cat="signs" role="tab" aria-selected="false">Common Signs (10)</button>
                     <button type="button" class="dict-tab" data-dict-cat="chart" role="tab" aria-selected="false">Reference Chart</button>
                 </div>
@@ -119,7 +119,7 @@ function injectDictionaryModalHTML() {
                 <div style="max-width: 940px; margin: 0 auto 24px; background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                     <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <div>
-                            <h3 style="font-size: 1.15rem; color: var(--text-primary); margin: 0; font-weight: 700;">American Sign Language Alphabet Chart (A–Z)</h3>
+                            <h3 style="font-size: 1.15rem; color: var(--text-primary); margin: 0; font-weight: 700;">American Sign Language Alphabet Chart (A-Z)</h3>
                             <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 3px 0 0;">Visual finger-spelling formation reference for all 26 manual alphabet letters.</p>
                         </div>
                         <a href="assets/signs/asl_alphabet_reference.jpg" target="_blank" class="btn secondary" style="font-size: 0.75rem; text-decoration: none; padding: 6px 14px;">
@@ -135,7 +135,7 @@ function injectDictionaryModalHTML() {
                 <div style="max-width: 940px; margin: 0 auto; background: var(--bg-surface-2); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                     <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <div>
-                            <h3 style="font-size: 1.15rem; color: var(--text-primary); margin: 0; font-weight: 700;">American Sign Language Numbers Chart (0–9)</h3>
+                            <h3 style="font-size: 1.15rem; color: var(--text-primary); margin: 0; font-weight: 700;">American Sign Language Numbers Chart (0-9)</h3>
                             <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 3px 0 0;">Standard manual counting hand shapes from 0 through 9.</p>
                         </div>
                         <a href="assets/signs/asl_numbers_reference.png" target="_blank" class="btn secondary" style="font-size: 0.75rem; text-decoration: none; padding: 6px 14px;">
@@ -327,8 +327,8 @@ function initSignDictionary() {
                         modeBtn.click();
                         closeModal();
                     } else {
-                        // If on quiz.html or chat.html: redirect to index.html with target mode
-                        window.location.href = `index.html?mode=${targetMode}&sign=${encodeURIComponent(item.id)}`;
+                        // If on other pages: redirect to detector.html with target mode
+                        window.location.href = `detector.html?mode=${targetMode}&sign=${encodeURIComponent(item.id)}`;
                     }
                 });
             }

@@ -11,7 +11,13 @@ import sys
 
 
 class CustomRequestHandler(SimpleHTTPRequestHandler):
-    """Custom request handler enabling CORS and correct caching/MIME settings."""
+    """Custom request handler enabling CORS, landing page routing, and correct caching/MIME settings."""
+
+    def translate_path(self, path):
+        # Route root '/' or empty path to index.html
+        if path == "/" or path == "":
+            path = "/index.html"
+        return super().translate_path(path)
 
     def end_headers(self):
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -27,7 +33,7 @@ def run_server(port: int = 8000, directory: str = "."):
     handler = partial(CustomRequestHandler, directory=root_dir)
 
     print("=" * 70)
-    print(" SIGN LANGUAGE INTERPRETER — LOCAL DEV SERVER")
+    print(" SIGN LANGUAGE STUDIO - LOCAL DEV SERVER")
     print("=" * 70)
     print(f" Serving Directory : {root_dir}")
     print(f" Local URL         : http://localhost:{port}")

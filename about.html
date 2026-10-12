@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>Sign Language Studio - About & Architecture</title>
+    <meta name="description" content="Technical architecture, research principles, and system specifications of Sign Language Studio.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Global Design System -->
+    <link rel="stylesheet" href="style.css?v=4.0.0">
+</head>
+
+<body class="about-body">
+    <!-- Ambient 60fps Neural Constellation Canvas -->
+    <canvas id="neural-bg-canvas"></canvas>
+
+    <!-- Sub-pixel Grid & Ambient Horizon Overlay -->
+    <div class="landing-grid-overlay" aria-hidden="true"></div>
+
+    <!-- Main Container -->
+    <div class="about-viewport">
+
+        <!-- ==================== STUDIO HEADER ==================== -->
+        <header class="app-header landing-header" role="banner">
+            <div class="header-inner">
+                <a href="index.html" class="header-left brand-link" title="Sign Language Studio">
+                    <div class="brand-mark">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                            <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                        </svg>
+                    </div>
+                    <div class="header-titles">
+                        <div class="brand-title-row">
+                            <h1 class="brand-title">Sign Language <span class="brand-title-accent">Studio</span></h1>
+                            <span class="engine-badge"><span class="engine-status-dot"></span> Research Lab v4.0</span>
+                        </div>
+                        <p class="brand-caption">Neural Vision &bull; Real-time ASL recognition &amp; multimodal accessibility</p>
+                    </div>
+                </a>
+
+                <nav class="nav-menu" aria-label="Primary Navigation">
+                    <a href="index.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Overview</span>
+                    </a>
+                    <a href="detector.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span>Detector</span>
+                    </a>
+                    <a href="quiz.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>Practice Lab</span>
+                    </a>
+                    <a href="chat.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>Gesture Assistant</span>
+                    </a>
+                    <a href="detector.html#two-way" class="nav-link nav-btn-modal" id="open-two-way-btn" title="Open Two-Way Speech &amp; Sign Room">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Two-Way Room</span>
+                    </a>
+                    <button id="open-dictionary-btn" class="nav-link nav-btn-modal" type="button" aria-haspopup="dialog">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span>Sign Library</span>
+                    </button>
+                    <a href="about.html" class="nav-link active" aria-current="page">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>About</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ==================== ABOUT DOSSIER CONTENT ==================== -->
+        <main class="about-content-wrap">
+
+            <!-- Section Header -->
+            <div class="about-hero-header">
+                <div class="landing-status-chip">
+                    <span class="engine-status-dot" style="background: var(--accent-emerald);"></span>
+                    <span>System Architecture &bull; Engineering Dossier v4.0</span>
+                </div>
+
+                <h1 class="landing-title" style="font-size: clamp(2.2rem, 3.4vw, 3.2rem);">
+                    <span>Engineered for Accessibility</span><br>
+                    <span class="text-gradient-silver">from First Principles.</span>
+                </h1>
+
+                <p class="landing-subtitle" style="max-width: 740px;">
+                    Sign Language Studio is an open, high-performance computer vision platform designed to translate American Sign Language directly on the client edge. Engineered with on-device deep learning, zero cloud ingestion, and real-time WebRTC peer-to-peer rooms.
+                </p>
+            </div>
+
+            <!-- 3 Core Architectural Pillars -->
+            <div class="about-pillars-grid">
+                <div class="about-card">
+                    <div class="about-card-badge">01 &bull; Computer Vision &amp; Deep Learning</div>
+                    <h2 class="about-card-title">Client-Side Neural Inference</h2>
+                    <p class="about-card-text">
+                        The vision stream tracks 21 articulated 3D hand keypoints at 30 to 60 FPS using MediaPipe Hands. Landmarks are normalized relative to wrist origin and evaluated by a 4-layer Sequential Deep Neural Network in TensorFlow.js. Neural inference executes with ~15-25ms forward passes on WebGL/GPU, driving ~400ms debounced recognition lock-in for sustained gesture confirmation, ensuring video frames never leave the device.
+                    </p>
+                    <div class="about-card-meta">
+                        <span class="mono-code">MediaPipe Hands</span>
+                        <span class="mono-code">TensorFlow.js WebGL</span>
+                        <span class="mono-code">42 Features</span>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-badge">02 &bull; Real-Time Telecommunications</div>
+                    <h2 class="about-card-title">Bidirectional P2P Channels</h2>
+                    <p class="about-card-text">
+                        The platform establishes direct browser-to-browser WebRTC DataChannels using PeerJS. Hearing users can speak naturally via the Web Speech API, with words tokenized and translated into illustrated sign sequences in real time. Deaf users sign directly into the camera, streaming synthesized speech and textual feedback to their partner.
+                    </p>
+                    <div class="about-card-meta">
+                        <span class="mono-code">WebRTC PeerJS</span>
+                        <span class="mono-code">Web Speech API</span>
+                        <span class="mono-code">P2P Rooms</span>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-badge">03 &bull; Multimodal Education &amp; Telemetry</div>
+                    <h2 class="about-card-title">Practice Academy &amp; Vision AI</h2>
+                    <p class="about-card-text">
+                        The interactive Practice Laboratory provides pose hold-and-verify feedback, circular SVG progress rings, streak multiplier scoring, and a 60-second speed-run mode. An integrated vision assistant powered by Puter.js allows users to upload sign photographs and receive step-by-step diagnostic signing corrections.
+                    </p>
+                    <div class="about-card-meta">
+                        <span class="mono-code">SVG Hold Engine</span>
+                        <span class="mono-code">Session Telemetry</span>
+                        <span class="mono-code">Puter Vision</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hardware & System Notes (Disclosures) -->
+            <div class="about-notes-section">
+                <!-- Note 1: Smart Glove -->
+                <div class="about-notice-box">
+                    <div class="about-notice-header">
+                        <span class="engine-status-dot" style="background: var(--accent-amber);"></span>
+                        <h3 class="about-notice-title">Hardware Note : Smart Glove Integration</h3>
+                    </div>
+                    <p class="about-notice-text">
+                        The custom Bluetooth Low Energy (BLE) sensor glove (ESP32 micro-controller and MPU-6050 6-axis IMU) was built as an experimental hardware extension to study rotational kinematics and trajectory disambiguation for dynamic gestures. <strong>The glove is completely optional and not required to use Sign Language Studio.</strong> All primary capabilities (alphabet finger-spelling, numerical counting, dynamic signs, practice quizzes, sign dictionary, and two-way rooms) function with 100% fidelity using any standard laptop or mobile camera through MediaPipe computer vision.
+                    </p>
+                </div>
+
+                <!-- Note 2: OS Gesture Controls -->
+                <div class="about-notice-box">
+                    <div class="about-notice-header">
+                        <span class="engine-status-dot" style="background: var(--accent-zinc);"></span>
+                        <h3 class="about-notice-title">System Note : Windows OS Gesture Controls</h3>
+                    </div>
+                    <p class="about-notice-text">
+                        The Windows OS Controller module includes a real-time vision classifier designed to recognize desktop control gestures such as cursor steering, pinch clicks, drag-and-drop, scrolling, and volume adjustment dials. <strong>Please note that native desktop injection and active OS execution is an experimental research preview that is not fully operational yet.</strong> Gesture classification is active in the vision engine, and full operating system automation will be completed in an upcoming release.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Technical Specifications & Deployment Strip -->
+            <div class="about-specs-panel">
+                <div class="about-specs-col">
+                    <span class="about-specs-lbl">Production Deployment</span>
+                    <a href="https://sign-language-studio.netlify.app/" target="_blank" rel="noopener noreferrer" class="about-specs-val" style="color: var(--accent-emerald);">
+                        sign-language-studio.netlify.app
+                    </a>
+                </div>
+                <div class="about-specs-col">
+                    <span class="about-specs-lbl">Source Repository</span>
+                    <a href="https://github.com/rudy-07/Sign-Language-Interpreter" target="_blank" rel="noopener noreferrer" class="about-specs-val">
+                        github.com/rudy-07/Sign-Language-Interpreter
+                    </a>
+                </div>
+                <div class="about-specs-col">
+                    <span class="about-specs-lbl">Privacy Architecture</span>
+                    <span class="about-specs-val">100% Client-Side Execution</span>
+                </div>
+                <div class="about-specs-col">
+                    <span class="about-specs-lbl">License</span>
+                    <span class="about-specs-val">Apache License 2.0</span>
+                </div>
+            </div>
+
+            <!-- CTA Row -->
+            <div class="about-cta-row">
+                <a href="index.html" class="btn primary">
+                    <span>Launch Studio Detector</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <a href="quiz.html" class="btn secondary">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    <span>Practice Laboratory</span>
+                </a>
+                <a href="landing.html" class="btn secondary">
+                    <span>Return to Overview</span>
+                </a>
+            </div>
+
+        </main>
+
+        <!-- ==================== STUDIO FOOTER STRIP ==================== -->
+        <footer class="landing-footer-strip" role="contentinfo" style="margin-top: 32px;">
+            <div>
+                <span>Sign Language Studio &bull; Independent Accessibility Research</span>
+            </div>
+            <div class="landing-footer-chips">
+                <span class="landing-footer-chip">MediaPipe 21-pt</span>
+                <span>&bull;</span>
+                <span class="landing-footer-chip">TensorFlow.js</span>
+                <span>&bull;</span>
+                <span class="landing-footer-chip">WebRTC P2P</span>
+                <span>&bull;</span>
+                <span class="landing-footer-chip">Web Bluetooth</span>
+            </div>
+            <div>
+                <span class="mono-code" style="font-size: 0.68rem;">v4.0.0-prod &bull; Nominal</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Background Animation & Global Dictionary Modal -->
+    <script src="landing_bg.js"></script>
+    <script src="dictionary.js?v=4.0.0"></script>
+</body>
+
+</html>

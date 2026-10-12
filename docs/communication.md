@@ -36,8 +36,8 @@ flowchart LR
 
 | Attribute | UUID | Value / Format | Description |
 | :--- | :--- | :--- | :--- |
-| **Advertised Device Name** | — | `MPU6050_Glove` | Filter used by `requestDevice` selector |
-| **Custom Primary Service** | `0000ffe0-0000-1000-8000-00805f9b34fb` | — | Custom Service hosting orientation telemetry |
+| **Advertised Device Name** | - | `MPU6050_Glove` | Filter used by `requestDevice` selector |
+| **Custom Primary Service** | `0000ffe0-0000-1000-8000-00805f9b34fb` | - | Custom Service hosting orientation telemetry |
 | **Telemetry Characteristic** | `0000ffe1-0000-1000-8000-00805f9b34fb` | String (UTF-8) | Read and Notify properties enabled |
 | **Client Characteristic Config** | `0x2902` | `0x0001` (Notifications Enabled) | Standard 16-bit BLE descriptor for notify |
 
@@ -54,7 +54,7 @@ $$\text{Payload Format: } \texttt{R:<roll\_deg>,P:<pitch\_deg>}$$
 | Field | Range | Units | Example | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | `R:` (Roll) | $[-180.0, 180.0]$ | Degrees ($^\circ$) | `R:45.2` | Wrist tilt / forearm rotation around longitudinal axis |
-| `,` | — | Delimiter | `,` | Separates roll and pitch tokens |
+| `,` | - | Delimiter | `,` | Separates roll and pitch tokens |
 | `P:` (Pitch) | $[-90.0, 90.0]$ | Degrees ($^\circ$) | `P:-12.1` | Wrist flexion / extension angle |
 
 *Full Packet Example*:

@@ -1,5 +1,5 @@
 /**
- * ASL Interpreter — Two-Way Communication Engine (P2P Room Code System)
+ * Sign Language Studio - Two-Way Communication Engine (P2P Room Code System)
  * Enables real-time Speech-to-Sign & Sign-to-Speech communication between two users.
  * Uses WebRTC (PeerJS) DataChannels & optional MediaStreams.
  */

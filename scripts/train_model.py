@@ -118,7 +118,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 70)
-    print(" SIGN LANGUAGE INTERPRETER — MODEL TRAINING PIPELINE")
+    print(" SIGN LANGUAGE STUDIO - MODEL TRAINING PIPELINE")
     print("=" * 70)
 
     print(f"[+] Loading dataset from {args.dataset}...")

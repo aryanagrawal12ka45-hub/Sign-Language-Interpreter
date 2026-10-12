@@ -25,16 +25,16 @@ graph LR
 
 | Layer # | Layer Type | Output Shape | Activation | Regularization / Params |
 | :--- | :--- | :--- | :--- | :--- |
-| **0** | `InputLayer` | `(None, 42)` | — | 42 normalized hand coordinates |
+| **0** | `InputLayer` | `(None, 42)` | - | 42 normalized hand coordinates |
 | **1** | `Dense` | `(None, 256)` | ReLU | $42 \times 256 + 256 = 11,008$ parameters |
-| **2** | `BatchNormalization` | `(None, 256)` | — | Normalizes layer activations ($1,024$ params) |
-| **3** | `Dropout` | `(None, 256)` | — | $30\%$ rate to prevent overfitting |
+| **2** | `BatchNormalization` | `(None, 256)` | - | Normalizes layer activations ($1,024$ params) |
+| **3** | `Dropout` | `(None, 256)` | - | $30\%$ rate to prevent overfitting |
 | **4** | `Dense` | `(None, 128)` | ReLU | $256 \times 128 + 128 = 32,896$ parameters |
-| **5** | `BatchNormalization` | `(None, 128)` | — | Normalizes layer activations ($512$ params) |
-| **6** | `Dropout` | `(None, 128)` | — | $20\%$ rate |
+| **5** | `BatchNormalization` | `(None, 128)` | - | Normalizes layer activations ($512$ params) |
+| **6** | `Dropout` | `(None, 128)` | - | $20\%$ rate |
 | **7** | `Dense` | `(None, 64)` | ReLU | $128 \times 64 + 64 = 8,256$ parameters |
 | **8** | `Dense` (Output) | `(None, 26)` | Softmax | $64 \times 26 + 26 = 1,690$ parameters |
-| **Total** | — | — | — | **$55,386$ trainable parameters ($\approx 216\text{ KB}$)** |
+| **Total** | - | - | - | **$55,386$ trainable parameters ($\approx 216\text{ KB}$)** |
 
 ---
 
@@ -83,7 +83,7 @@ Users with atypical hand morphology or lighting conditions that degrade default 
 1. **Feature Vector**: 3D wrist-relative landmark tensor $\in \mathbb{R}^{63}$ ($21 \times 3$).
 2. **Classifier**: `@tensorflow-models/knn-classifier` instance.
 3. **Arbitration Logic**:
-   - The user selects a letter (e.g., 'E') and captures 5–10 frames.
+   - The user selects a letter (e.g., 'E') and captures 5-10 frames.
    - During live inference, k-NN confidence $C_{\text{knn}}$ is calculated:
      $$\text{Final Class} = \begin{cases} \hat{y}_{\text{knn}} & \text{if } C_{\text{knn}} > 0.70 \\ \hat{y}_{\text{DNN}} & \text{otherwise} \end{cases}$$
 4. **Persistence**: k-NN dataset weights and exemplar counts can be exported to and imported from `localStorage` (`asl_knn_dataset`).

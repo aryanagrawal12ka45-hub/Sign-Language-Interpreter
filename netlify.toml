@@ -4,17 +4,12 @@
 [build]
   publish = "."
 
-# Route root '/' directly to the B2B SaaS landing page
+# Redirect legacy /landing.html to root '/'
 [[redirects]]
-  from = "/"
-  to = "/landing.html"
-  status = 200
-
-# Allow direct access to the detector at /index.html
-[[redirects]]
-  from = "/index.html"
-  to = "/index.html"
-  status = 200
+  from = "/landing.html"
+  to = "/"
+  status = 301
+  force = true
 
 # Security & Hardware Access Headers
 [[headers]]

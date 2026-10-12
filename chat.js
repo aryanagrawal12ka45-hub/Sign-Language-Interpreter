@@ -146,7 +146,7 @@ async function handleSendMessage() {
 
         let errorHint = "Could not get a response from the AI. Please check your internet connection and try again.";
         if (err.message && err.message.includes("signed in")) {
-            errorHint = "Puter requires sign-in for free AI. A sign-in popup should appear — please allow it.";
+            errorHint = "Puter requires sign-in for free AI. A sign-in popup should appear: please allow it.";
         }
         appendMessage('ai', `${errorHint}\n\nDetails: ${err}`);
     }

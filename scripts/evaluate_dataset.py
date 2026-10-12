@@ -18,7 +18,7 @@ def evaluate_keypoint_dataset(csv_path: str) -> None:
         sys.exit(1)
 
     print("=" * 70)
-    print(" SIGN LANGUAGE INTERPRETER — DATASET INTEGRITY & EVALUATION REPORT")
+    print(" SIGN LANGUAGE STUDIO - DATASET INTEGRITY & EVALUATION REPORT")
     print("=" * 70)
     print(f"Dataset Path : {os.path.abspath(csv_path)}")
     file_size_mb = os.path.getsize(csv_path) / (1024 * 1024)

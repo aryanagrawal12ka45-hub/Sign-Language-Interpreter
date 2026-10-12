@@ -1,5 +1,5 @@
 /**
- * Sign Language Studio — Neural Ambient Canvas Animation
+ * Sign Language Studio - Neural Ambient Canvas Animation
  * High-performance 60fps constellation & tensor particle graph
  * Visual benchmark: KaptaanLM Research Labs ambient background
  */

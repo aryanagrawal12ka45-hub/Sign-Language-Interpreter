@@ -11,10 +11,10 @@ MediaPipe extracts **21 3D landmarks** per detected hand:
 
 | Joint Index | Description | Joint Index | Description |
 | :--- | :--- | :--- | :--- |
-| **0** | Wrist (Origin Reference) | **11–12** | Middle PIP, DIP, Tip |
-| **1–4** | Thumb CMC, MCP, IP, Tip | **13–16** | Ring MCP, PIP, DIP, Tip |
-| **5–8** | Index MCP, PIP, DIP, Tip | **17–20** | Pinky MCP, PIP, DIP, Tip |
-| **9–10** | Middle MCP, Middle PIP | — | — |
+| **0** | Wrist (Origin Reference) | **11-12** | Middle PIP, DIP, Tip |
+| **1-4** | Thumb CMC, MCP, IP, Tip | **13-16** | Ring MCP, PIP, DIP, Tip |
+| **5-8** | Index MCP, PIP, DIP, Tip | **17-20** | Pinky MCP, PIP, DIP, Tip |
+| **9-10** | Middle MCP, Middle PIP | - | - |
 
 ```mermaid
 graph TD

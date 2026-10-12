@@ -51,7 +51,7 @@ To ensure transparency, this repository explicitly separates what is implemented
 
 | Aspect | Current Working Prototype | Planned Future Target |
 | :--- | :--- | :--- |
-| **Vocabulary** | 26 ASL static letters ('A'–'Z') + 5 fused gestures ('J', 'Z', 'YES', 'HELLO', 'SPACE') | Continuous ASL lexicon (500+ conversational words & idioms) |
+| **Vocabulary** | 26 ASL static letters ('A'-'Z') + 5 fused gestures ('J', 'Z', 'YES', 'HELLO', 'SPACE') | Continuous ASL lexicon (500+ conversational words & idioms) |
 | **Inference Mode** | Single-character stream with debounce lock-in | Continuous sentence-level sequence parsing (RNN/Transformer) |
 | **Hardware** | Laptop Webcam + Single ESP32 MPU-6050 Glove | Dual-glove bilateral tracking + optional depth camera support |
 | **Active Learning** | On-device k-NN override with LocalStorage persistence | Few-shot meta-learning model fine-tuning |

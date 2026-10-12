@@ -9,8 +9,8 @@ The **Sign Language Interpreter** hardware subsystem is built around an **ESP32 
 | Component | Function | Operating Voltage | Interface / Protocol | Key Specifications |
 | :--- | :--- | :--- | :--- | :--- |
 | **ESP32 Dev Module** | Main controller & BLE Server | 3.3V Logic (5V USB) | BLE 4.2 / I2C / UART | Dual-core Tensilica Xtensa LX6 @ 240 MHz, 520 KB SRAM, 4 MB Flash |
-| **MPU-6050 (GY-521)** | 6-Axis Accelerometer & Gyroscope | 3.3V – 5.0V (Onboard LDO) | I2C (`0x68` / `0x69`) | 16-bit ADC, $\pm 2g$ Accelerometer, $\pm 250^\circ/\text{s}$ Gyroscope, $21\text{ Hz}$ DLPF |
-| **Monocular Webcam** | Optical hand video feed | 5V (USB internal/external) | USB Video Class (UVC) | $640 \times 480$ minimum resolution @ 30–60 FPS |
+| **MPU-6050 (GY-521)** | 6-Axis Accelerometer & Gyroscope | 3.3V - 5.0V (Onboard LDO) | I2C (`0x68` / `0x69`) | 16-bit ADC, $\pm 2g$ Accelerometer, $\pm 250^\circ/\text{s}$ Gyroscope, $21\text{ Hz}$ DLPF |
+| **Monocular Webcam** | Optical hand video feed | 5V (USB internal/external) | USB Video Class (UVC) | $640 \times 480$ minimum resolution @ 30-60 FPS |
 | **Host PC / Laptop** | Machine learning inference host | Standard AC / Battery | Web Browser (Chromium) | WebGL 2.0 / WebGPU capable GPU / Integrated Graphics |
 
 ---

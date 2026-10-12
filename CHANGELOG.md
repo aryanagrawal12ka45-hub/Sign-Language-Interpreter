@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-08-20
 
 ### Added
-- **Real-Time Vision Pipeline**: MediaPipe Hands landmark tracking (21 3D hand landmarks) running at 30–60 FPS in browser.
+- **Real-Time Vision Pipeline**: MediaPipe Hands landmark tracking (21 3D hand landmarks) running at 30-60 FPS in browser.
 - **On-Device Neural Inference**: 4-layer Sequential Deep Neural Network (`Dense(256) -> Dense(128) -> Dense(64) -> Dense(26)`) running in TensorFlow.js with client-side IndexedDB caching.
 - **ESP32 Smart Glove Firmware**: C++/Arduino firmware (`firmware/esp_glove/`) streaming MPU-6050 accelerometer roll and pitch telemetry over BLE GATT at 50 Hz.
 - **Web Bluetooth Integration**: Direct browser-to-ESP32 BLE GATT connection with auto-reconnection and telemetry visualizer.
