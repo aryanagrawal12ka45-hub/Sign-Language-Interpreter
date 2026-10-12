@@ -125,7 +125,332 @@ hands.setOptions({
 
 hands.onResults(onResults);
 
-// Profile switch: Fast (30+ FPS) vs HD Precision (720p)
+// ============================================================================
+// Multi-Device Resilient Camera Manager (Progressive Fallback & Diagnostics)
+// ============================================================================
+class CameraManager {
+    constructor(videoEl, onFrameCallback) {
+        this.videoEl = videoEl;
+        this.onFrameCallback = onFrameCallback;
+        this.stream = null;
+        this.activeDeviceId = null;
+        this.isMirrored = true;
+        this.isProcessing = false;
+        this.isActive = false;
+        this.perfMode = 'fast';
+        this.frameCallbackId = null;
+        this.animFrameId = null;
+        this.deviceSelectEl = document.getElementById('camera-device-select');
+        this.errorOverlay = document.getElementById('camera-error-overlay');
+        this.errorTitle = document.getElementById('camera-error-title');
+        this.errorDesc = document.getElementById('camera-error-desc');
+        this.troubleshootList = document.getElementById('camera-troubleshoot-list');
+        this.mirrorBtn = document.getElementById('camera-mirror-btn');
+
+        if (navigator.mediaDevices && navigator.mediaDevices.addEventListener) {
+            navigator.mediaDevices.addEventListener('devicechange', () => this.populateDevices());
+        }
+    }
+
+    async populateDevices() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices || !this.deviceSelectEl) return;
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(d => d.kind === 'videoinput');
+            const currentVal = this.deviceSelectEl.value;
+            this.deviceSelectEl.innerHTML = '';
+
+            if (videoDevices.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'Default Camera';
+                this.deviceSelectEl.appendChild(opt);
+                return;
+            }
+
+            videoDevices.forEach((dev, idx) => {
+                const opt = document.createElement('option');
+                opt.value = dev.deviceId;
+                opt.textContent = dev.label || `Camera ${idx + 1}`;
+                if (dev.deviceId === this.activeDeviceId || (!this.activeDeviceId && idx === 0)) {
+                    opt.selected = true;
+                }
+                this.deviceSelectEl.appendChild(opt);
+            });
+
+            if (currentVal && Array.from(this.deviceSelectEl.options).some(o => o.value === currentVal)) {
+                this.deviceSelectEl.value = currentVal;
+            }
+        } catch (e) {
+            console.warn('[CameraManager] Could not enumerate devices:', e);
+        }
+    }
+
+    getConstraints(deviceId, fallbackLevel = 0) {
+        const isHd = this.perfMode === 'hd';
+        const targetWidth = isHd ? 1280 : 640;
+        const targetHeight = isHd ? 720 : 480;
+
+        if (fallbackLevel === 0) {
+            const videoConstraints = {
+                width: { ideal: targetWidth },
+                height: { ideal: targetHeight },
+                frameRate: { ideal: 30 }
+            };
+            if (deviceId) {
+                videoConstraints.deviceId = { exact: deviceId };
+            } else {
+                videoConstraints.facingMode = 'user';
+            }
+            return { video: videoConstraints, audio: false };
+        } else if (fallbackLevel === 1) {
+            const videoConstraints = {
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            };
+            if (deviceId) videoConstraints.deviceId = deviceId;
+            return { video: videoConstraints, audio: false };
+        } else {
+            return { video: true, audio: false };
+        }
+    }
+
+    async start(deviceId = null) {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            this.showError({
+                name: 'NotSupportedError',
+                message: 'Your browser or current connection does not support the Camera API. (Note: Browsers require HTTPS or localhost for camera access).'
+            });
+            return false;
+        }
+
+        this.stopStream();
+        if (deviceId) this.activeDeviceId = deviceId;
+
+        let stream = null;
+        let lastError = null;
+
+        for (let level = 0; level <= 2; level++) {
+            try {
+                const constraints = this.getConstraints(this.activeDeviceId, level);
+                console.log(`[CameraManager] Attempting to open camera (level ${level}):`, constraints);
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                if (stream) break;
+            } catch (err) {
+                lastError = err;
+                console.warn(`[CameraManager] Level ${level} failed:`, err.name, err.message);
+                if (err.name === 'NotAllowedError' || err.name === 'NotReadableError') {
+                    break;
+                }
+            }
+        }
+
+        if (!stream) {
+            this.showError(lastError || new Error('Failed to open camera.'));
+            return false;
+        }
+
+        this.stream = stream;
+        this.videoEl.srcObject = stream;
+        try {
+            await this.videoEl.play();
+        } catch (playErr) {
+            console.warn('[CameraManager] video.play() exception:', playErr);
+        }
+
+        const tracks = stream.getVideoTracks();
+        if (tracks.length > 0) {
+            const settings = tracks[0].getSettings();
+            if (settings && settings.deviceId) {
+                this.activeDeviceId = settings.deviceId;
+            }
+        }
+
+        this.hideError();
+        this.isActive = true;
+        this.startFrameLoop();
+        await this.populateDevices();
+
+        if (footerCameraStatus) footerCameraStatus.textContent = 'Active';
+        if (footerCameraDot) {
+            footerCameraDot.style.background = 'var(--accent-color)';
+            footerCameraDot.style.boxShadow = '0 0 6px var(--accent-glow)';
+        }
+
+        console.log('[CameraManager] Camera active successfully');
+        return true;
+    }
+
+    startFrameLoop() {
+        this.stopFrameLoop();
+        const pump = async () => {
+            if (!this.isActive || !this.stream) return;
+
+            if (this.videoEl.readyState >= 2 && !this.isProcessing) {
+                this.isProcessing = true;
+                try {
+                    await this.onFrameCallback();
+                } catch (e) {
+                } finally {
+                    this.isProcessing = false;
+                }
+            }
+
+            if ('requestVideoFrameCallback' in this.videoEl) {
+                this.frameCallbackId = this.videoEl.requestVideoFrameCallback(pump);
+            } else {
+                this.animFrameId = requestAnimationFrame(pump);
+            }
+        };
+
+        if ('requestVideoFrameCallback' in this.videoEl) {
+            this.frameCallbackId = this.videoEl.requestVideoFrameCallback(pump);
+        } else {
+            this.animFrameId = requestAnimationFrame(pump);
+        }
+    }
+
+    stopFrameLoop() {
+        if (this.frameCallbackId && 'cancelVideoFrameCallback' in this.videoEl) {
+            this.videoEl.cancelVideoFrameCallback(this.frameCallbackId);
+            this.frameCallbackId = null;
+        }
+        if (this.animFrameId) {
+            cancelAnimationFrame(this.animFrameId);
+            this.animFrameId = null;
+        }
+        this.isProcessing = false;
+    }
+
+    stopStream() {
+        this.stopFrameLoop();
+        this.isActive = false;
+        if (this.stream) {
+            try {
+                this.stream.getTracks().forEach(track => track.stop());
+            } catch (e) {}
+            this.stream = null;
+        }
+        if (this.videoEl) {
+            this.videoEl.srcObject = null;
+        }
+    }
+
+    stop() {
+        this.stopStream();
+        if (footerCameraStatus) footerCameraStatus.textContent = 'Paused';
+        if (footerCameraDot) {
+            footerCameraDot.style.background = 'var(--text-tertiary)';
+            footerCameraDot.style.boxShadow = 'none';
+        }
+    }
+
+    async restart() {
+        this.stop();
+        return await this.start(this.activeDeviceId);
+    }
+
+    toggleMirror() {
+        this.isMirrored = !this.isMirrored;
+        if (this.mirrorBtn) {
+            this.mirrorBtn.classList.toggle('active', this.isMirrored);
+        }
+        return this.isMirrored;
+    }
+
+    setPerfMode(mode) {
+        this.perfMode = mode;
+        if (this.isActive) {
+            this.restart();
+        }
+    }
+
+    showError(err) {
+        console.error('[CameraManager] Camera error reported:', err);
+        if (footerCameraStatus) footerCameraStatus.textContent = 'Error';
+        if (footerCameraDot) {
+            footerCameraDot.style.background = 'var(--danger-color)';
+            footerCameraDot.style.boxShadow = '0 0 6px rgba(244, 63, 94, 0.5)';
+        }
+
+        if (!this.errorOverlay) return;
+
+        let title = 'Camera Access Issue';
+        let desc = err.message || 'Unable to open video stream.';
+        let tips = [];
+
+        const errName = err.name || '';
+        if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError') {
+            title = 'Camera Access Blocked';
+            desc = 'The browser blocked access to your webcam.';
+            tips = [
+                'Look at your browser address bar and click the 🔒 Lock or 🎥 Camera icon.',
+                'Ensure "Camera" is set to "Allow".',
+                'If prompted again, click "Allow" when the dialog appears.',
+                'Check Windows Settings > Privacy & security > Camera > "Let desktop apps access your camera".'
+            ];
+        } else if (errName === 'NotReadableError' || errName === 'TrackStartError') {
+            title = 'Camera Already in Use';
+            desc = 'Another application or browser tab has locked the webcam.';
+            tips = [
+                'Close Zoom, Microsoft Teams, Discord, Skype, OBS, or other video chat apps.',
+                'Close any other browser tabs that might be using the camera.',
+                'Unplug and re-plug your USB webcam if using an external device.',
+                'Click "Retry Camera" once other applications are closed.'
+            ];
+        } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
+            title = 'No Webcam Detected';
+            desc = 'Windows did not report any connected video capture devices.';
+            tips = [
+                'Ensure your webcam is securely plugged in or laptop camera privacy shutter is open.',
+                'Check Windows Device Manager to ensure camera drivers are functioning.',
+                'Restart your browser after connecting the camera.'
+            ];
+        } else if (errName === 'OverconstrainedError') {
+            title = 'Resolution Not Supported';
+            desc = 'The requested camera resolution is not supported by your hardware.';
+            tips = [
+                'Switch the Performance dropdown to "Fast (30+ FPS)".',
+                'Select a different webcam device from the dropdown.'
+            ];
+        } else if (window.location.protocol === 'http:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            title = 'Insecure Network Context';
+            desc = 'Modern browsers strictly require HTTPS to access webcams on remote network addresses.';
+            tips = [
+                'If opening from another PC/phone, use localhost or forward via an HTTPS tunnel (e.g. ngrok / localtunnel).',
+                'Access the application directly on the host computer at http://localhost:8000.'
+            ];
+        } else {
+            tips = [
+                'Ensure camera permissions are allowed in your browser.',
+                'Try selecting a different camera from the device list above.',
+                'Check if your laptop has a physical webcam privacy slider or Fn key switch.'
+            ];
+        }
+
+        if (this.errorTitle) this.errorTitle.textContent = title;
+        if (this.errorDesc) this.errorDesc.textContent = desc;
+        if (this.troubleshootList) {
+            this.troubleshootList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+        }
+        this.errorOverlay.classList.remove('hidden');
+    }
+
+    hideError() {
+        if (this.errorOverlay) {
+            this.errorOverlay.classList.add('hidden');
+        }
+    }
+}
+
+// Instantiate resilient Camera Manager
+const cameraManager = new CameraManager(videoElement, async () => {
+    await hands.send({ image: videoElement });
+});
+window.cameraManager = cameraManager;
+const camera = cameraManager; // Backward compatibility
+
+// Wire up UI Controls
 const cameraPerfSelect = document.getElementById('camera-perf-mode');
 if (cameraPerfSelect) {
     cameraPerfSelect.addEventListener('change', (e) => {
@@ -137,30 +462,50 @@ if (cameraPerfSelect) {
             hands.setOptions({ modelComplexity: 0, minDetectionConfidence: 0.65 });
             console.log('[Camera Perf] Switched to Fast 30+ FPS profile');
         }
+        cameraManager.setPerfMode(mode);
     });
 }
 
-// Setup WebCam using MediaPipe CameraUtils
-const camera = new Camera(videoElement, {
-    onFrame: async () => {
-        await hands.send({ image: videoElement });
-    },
-    width: 640,
-    height: 480
-});
-
-camera.start()
-    .then(() => {
-        console.log("Camera started successfully");
-        if (footerCameraStatus) footerCameraStatus.textContent = 'Active';
-        if (footerCameraDot) { footerCameraDot.style.background = 'var(--accent-color)'; footerCameraDot.style.boxShadow = '0 0 6px var(--accent-glow)'; }
-    })
-    .catch((err) => {
-        console.error("Error starting camera:", err);
-        statusText.innerText = 'Error accessing camera. Please grant permission.';
-        if (footerCameraStatus) footerCameraStatus.textContent = 'Error';
-        if (footerCameraDot) { footerCameraDot.style.background = 'var(--danger-color)'; }
+const cameraDeviceSelect = document.getElementById('camera-device-select');
+if (cameraDeviceSelect) {
+    cameraDeviceSelect.addEventListener('change', (e) => {
+        const devId = e.target.value;
+        cameraManager.start(devId);
     });
+}
+
+const cameraMirrorBtn = document.getElementById('camera-mirror-btn');
+if (cameraMirrorBtn) {
+    cameraMirrorBtn.addEventListener('click', () => {
+        cameraManager.toggleMirror();
+    });
+}
+
+const cameraRestartBtn = document.getElementById('camera-restart-btn');
+if (cameraRestartBtn) {
+    cameraRestartBtn.addEventListener('click', () => {
+        cameraManager.restart();
+    });
+}
+
+const cameraRetryActionBtn = document.getElementById('camera-retry-action-btn');
+if (cameraRetryActionBtn) {
+    cameraRetryActionBtn.addEventListener('click', () => {
+        cameraManager.restart();
+    });
+}
+
+const cameraDismissErrBtn = document.getElementById('camera-dismiss-err-btn');
+if (cameraDismissErrBtn) {
+    cameraDismissErrBtn.addEventListener('click', () => {
+        cameraManager.hideError();
+    });
+}
+
+// Start camera stream
+cameraManager.start().catch((err) => {
+    console.error("Error starting camera:", err);
+});
 
 // --- Web Bluetooth (Hardware Integration) ---
 const connectBleBtn = document.getElementById('connect-ble-btn');
@@ -619,9 +964,11 @@ function onResults(results) {
     canvasCtx.save();
     canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-    // We want the drawing to mirror the webcam feed
-    canvasCtx.translate(canvasElement.width, 0);
-    canvasCtx.scale(-1, 1);
+    // Mirror feed and drawings if mirror mode is enabled
+    if (cameraManager.isMirrored) {
+        canvasCtx.translate(canvasElement.width, 0);
+        canvasCtx.scale(-1, 1);
+    }
 
     // Draw the camera feed onto canvas
     canvasCtx.drawImage(
@@ -1122,12 +1469,17 @@ function handlePrediction(rawPrediction) {
 // Adjust canvas internal resolution initially
 function resizeCanvas() {
     const rect = canvasElement.getBoundingClientRect();
-    canvasElement.width = rect.width;
-    canvasElement.height = rect.height;
+    if (rect.width > 0 && rect.height > 0) {
+        canvasElement.width = rect.width;
+        canvasElement.height = rect.height;
+    } else {
+        canvasElement.width = videoElement.videoWidth || 640;
+        canvasElement.height = videoElement.videoHeight || 480;
+    }
 }
 
 window.addEventListener('resize', resizeCanvas);
-// Call once slightly delayed to ensure DOM is ready
+videoElement.addEventListener('loadedmetadata', resizeCanvas);
 setTimeout(resizeCanvas, 500);
 
 // --- Sentence Builder Logic ---
@@ -1623,9 +1975,9 @@ function initSpeechToSign() {
                 if (current.type === 'SPACE') {
                     activeGlyphEl.innerHTML = `<span style="font-size: 0.85rem; font-weight: 700; color: var(--text-tertiary);">PAUSE</span>`;
                 } else {
-                    const imgPath = `assets/signs/${current.glyph}.svg`;
+                    const imgPath = `assets/signs/${current.glyph}.png?v=3.2.0`;
                     activeGlyphEl.innerHTML = `
-                        <img src="${imgPath}" alt="${current.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="width:100%; height:100%; object-fit:contain; display:block;" />
+                        <img src="${imgPath}" alt="${current.name}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1'; this.src='assets/signs/${current.glyph}.svg';}else{this.style.display='none'; this.nextElementSibling.style.display='block';}" style="width:100%; height:100%; object-fit:contain; display:block;" />
                         <span style="display:none; font-size:1.1rem; font-weight:800; color:var(--text-primary); text-align:center;">${current.glyph}</span>
                     `;
                 }

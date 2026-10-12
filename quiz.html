@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=2.4.0">
+    <link rel="stylesheet" href="style.css?v=3.2.0">
 
     <!-- MediaPipe Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -99,6 +99,37 @@
                     <div class="camera-status-bar">
                         <div class="camera-badge"><span class="dot"></span> Camera Input</div>
                         <div class="camera-badge" id="fps-badge">FPS: --</div>
+                        <select id="camera-device-select" class="camera-perf-select" title="Select Webcam Device" aria-label="Select Webcam Device">
+                            <option value="">Default Camera</option>
+                        </select>
+                        <button type="button" id="camera-mirror-btn" class="camera-ctrl-btn active" title="Toggle Mirror Mode" aria-label="Toggle Mirror Mode">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3m8-18h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/></svg>
+                            <span>Mirror</span>
+                        </button>
+                        <button type="button" id="camera-restart-btn" class="camera-ctrl-btn" title="Restart / Retry Camera" aria-label="Restart / Retry Camera">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                            <span>Retry</span>
+                        </button>
+                    </div>
+
+                                        <!-- Camera Error & Diagnostic Overlay -->
+                    <div class="camera-error-overlay hidden" id="camera-error-overlay">
+                        <div class="camera-error-icon">⚠️</div>
+                        <h3 class="camera-error-title" id="camera-error-title">Camera Unavailable</h3>
+                        <p class="camera-error-desc" id="camera-error-desc">Unable to access your webcam.</p>
+                        <div class="camera-error-troubleshoot" id="camera-error-troubleshoot">
+                            <strong>Quick Fix Checklist:</strong>
+                            <ul id="camera-troubleshoot-list">
+                                <li>Check browser permissions (click 🔒 Lock or 🎥 Camera icon in address bar -> Allow).</li>
+                                <li>Ensure no other application (Zoom, Teams, Skype, OBS) is using the webcam.</li>
+                                <li>If multiple cameras exist, select a different device from the dropdown.</li>
+                            </ul>
+                        </div>
+                        <div class="camera-error-actions">
+                            <button type="button" id="camera-simulate-btn" class="btn primary sm" style="background: linear-gradient(135deg, #10b981, #059669); border: 0;">🎮 Start Simulation Mode</button>
+                            <button type="button" id="camera-retry-action-btn" class="btn secondary sm">Retry Camera</button>
+                            <button type="button" id="camera-dismiss-err-btn" class="btn secondary sm">Dismiss</button>
+                        </div>
                     </div>
 
                     <!-- Loading / Initialization Overlay -->
@@ -203,6 +234,26 @@
                             </svg>
                             <span>Skip Sign</span>
                         </button>
+                    </div>
+
+                    <!-- Camera-Free Testing Mode Controls -->
+                    <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.70rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); font-weight: 700;">
+                                Camera-Free Testing Mode
+                            </span>
+                            <span style="font-size: 0.68rem; color: var(--accent-emerald); font-weight: 600;">Shortcuts: [Space] Match, [W] Wrong</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button type="button" id="sim-correct-btn" class="btn secondary sm" style="border-color: rgba(16, 185, 129, 0.4); color: var(--accent-emerald);">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Simulate Match</span>
+                            </button>
+                            <button type="button" id="sim-wrong-btn" class="btn secondary sm" style="border-color: rgba(244, 63, 94, 0.4); color: var(--accent-rose);">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                <span>Simulate Wrong</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -349,8 +400,8 @@
     </div>
 
     <!-- Sign Dictionary & Quiz Engine -->
-    <script src="dictionary.js"></script>
-    <script src="quiz.js?v=2.4.0"></script>
+    <script src="dictionary.js?v=3.2.0"></script>
+    <script src="quiz.js?v=3.2.0"></script>
 </body>
 
 </html>
