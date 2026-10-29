@@ -847,10 +847,11 @@ function setGameMode(mode) {
         if (isSpeedRunActive) clearInterval(speedRunTimer);
         isSpeedRunActive = false;
         if (quizTimerContainer) quizTimerContainer.style.display = 'none';
-        if (primaryActionText) primaryActionText.textContent = 'Switch to Speed Run';
+        if (primaryActionText) primaryActionText.textContent = 'Start Speed Run';
         if (quizStatusBadge) quizStatusBadge.textContent = 'Practice Mode';
     }
 }
+window.setGameMode = setGameMode;
 
 document.getElementById('quiz-mode-pills')?.addEventListener('click', (e) => {
     const btn = e.target.closest('.pill-btn');

@@ -24,7 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger("WindowsBridge")
 
 PORT = 8765
-HOST = "127.0.0.1"
+HOST = "0.0.0.0"
 
 
 class WindowsBridgeServer:
@@ -33,6 +33,8 @@ class WindowsBridgeServer:
         self.port = port
         self.controller = WindowsOSController()
         self.connected_clients = set()
+        self.rooms = {}  # room_code: str -> {"host": ws, "guest": ws, "host_role": str, "guest_role": str, "created_at": float}
+        self.client_rooms = {}  # ws -> set of room_codes
         self._stop_event = None
         logger.info(f"Initialized WindowsOSController (Screen: {self.controller.screen_width}x{self.controller.screen_height})")
 
@@ -63,12 +65,46 @@ class WindowsBridgeServer:
             logger.info(f"Client disconnected: {client_addr}")
         finally:
             self.connected_clients.discard(websocket)
+            # Clean up any rooms associated with this client
+            if websocket in self.client_rooms:
+                for r_code in list(self.client_rooms[websocket]):
+                    if r_code in self.rooms:
+                        room = self.rooms[r_code]
+                        target = room["guest"] if websocket == room["host"] else room["host"]
+                        if target and not getattr(target, "closed", False):
+                            try:
+                                await target.send(json.dumps({
+                                    "type": "room_partner_left",
+                                    "roomCode": r_code,
+                                    "message": "Partner disconnected."
+                                }))
+                            except Exception:
+                                pass
+                        del self.rooms[r_code]
+                del self.client_rooms[websocket]
             # Ensure any active drag is released on disconnect
             if self.controller.is_dragging:
                 self.controller.end_drag()
 
     async def process_command(self, websocket, data: dict):
         cmd_type = data.get("type")
+
+        # Two-Way P2P Room Signaling
+        if cmd_type == "room_create":
+            await self.handle_room_create(websocket, data)
+            return
+
+        elif cmd_type == "room_join":
+            await self.handle_room_join(websocket, data)
+            return
+
+        elif cmd_type == "room_message":
+            await self.handle_room_message(websocket, data)
+            return
+
+        elif cmd_type == "room_leave":
+            await self.handle_room_leave(websocket, data)
+            return
 
         if cmd_type == "mouse_move":
             x = data.get("x", 0.5)
@@ -175,6 +211,123 @@ class WindowsBridgeServer:
                 "telemetry": self.controller.get_status()
             }
             await websocket.send(json.dumps(resp))
+
+    async def handle_room_create(self, websocket, data: dict):
+        room_code = str(data.get("roomCode", "")).strip().upper()
+        role = data.get("role", "both")
+        if not room_code:
+            await websocket.send(json.dumps({
+                "type": "room_error",
+                "message": "Invalid room code."
+            }))
+            return
+
+        # Check if room already exists with an active host
+        if room_code in self.rooms:
+            old_host = self.rooms[room_code].get("host")
+            if old_host and old_host != websocket and not getattr(old_host, "closed", False):
+                await websocket.send(json.dumps({
+                    "type": "room_error",
+                    "roomCode": room_code,
+                    "message": f"Room code {room_code} is currently occupied. Please choose another."
+                }))
+                return
+
+        self.rooms[room_code] = {
+            "host": websocket,
+            "guest": None,
+            "host_role": role,
+            "guest_role": None,
+            "created_at": asyncio.get_event_loop().time()
+        }
+        if websocket not in self.client_rooms:
+            self.client_rooms[websocket] = set()
+        self.client_rooms[websocket].add(room_code)
+
+        logger.info(f"[Room] Created room {room_code} by client {websocket.remote_address}")
+        await websocket.send(json.dumps({
+            "type": "room_created",
+            "roomCode": room_code,
+            "role": role,
+            "status": "ok"
+        }))
+
+    async def handle_room_join(self, websocket, data: dict):
+        room_code = str(data.get("roomCode", "")).strip().upper()
+        role = data.get("role", "both")
+        if not room_code or room_code not in self.rooms:
+            await websocket.send(json.dumps({
+                "type": "room_error",
+                "roomCode": room_code,
+                "message": f"Room {room_code} was not found. Please verify the code with the host."
+            }))
+            return
+
+        room = self.rooms[room_code]
+        host_ws = room.get("host")
+        if not host_ws or getattr(host_ws, "closed", False):
+            del self.rooms[room_code]
+            await websocket.send(json.dumps({
+                "type": "room_error",
+                "roomCode": room_code,
+                "message": f"Host for room {room_code} has disconnected."
+            }))
+            return
+
+        room["guest"] = websocket
+        room["guest_role"] = role
+        if websocket not in self.client_rooms:
+            self.client_rooms[websocket] = set()
+        self.client_rooms[websocket].add(room_code)
+
+        logger.info(f"[Room] Guest {websocket.remote_address} joined room {room_code}")
+        # Notify Guest
+        await websocket.send(json.dumps({
+            "type": "room_joined",
+            "roomCode": room_code,
+            "partnerRole": room["host_role"],
+            "peerName": "Host",
+            "status": "ok"
+        }))
+        # Notify Host
+        await host_ws.send(json.dumps({
+            "type": "room_partner_joined",
+            "roomCode": room_code,
+            "partnerRole": role,
+            "peerName": "Guest",
+            "status": "ok"
+        }))
+
+    async def handle_room_message(self, websocket, data: dict):
+        room_code = str(data.get("roomCode", "")).strip().upper()
+        payload = data.get("payload", {})
+        if room_code in self.rooms:
+            room = self.rooms[room_code]
+            target = room["guest"] if websocket == room["host"] else room["host"]
+            if target and not getattr(target, "closed", False):
+                await target.send(json.dumps({
+                    "type": "room_message",
+                    "roomCode": room_code,
+                    "payload": payload
+                }))
+
+    async def handle_room_leave(self, websocket, data: dict):
+        room_code = str(data.get("roomCode", "")).strip().upper()
+        if room_code in self.rooms:
+            room = self.rooms[room_code]
+            target = room["guest"] if websocket == room["host"] else room["host"]
+            if target and not getattr(target, "closed", False):
+                try:
+                    await target.send(json.dumps({
+                        "type": "room_partner_left",
+                        "roomCode": room_code,
+                        "message": "Partner left the room."
+                    }))
+                except Exception:
+                    pass
+            del self.rooms[room_code]
+        if websocket in self.client_rooms:
+            self.client_rooms[websocket].discard(room_code)
 
     async def start(self):
         logger.info(f"Starting Windows OS Bridge Server on ws://{self.host}:{self.port}...")

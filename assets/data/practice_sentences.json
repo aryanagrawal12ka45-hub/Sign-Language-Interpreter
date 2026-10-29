@@ -1,0 +1,2396 @@
+[
+  {
+    "id": "sent_001",
+    "text": "Hello friend",
+    "category": "Greetings and introductions",
+    "difficulty": "beginner",
+    "word_count": 2,
+    "signs": [
+      "clip_hello",
+      "clip_friend"
+    ],
+    "gloss": "HELLO FRIEND"
+  },
+  {
+    "id": "sent_002",
+    "text": "Nice to meet you",
+    "category": "Greetings and introductions",
+    "difficulty": "beginner",
+    "word_count": 4,
+    "signs": [
+      "clip_you",
+      "clip_meet"
+    ],
+    "gloss": "YOU MEET"
+  },
+  {
+    "id": "sent_003",
+    "text": "Good morning teacher",
+    "category": "Greetings and introductions",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_morning",
+      "clip_good",
+      "clip_teacher"
+    ],
+    "gloss": "MORNING GOOD TEACHER"
+  },
+  {
+    "id": "sent_004",
+    "text": "Welcome home",
+    "category": "Greetings and introductions",
+    "difficulty": "beginner",
+    "word_count": 2,
+    "signs": [
+      "clip_welcome",
+      "clip_home"
+    ],
+    "gloss": "WELCOME HOME"
+  },
+  {
+    "id": "sent_005",
+    "text": "Hello my name is Rahul",
+    "category": "Greetings and introductions",
+    "difficulty": "intermediate",
+    "word_count": 5,
+    "signs": [
+      "clip_my",
+      "clip_hello",
+      "clip_name",
+      "R",
+      "A",
+      "H",
+      "U",
+      "L"
+    ],
+    "gloss": "MY HELLO NAME R A H U L"
+  },
+  {
+    "id": "sent_006",
+    "text": "I am happy to meet you",
+    "category": "Greetings and introductions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "clip_you",
+      "clip_happy",
+      "clip_meet"
+    ],
+    "gloss": "I YOU HAPPY MEET"
+  },
+  {
+    "id": "sent_007",
+    "text": "What is your good name",
+    "category": "Greetings and introductions",
+    "difficulty": "intermediate",
+    "word_count": 5,
+    "signs": [
+      "clip_your",
+      "clip_good",
+      "clip_name",
+      "clip_what"
+    ],
+    "gloss": "YOUR GOOD NAME WHAT"
+  },
+  {
+    "id": "sent_008",
+    "text": "Welcome to my home friend",
+    "category": "Greetings and introductions",
+    "difficulty": "intermediate",
+    "word_count": 5,
+    "signs": [
+      "clip_my",
+      "clip_welcome",
+      "clip_home",
+      "clip_friend"
+    ],
+    "gloss": "MY WELCOME HOME FRIEND"
+  },
+  {
+    "id": "sent_009",
+    "text": "Hello good morning teacher I am ready to learn sign language",
+    "category": "Greetings and introductions",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_morning",
+      "clip_i",
+      "clip_hello",
+      "clip_good",
+      "clip_teacher",
+      "clip_ready",
+      "clip_learn",
+      "S",
+      "I",
+      "G",
+      "N",
+      "L",
+      "A",
+      "N",
+      "G",
+      "U",
+      "A",
+      "G",
+      "E"
+    ],
+    "gloss": "MORNING I HELLO GOOD TEACHER READY LEARN S I G N L A N G U A G E"
+  },
+  {
+    "id": "sent_010",
+    "text": "Hello my friend it is nice to see you again today",
+    "category": "Greetings and introductions",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "T",
+      "O",
+      "D",
+      "A",
+      "Y",
+      "clip_my",
+      "clip_you",
+      "clip_hello",
+      "clip_friend",
+      "I",
+      "T",
+      "N",
+      "I",
+      "C",
+      "E",
+      "clip_again",
+      "clip_see"
+    ],
+    "gloss": "T O D A Y MY YOU HELLO FRIEND I T N I C E AGAIN SEE"
+  },
+  {
+    "id": "sent_011",
+    "text": "Please welcome our new student to the class this morning",
+    "category": "Greetings and introductions",
+    "difficulty": "advanced",
+    "word_count": 10,
+    "signs": [
+      "clip_morning",
+      "clip_my",
+      "clip_please",
+      "clip_welcome",
+      "N",
+      "E",
+      "W",
+      "clip_student",
+      "clip_class",
+      "T",
+      "H",
+      "I"
+    ],
+    "gloss": "MORNING MY PLEASE WELCOME N E W STUDENT CLASS T H I"
+  },
+  {
+    "id": "sent_012",
+    "text": "Wake up early",
+    "category": "Daily routine",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_early",
+      "W",
+      "A",
+      "K",
+      "E"
+    ],
+    "gloss": "EARLY W A K E"
+  },
+  {
+    "id": "sent_013",
+    "text": "Time to sleep",
+    "category": "Daily routine",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_time",
+      "clip_sleep"
+    ],
+    "gloss": "TIME SLEEP"
+  },
+  {
+    "id": "sent_014",
+    "text": "Start morning walk",
+    "category": "Daily routine",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_morning",
+      "clip_start",
+      "clip_walk"
+    ],
+    "gloss": "MORNING START WALK"
+  },
+  {
+    "id": "sent_015",
+    "text": "Eat breakfast now",
+    "category": "Daily routine",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "N",
+      "O",
+      "W",
+      "clip_breakfast",
+      "clip_eat"
+    ],
+    "gloss": "N O W BREAKFAST EAT"
+  },
+  {
+    "id": "sent_016",
+    "text": "I wake up early every morning",
+    "category": "Daily routine",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_early",
+      "clip_morning",
+      "clip_i",
+      "W",
+      "A",
+      "K",
+      "E",
+      "E",
+      "V",
+      "E",
+      "R",
+      "Y"
+    ],
+    "gloss": "EARLY MORNING I W A K E E V E R Y"
+  },
+  {
+    "id": "sent_017",
+    "text": "Finish your work and go home",
+    "category": "Daily routine",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_your",
+      "clip_finish",
+      "clip_work",
+      "A",
+      "N",
+      "D",
+      "clip_home",
+      "clip_go"
+    ],
+    "gloss": "YOUR FINISH WORK A N D HOME GO"
+  },
+  {
+    "id": "sent_018",
+    "text": "I drink milk before I sleep",
+    "category": "Daily routine",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "clip_milk",
+      "B",
+      "E",
+      "F",
+      "O",
+      "R",
+      "E",
+      "clip_sleep",
+      "clip_drink"
+    ],
+    "gloss": "I MILK B E F O R E SLEEP DRINK"
+  },
+  {
+    "id": "sent_019",
+    "text": "Please open the room window now",
+    "category": "Daily routine",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "N",
+      "O",
+      "W",
+      "clip_please",
+      "clip_open",
+      "clip_room",
+      "clip_window"
+    ],
+    "gloss": "N O W PLEASE OPEN ROOM WINDOW"
+  },
+  {
+    "id": "sent_020",
+    "text": "Every morning I wake up early and go for a long walk",
+    "category": "Daily routine",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_morning",
+      "clip_early",
+      "clip_i",
+      "E",
+      "V",
+      "E",
+      "R",
+      "Y",
+      "W",
+      "A",
+      "K",
+      "E",
+      "A",
+      "N",
+      "D",
+      "L",
+      "O",
+      "N",
+      "G",
+      "clip_walk",
+      "clip_go"
+    ],
+    "gloss": "MORNING EARLY I E V E R Y W A K E A N D L O N G WALK GO"
+  },
+  {
+    "id": "sent_021",
+    "text": "Please finish your study work before you go out to play",
+    "category": "Daily routine",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_your",
+      "clip_you",
+      "clip_please",
+      "clip_finish",
+      "clip_work",
+      "B",
+      "E",
+      "F",
+      "O",
+      "R",
+      "E",
+      "O",
+      "U",
+      "T",
+      "clip_play",
+      "clip_study",
+      "clip_go"
+    ],
+    "gloss": "YOUR YOU PLEASE FINISH WORK B E F O R E O U T PLAY STUDY GO"
+  },
+  {
+    "id": "sent_022",
+    "text": "I eat dinner with my family and then read my book",
+    "category": "Daily routine",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_i",
+      "clip_my",
+      "clip_dinner",
+      "clip_family",
+      "A",
+      "N",
+      "D",
+      "T",
+      "H",
+      "E",
+      "N",
+      "clip_book",
+      "clip_eat",
+      "clip_read"
+    ],
+    "gloss": "I MY DINNER FAMILY A N D T H E N BOOK EAT READ"
+  },
+  {
+    "id": "sent_023",
+    "text": "I love my mother",
+    "category": "Family and friends",
+    "difficulty": "beginner",
+    "word_count": 4,
+    "signs": [
+      "clip_i",
+      "clip_my",
+      "clip_love",
+      "clip_mother"
+    ],
+    "gloss": "I MY LOVE MOTHER"
+  },
+  {
+    "id": "sent_024",
+    "text": "My father is good",
+    "category": "Family and friends",
+    "difficulty": "beginner",
+    "word_count": 4,
+    "signs": [
+      "clip_my",
+      "clip_father",
+      "clip_good"
+    ],
+    "gloss": "MY FATHER GOOD"
+  },
+  {
+    "id": "sent_025",
+    "text": "Meet my brother",
+    "category": "Family and friends",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_my",
+      "clip_meet",
+      "clip_brother"
+    ],
+    "gloss": "MY MEET BROTHER"
+  },
+  {
+    "id": "sent_026",
+    "text": "Help your sister",
+    "category": "Family and friends",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_your",
+      "clip_sister",
+      "clip_help"
+    ],
+    "gloss": "YOUR SISTER HELP"
+  },
+  {
+    "id": "sent_027",
+    "text": "My family lives in a city",
+    "category": "Family and friends",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_my",
+      "clip_family",
+      "clip_live",
+      "I",
+      "N",
+      "clip_city"
+    ],
+    "gloss": "MY FAMILY LIVE I N CITY"
+  },
+  {
+    "id": "sent_028",
+    "text": "My friend helps me with study",
+    "category": "Family and friends",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_my",
+      "clip_friend",
+      "clip_me",
+      "clip_help",
+      "clip_study"
+    ],
+    "gloss": "MY FRIEND ME HELP STUDY"
+  },
+  {
+    "id": "sent_029",
+    "text": "I love my parents very much",
+    "category": "Family and friends",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "clip_my",
+      "clip_love",
+      "clip_parent",
+      "V",
+      "E",
+      "R",
+      "Y",
+      "M",
+      "U",
+      "C",
+      "H"
+    ],
+    "gloss": "I MY LOVE PARENT V E R Y M U C H"
+  },
+  {
+    "id": "sent_030",
+    "text": "Her brother is a good boy",
+    "category": "Family and friends",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_person",
+      "clip_brother",
+      "clip_good",
+      "clip_boy"
+    ],
+    "gloss": "PERSON BROTHER GOOD BOY"
+  },
+  {
+    "id": "sent_031",
+    "text": "My mother and father live with my sister in our village home",
+    "category": "Family and friends",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_my",
+      "clip_mother",
+      "A",
+      "N",
+      "D",
+      "clip_father",
+      "clip_live",
+      "clip_sister",
+      "I",
+      "N",
+      "clip_village",
+      "clip_home"
+    ],
+    "gloss": "MY MOTHER A N D FATHER LIVE SISTER I N VILLAGE HOME"
+  },
+  {
+    "id": "sent_032",
+    "text": "I want to introduce my best friend to my entire family today",
+    "category": "Family and friends",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "T",
+      "O",
+      "D",
+      "A",
+      "Y",
+      "clip_i",
+      "clip_my",
+      "I",
+      "N",
+      "T",
+      "R",
+      "O",
+      "D",
+      "U",
+      "C",
+      "E",
+      "B",
+      "E",
+      "S",
+      "T",
+      "clip_friend",
+      "E",
+      "N",
+      "T",
+      "I",
+      "R",
+      "E",
+      "clip_family",
+      "clip_want"
+    ],
+    "gloss": "T O D A Y I MY I N T R O D U C E B E S T FRIEND E N T I R E FAMILY WANT"
+  },
+  {
+    "id": "sent_033",
+    "text": "My brother and sister study hard in college every single day",
+    "category": "Family and friends",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_my",
+      "clip_brother",
+      "A",
+      "N",
+      "D",
+      "clip_sister",
+      "H",
+      "A",
+      "R",
+      "D",
+      "I",
+      "N",
+      "clip_college",
+      "E",
+      "V",
+      "E",
+      "R",
+      "Y",
+      "S",
+      "I",
+      "N",
+      "G",
+      "L",
+      "E",
+      "D",
+      "A",
+      "Y",
+      "clip_study"
+    ],
+    "gloss": "MY BROTHER A N D SISTER H A R D I N COLLEGE E V E R Y S I N G L E D A Y STUDY"
+  },
+  {
+    "id": "sent_034",
+    "text": "Read this book",
+    "category": "School and college",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "T",
+      "H",
+      "I",
+      "clip_book",
+      "clip_read"
+    ],
+    "gloss": "T H I BOOK READ"
+  },
+  {
+    "id": "sent_035",
+    "text": "Study for exam",
+    "category": "School and college",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_exam",
+      "clip_study"
+    ],
+    "gloss": "EXAM STUDY"
+  },
+  {
+    "id": "sent_036",
+    "text": "Listen to teacher",
+    "category": "School and college",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_listen",
+      "clip_teacher"
+    ],
+    "gloss": "LISTEN TEACHER"
+  },
+  {
+    "id": "sent_037",
+    "text": "Write your question",
+    "category": "School and college",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_your",
+      "clip_question",
+      "clip_write"
+    ],
+    "gloss": "YOUR QUESTION WRITE"
+  },
+  {
+    "id": "sent_038",
+    "text": "The teacher is in the classroom",
+    "category": "School and college",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_teacher",
+      "I",
+      "N",
+      "C",
+      "L",
+      "A",
+      "S",
+      "S",
+      "R",
+      "O",
+      "O",
+      "M"
+    ],
+    "gloss": "TEACHER I N C L A S S R O O M"
+  },
+  {
+    "id": "sent_039",
+    "text": "Students are reading books in class",
+    "category": "School and college",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_students",
+      "clip_reading",
+      "clip_books",
+      "I",
+      "N",
+      "clip_class"
+    ],
+    "gloss": "STUDENTS READING BOOKS I N CLASS"
+  },
+  {
+    "id": "sent_040",
+    "text": "I study computer science in college",
+    "category": "School and college",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "clip_computer",
+      "S",
+      "C",
+      "I",
+      "E",
+      "N",
+      "C",
+      "E",
+      "I",
+      "N",
+      "clip_college",
+      "clip_study"
+    ],
+    "gloss": "I COMPUTER S C I E N C E I N COLLEGE STUDY"
+  },
+  {
+    "id": "sent_041",
+    "text": "Please answer my question teacher",
+    "category": "School and college",
+    "difficulty": "intermediate",
+    "word_count": 5,
+    "signs": [
+      "clip_my",
+      "clip_please",
+      "clip_answer",
+      "clip_question",
+      "clip_teacher"
+    ],
+    "gloss": "MY PLEASE ANSWER QUESTION TEACHER"
+  },
+  {
+    "id": "sent_042",
+    "text": "All college students must finish their computer project before the final exam",
+    "category": "School and college",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "A",
+      "L",
+      "L",
+      "clip_college",
+      "clip_students",
+      "clip_finish",
+      "T",
+      "H",
+      "E",
+      "I",
+      "R",
+      "clip_computer",
+      "clip_project",
+      "B",
+      "E",
+      "F",
+      "O",
+      "R",
+      "E",
+      "F",
+      "I",
+      "N",
+      "A",
+      "L",
+      "clip_exam"
+    ],
+    "gloss": "A L L COLLEGE STUDENTS FINISH T H E I R COMPUTER PROJECT B E F O R E F I N A L EXAM"
+  },
+  {
+    "id": "sent_043",
+    "text": "The teacher asked the class to open books and read carefully",
+    "category": "School and college",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_teacher",
+      "clip_asked",
+      "clip_class",
+      "clip_open",
+      "clip_books",
+      "A",
+      "N",
+      "D",
+      "C",
+      "A",
+      "R",
+      "E",
+      "F",
+      "U",
+      "L",
+      "L",
+      "Y",
+      "clip_read"
+    ],
+    "gloss": "TEACHER ASKED CLASS OPEN BOOKS A N D C A R E F U L L Y READ"
+  },
+  {
+    "id": "sent_044",
+    "text": "I will study hard in school to pass my important exam",
+    "category": "School and college",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_i",
+      "clip_my",
+      "H",
+      "A",
+      "R",
+      "D",
+      "I",
+      "N",
+      "clip_school",
+      "P",
+      "A",
+      "S",
+      "S",
+      "clip_important",
+      "clip_exam",
+      "clip_study"
+    ],
+    "gloss": "I MY H A R D I N SCHOOL P A S S IMPORTANT EXAM STUDY"
+  },
+  {
+    "id": "sent_045",
+    "text": "Drink more water",
+    "category": "Food and drinks",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "M",
+      "O",
+      "R",
+      "E",
+      "clip_water",
+      "clip_drink"
+    ],
+    "gloss": "M O R E WATER DRINK"
+  },
+  {
+    "id": "sent_046",
+    "text": "Eat fresh fruit",
+    "category": "Food and drinks",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "F",
+      "R",
+      "E",
+      "S",
+      "H",
+      "clip_fruit",
+      "clip_eat"
+    ],
+    "gloss": "F R E S H FRUIT EAT"
+  },
+  {
+    "id": "sent_047",
+    "text": "I want tea",
+    "category": "Food and drinks",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_i",
+      "clip_tea",
+      "clip_want"
+    ],
+    "gloss": "I TEA WANT"
+  },
+  {
+    "id": "sent_048",
+    "text": "Rice and bread",
+    "category": "Food and drinks",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_rice",
+      "A",
+      "N",
+      "D",
+      "clip_bread"
+    ],
+    "gloss": "RICE A N D BREAD"
+  },
+  {
+    "id": "sent_049",
+    "text": "Please give me cold drinking water",
+    "category": "Food and drinks",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_please",
+      "clip_me",
+      "C",
+      "O",
+      "L",
+      "D",
+      "clip_drinking",
+      "clip_water",
+      "clip_give"
+    ],
+    "gloss": "PLEASE ME C O L D DRINKING WATER GIVE"
+  },
+  {
+    "id": "sent_050",
+    "text": "I like to eat fresh vegetables",
+    "category": "Food and drinks",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "F",
+      "R",
+      "E",
+      "S",
+      "H",
+      "clip_vegetable",
+      "clip_like",
+      "clip_eat"
+    ],
+    "gloss": "I F R E S H VEGETABLE LIKE EAT"
+  },
+  {
+    "id": "sent_051",
+    "text": "Drink hot coffee in the morning",
+    "category": "Food and drinks",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_morning",
+      "H",
+      "O",
+      "T",
+      "clip_coffee",
+      "I",
+      "N",
+      "clip_drink"
+    ],
+    "gloss": "MORNING H O T COFFEE I N DRINK"
+  },
+  {
+    "id": "sent_052",
+    "text": "We eat dinner at home together",
+    "category": "Food and drinks",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "clip_dinner",
+      "clip_home",
+      "T",
+      "O",
+      "G",
+      "E",
+      "T",
+      "H",
+      "E",
+      "R",
+      "clip_eat"
+    ],
+    "gloss": "I DINNER HOME T O G E T H E R EAT"
+  },
+  {
+    "id": "sent_053",
+    "text": "Mother cooked delicious rice and vegetables for our family lunch today",
+    "category": "Food and drinks",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "T",
+      "O",
+      "D",
+      "A",
+      "Y",
+      "clip_my",
+      "clip_mother",
+      "C",
+      "O",
+      "O",
+      "K",
+      "D",
+      "E",
+      "L",
+      "I",
+      "C",
+      "I",
+      "O",
+      "U",
+      "clip_rice",
+      "A",
+      "N",
+      "D",
+      "clip_vegetable",
+      "clip_family",
+      "clip_lunch"
+    ],
+    "gloss": "T O D A Y MY MOTHER C O O K D E L I C I O U RICE A N D VEGETABLE FAMILY LUNCH"
+  },
+  {
+    "id": "sent_054",
+    "text": "Please bring some fresh fruit and hot tea for our guests",
+    "category": "Food and drinks",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_my",
+      "clip_please",
+      "clip_bring",
+      "S",
+      "O",
+      "M",
+      "E",
+      "F",
+      "R",
+      "E",
+      "S",
+      "H",
+      "clip_fruit",
+      "A",
+      "N",
+      "D",
+      "H",
+      "O",
+      "T",
+      "clip_tea",
+      "G",
+      "U",
+      "E",
+      "S",
+      "T"
+    ],
+    "gloss": "MY PLEASE BRING S O M E F R E S H FRUIT A N D H O T TEA G U E S T"
+  },
+  {
+    "id": "sent_055",
+    "text": "I want to drink cold milk and eat bread before school",
+    "category": "Food and drinks",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_i",
+      "C",
+      "O",
+      "L",
+      "D",
+      "clip_milk",
+      "A",
+      "N",
+      "D",
+      "clip_bread",
+      "B",
+      "E",
+      "F",
+      "O",
+      "R",
+      "E",
+      "clip_school",
+      "clip_want",
+      "clip_drink",
+      "clip_eat"
+    ],
+    "gloss": "I C O L D MILK A N D BREAD B E F O R E SCHOOL WANT DRINK EAT"
+  },
+  {
+    "id": "sent_056",
+    "text": "Please call police",
+    "category": "Health and emergencies",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_please",
+      "C",
+      "A",
+      "L",
+      "L",
+      "clip_police"
+    ],
+    "gloss": "PLEASE C A L L POLICE"
+  },
+  {
+    "id": "sent_057",
+    "text": "I feel pain",
+    "category": "Health and emergencies",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_i",
+      "clip_feel",
+      "clip_pain"
+    ],
+    "gloss": "I FEEL PAIN"
+  },
+  {
+    "id": "sent_058",
+    "text": "Where is doctor",
+    "category": "Health and emergencies",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_doctor",
+      "clip_where"
+    ],
+    "gloss": "DOCTOR WHERE"
+  },
+  {
+    "id": "sent_059",
+    "text": "Need urgent help",
+    "category": "Health and emergencies",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_emergency",
+      "clip_need",
+      "clip_help"
+    ],
+    "gloss": "EMERGENCY NEED HELP"
+  },
+  {
+    "id": "sent_060",
+    "text": "Please take me to the hospital",
+    "category": "Health and emergencies",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_please",
+      "clip_me",
+      "clip_hospital",
+      "clip_take"
+    ],
+    "gloss": "PLEASE ME HOSPITAL TAKE"
+  },
+  {
+    "id": "sent_061",
+    "text": "The doctor is inside the clinic",
+    "category": "Health and emergencies",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_doctor",
+      "I",
+      "N",
+      "S",
+      "I",
+      "D",
+      "E",
+      "clip_hospital"
+    ],
+    "gloss": "DOCTOR I N S I D E HOSPITAL"
+  },
+  {
+    "id": "sent_062",
+    "text": "Stay safe and wait for police",
+    "category": "Health and emergencies",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "S",
+      "T",
+      "A",
+      "Y",
+      "clip_safe",
+      "A",
+      "N",
+      "D",
+      "clip_wait",
+      "clip_police"
+    ],
+    "gloss": "S T A Y SAFE A N D WAIT POLICE"
+  },
+  {
+    "id": "sent_063",
+    "text": "I have severe pain in body",
+    "category": "Health and emergencies",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "S",
+      "E",
+      "V",
+      "E",
+      "R",
+      "E",
+      "clip_pain",
+      "I",
+      "N",
+      "B",
+      "O",
+      "D",
+      "Y"
+    ],
+    "gloss": "I S E V E R E PAIN I N B O D Y"
+  },
+  {
+    "id": "sent_064",
+    "text": "In case of emergency please call the doctor and police immediately",
+    "category": "Health and emergencies",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "I",
+      "N",
+      "C",
+      "A",
+      "S",
+      "E",
+      "clip_emergency",
+      "clip_please",
+      "C",
+      "A",
+      "L",
+      "L",
+      "clip_doctor",
+      "A",
+      "N",
+      "D",
+      "clip_police",
+      "I",
+      "M",
+      "M",
+      "E",
+      "D",
+      "I",
+      "A",
+      "T",
+      "E",
+      "L",
+      "Y"
+    ],
+    "gloss": "I N C A S E EMERGENCY PLEASE C A L L DOCTOR A N D POLICE I M M E D I A T E L Y"
+  },
+  {
+    "id": "sent_065",
+    "text": "He is injured and needs help to reach the nearest hospital",
+    "category": "Health and emergencies",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_person",
+      "I",
+      "N",
+      "J",
+      "U",
+      "R",
+      "A",
+      "N",
+      "D",
+      "R",
+      "E",
+      "A",
+      "C",
+      "H",
+      "N",
+      "E",
+      "A",
+      "R",
+      "E",
+      "S",
+      "T",
+      "clip_hospital",
+      "clip_need",
+      "clip_help"
+    ],
+    "gloss": "PERSON I N J U R A N D R E A C H N E A R E S T HOSPITAL NEED HELP"
+  },
+  {
+    "id": "sent_066",
+    "text": "Please stop the car and help this person who has pain",
+    "category": "Health and emergencies",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_person",
+      "clip_please",
+      "clip_stop",
+      "clip_car",
+      "A",
+      "N",
+      "D",
+      "T",
+      "H",
+      "I",
+      "clip_pain",
+      "clip_help",
+      "clip_who"
+    ],
+    "gloss": "PERSON PLEASE STOP CAR A N D T H I PAIN HELP WHO"
+  },
+  {
+    "id": "sent_067",
+    "text": "Where is bus",
+    "category": "Travel and directions",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_bus",
+      "clip_where"
+    ],
+    "gloss": "BUS WHERE"
+  },
+  {
+    "id": "sent_068",
+    "text": "Go to train",
+    "category": "Travel and directions",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_train",
+      "clip_go"
+    ],
+    "gloss": "TRAIN GO"
+  },
+  {
+    "id": "sent_069",
+    "text": "Follow this road",
+    "category": "Travel and directions",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "F",
+      "O",
+      "L",
+      "L",
+      "O",
+      "W",
+      "T",
+      "H",
+      "I",
+      "clip_road"
+    ],
+    "gloss": "F O L L O W T H I ROAD"
+  },
+  {
+    "id": "sent_070",
+    "text": "Visit the city",
+    "category": "Travel and directions",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "V",
+      "I",
+      "S",
+      "I",
+      "T",
+      "clip_city"
+    ],
+    "gloss": "V I S I T CITY"
+  },
+  {
+    "id": "sent_071",
+    "text": "The bus is coming to stop",
+    "category": "Travel and directions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_bus",
+      "clip_coming",
+      "clip_stop"
+    ],
+    "gloss": "BUS COMING STOP"
+  },
+  {
+    "id": "sent_072",
+    "text": "Where does this road go to",
+    "category": "Travel and directions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "T",
+      "H",
+      "I",
+      "clip_road",
+      "clip_go",
+      "clip_where"
+    ],
+    "gloss": "T H I ROAD GO WHERE"
+  },
+  {
+    "id": "sent_073",
+    "text": "I take train to my village",
+    "category": "Travel and directions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "clip_my",
+      "clip_train",
+      "clip_village",
+      "clip_take"
+    ],
+    "gloss": "I MY TRAIN VILLAGE TAKE"
+  },
+  {
+    "id": "sent_074",
+    "text": "Walk to the city park now",
+    "category": "Travel and directions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "N",
+      "O",
+      "W",
+      "clip_walk",
+      "clip_city",
+      "clip_park"
+    ],
+    "gloss": "N O W WALK CITY PARK"
+  },
+  {
+    "id": "sent_075",
+    "text": "We are traveling by train to visit our grandparents in the village",
+    "category": "Travel and directions",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_i",
+      "clip_my",
+      "T",
+      "R",
+      "A",
+      "V",
+      "E",
+      "L",
+      "clip_train",
+      "V",
+      "I",
+      "S",
+      "I",
+      "T",
+      "G",
+      "R",
+      "A",
+      "N",
+      "D",
+      "P",
+      "A",
+      "R",
+      "E",
+      "N",
+      "T",
+      "I",
+      "N",
+      "clip_village"
+    ],
+    "gloss": "I MY T R A V E L TRAIN V I S I T G R A N D P A R E N T I N VILLAGE"
+  },
+  {
+    "id": "sent_076",
+    "text": "Can you tell me how to reach the railway station from here",
+    "category": "Travel and directions",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_you",
+      "clip_tell",
+      "clip_me",
+      "R",
+      "E",
+      "A",
+      "C",
+      "H",
+      "clip_train",
+      "S",
+      "T",
+      "A",
+      "T",
+      "I",
+      "O",
+      "N",
+      "H",
+      "E",
+      "R",
+      "E",
+      "clip_how"
+    ],
+    "gloss": "YOU TELL ME R E A C H TRAIN S T A T I O N H E R E HOW"
+  },
+  {
+    "id": "sent_077",
+    "text": "The car stopped on the road because of heavy traffic today",
+    "category": "Travel and directions",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "T",
+      "O",
+      "D",
+      "A",
+      "Y",
+      "clip_car",
+      "S",
+      "T",
+      "O",
+      "P",
+      "P",
+      "O",
+      "N",
+      "clip_road",
+      "clip_because",
+      "H",
+      "E",
+      "A",
+      "V",
+      "Y",
+      "T",
+      "R",
+      "A",
+      "F",
+      "F",
+      "I",
+      "C"
+    ],
+    "gloss": "T O D A Y CAR S T O P P O N ROAD BECAUSE H E A V Y T R A F F I C"
+  },
+  {
+    "id": "sent_078",
+    "text": "How much money",
+    "category": "Shopping and money",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "M",
+      "U",
+      "C",
+      "H",
+      "clip_money",
+      "clip_how"
+    ],
+    "gloss": "M U C H MONEY HOW"
+  },
+  {
+    "id": "sent_079",
+    "text": "Go to market",
+    "category": "Shopping and money",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_market",
+      "clip_go"
+    ],
+    "gloss": "MARKET GO"
+  },
+  {
+    "id": "sent_080",
+    "text": "Buy this bag",
+    "category": "Shopping and money",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "B",
+      "U",
+      "Y",
+      "T",
+      "H",
+      "I",
+      "clip_bag"
+    ],
+    "gloss": "B U Y T H I BAG"
+  },
+  {
+    "id": "sent_081",
+    "text": "Pay the shop",
+    "category": "Shopping and money",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "P",
+      "A",
+      "Y",
+      "clip_shop"
+    ],
+    "gloss": "P A Y SHOP"
+  },
+  {
+    "id": "sent_082",
+    "text": "How much does this book cost",
+    "category": "Shopping and money",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "M",
+      "U",
+      "C",
+      "H",
+      "T",
+      "H",
+      "I",
+      "clip_book",
+      "M",
+      "U",
+      "C",
+      "H",
+      "clip_how"
+    ],
+    "gloss": "M U C H T H I BOOK M U C H HOW"
+  },
+  {
+    "id": "sent_083",
+    "text": "I want to buy new clothes",
+    "category": "Shopping and money",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "B",
+      "U",
+      "Y",
+      "N",
+      "E",
+      "W",
+      "clip_clothes",
+      "clip_want"
+    ],
+    "gloss": "I B U Y N E W CLOTHES WANT"
+  },
+  {
+    "id": "sent_084",
+    "text": "Keep your money in the bag",
+    "category": "Shopping and money",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_your",
+      "clip_keep",
+      "clip_money",
+      "I",
+      "N",
+      "clip_bag"
+    ],
+    "gloss": "YOUR KEEP MONEY I N BAG"
+  },
+  {
+    "id": "sent_085",
+    "text": "Please give me change for money",
+    "category": "Shopping and money",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_please",
+      "clip_me",
+      "clip_change",
+      "clip_money",
+      "clip_give"
+    ],
+    "gloss": "PLEASE ME CHANGE MONEY GIVE"
+  },
+  {
+    "id": "sent_086",
+    "text": "I went to the market to buy fruits vegetables and clothes",
+    "category": "Shopping and money",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_i",
+      "clip_market",
+      "B",
+      "U",
+      "Y",
+      "clip_fruit",
+      "clip_vegetable",
+      "A",
+      "N",
+      "D",
+      "clip_clothes",
+      "clip_go"
+    ],
+    "gloss": "I MARKET B U Y FRUIT VEGETABLE A N D CLOTHES GO"
+  },
+  {
+    "id": "sent_087",
+    "text": "How many bags of rice do you want from this shop",
+    "category": "Shopping and money",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_you",
+      "M",
+      "A",
+      "N",
+      "Y",
+      "clip_bag",
+      "clip_rice",
+      "clip_do",
+      "T",
+      "H",
+      "I",
+      "clip_shop",
+      "clip_want",
+      "clip_how"
+    ],
+    "gloss": "YOU M A N Y BAG RICE DO T H I SHOP WANT HOW"
+  },
+  {
+    "id": "sent_088",
+    "text": "Please keep your money safe while shopping in the crowded market",
+    "category": "Shopping and money",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_your",
+      "clip_please",
+      "clip_keep",
+      "clip_money",
+      "clip_safe",
+      "W",
+      "H",
+      "I",
+      "L",
+      "E",
+      "S",
+      "H",
+      "O",
+      "P",
+      "P",
+      "I",
+      "N",
+      "C",
+      "R",
+      "O",
+      "W",
+      "D",
+      "clip_market"
+    ],
+    "gloss": "YOUR PLEASE KEEP MONEY SAFE W H I L E S H O P P I N C R O W D MARKET"
+  },
+  {
+    "id": "sent_089",
+    "text": "I am happy",
+    "category": "Feelings and emotions",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_i",
+      "clip_happy"
+    ],
+    "gloss": "I HAPPY"
+  },
+  {
+    "id": "sent_090",
+    "text": "Do not be sad",
+    "category": "Feelings and emotions",
+    "difficulty": "beginner",
+    "word_count": 4,
+    "signs": [
+      "clip_do",
+      "clip_sad",
+      "N",
+      "O",
+      "T"
+    ],
+    "gloss": "DO SAD N O T"
+  },
+  {
+    "id": "sent_091",
+    "text": "Why so angry",
+    "category": "Feelings and emotions",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "S",
+      "O",
+      "clip_angry",
+      "clip_why"
+    ],
+    "gloss": "S O ANGRY WHY"
+  },
+  {
+    "id": "sent_092",
+    "text": "I feel tired",
+    "category": "Feelings and emotions",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_i",
+      "clip_feel",
+      "clip_tired"
+    ],
+    "gloss": "I FEEL TIRED"
+  },
+  {
+    "id": "sent_093",
+    "text": "I am feeling scared of dark",
+    "category": "Feelings and emotions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "clip_feeling",
+      "clip_scared",
+      "D",
+      "A",
+      "R",
+      "K"
+    ],
+    "gloss": "I FEELING SCARED D A R K"
+  },
+  {
+    "id": "sent_094",
+    "text": "Why are you confused about this",
+    "category": "Feelings and emotions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_you",
+      "clip_confused",
+      "T",
+      "H",
+      "I",
+      "clip_why"
+    ],
+    "gloss": "YOU CONFUSED T H I WHY"
+  },
+  {
+    "id": "sent_095",
+    "text": "I believe in you my friend",
+    "category": "Feelings and emotions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_i",
+      "clip_you",
+      "clip_my",
+      "clip_believe",
+      "I",
+      "N",
+      "clip_friend"
+    ],
+    "gloss": "I YOU MY BELIEVE I N FRIEND"
+  },
+  {
+    "id": "sent_096",
+    "text": "She was happy to see family",
+    "category": "Feelings and emotions",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_person",
+      "clip_happy",
+      "clip_family",
+      "clip_see"
+    ],
+    "gloss": "PERSON HAPPY FAMILY SEE"
+  },
+  {
+    "id": "sent_097",
+    "text": "I was very tired after work but happy to be back home",
+    "category": "Feelings and emotions",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_i",
+      "V",
+      "E",
+      "R",
+      "Y",
+      "clip_tired",
+      "clip_work",
+      "B",
+      "U",
+      "T",
+      "clip_happy",
+      "B",
+      "A",
+      "C",
+      "K",
+      "clip_home"
+    ],
+    "gloss": "I V E R Y TIRED WORK B U T HAPPY B A C K HOME"
+  },
+  {
+    "id": "sent_098",
+    "text": "Do not be scared or angry because we are here to help",
+    "category": "Feelings and emotions",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_i",
+      "clip_do",
+      "clip_scared",
+      "O",
+      "R",
+      "clip_angry",
+      "clip_because",
+      "H",
+      "E",
+      "R",
+      "E",
+      "clip_help",
+      "N",
+      "O",
+      "T"
+    ],
+    "gloss": "I DO SCARED O R ANGRY BECAUSE H E R E HELP N O T"
+  },
+  {
+    "id": "sent_099",
+    "text": "I feel confused because I cannot remember what the teacher taught",
+    "category": "Feelings and emotions",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_i",
+      "clip_feel",
+      "clip_confused",
+      "clip_because",
+      "C",
+      "A",
+      "N",
+      "N",
+      "O",
+      "T",
+      "clip_remember",
+      "clip_teacher",
+      "clip_taught",
+      "clip_what"
+    ],
+    "gloss": "I FEEL CONFUSED BECAUSE C A N N O T REMEMBER TEACHER TAUGHT WHAT"
+  },
+  {
+    "id": "sent_100",
+    "text": "What is this",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "T",
+      "H",
+      "I",
+      "clip_what"
+    ],
+    "gloss": "T H I WHAT"
+  },
+  {
+    "id": "sent_101",
+    "text": "Who are you",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_you",
+      "clip_who"
+    ],
+    "gloss": "YOU WHO"
+  },
+  {
+    "id": "sent_102",
+    "text": "Where to go",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_go",
+      "clip_where"
+    ],
+    "gloss": "GO WHERE"
+  },
+  {
+    "id": "sent_103",
+    "text": "Why are you late",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "beginner",
+    "word_count": 4,
+    "signs": [
+      "clip_late",
+      "clip_you",
+      "clip_why"
+    ],
+    "gloss": "LATE YOU WHY"
+  },
+  {
+    "id": "sent_104",
+    "text": "When will the train arrive here",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_train",
+      "A",
+      "R",
+      "R",
+      "I",
+      "V",
+      "E",
+      "H",
+      "E",
+      "R",
+      "E",
+      "clip_when"
+    ],
+    "gloss": "TRAIN A R R I V E H E R E WHEN"
+  },
+  {
+    "id": "sent_105",
+    "text": "How many books do you have",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_you",
+      "M",
+      "A",
+      "N",
+      "Y",
+      "clip_books",
+      "clip_do",
+      "clip_how"
+    ],
+    "gloss": "YOU M A N Y BOOKS DO HOW"
+  },
+  {
+    "id": "sent_106",
+    "text": "Where do you want to live",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_you",
+      "clip_do",
+      "clip_live",
+      "clip_want",
+      "clip_where"
+    ],
+    "gloss": "YOU DO LIVE WANT WHERE"
+  },
+  {
+    "id": "sent_107",
+    "text": "Why did you not come yesterday",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "Y",
+      "E",
+      "S",
+      "T",
+      "E",
+      "R",
+      "D",
+      "A",
+      "Y",
+      "clip_you",
+      "clip_did",
+      "clip_come",
+      "N",
+      "O",
+      "T",
+      "clip_why"
+    ],
+    "gloss": "Y E S T E R D A Y YOU DID COME N O T WHY"
+  },
+  {
+    "id": "sent_108",
+    "text": "Who can help me understand this difficult question in my school book",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_my",
+      "clip_me",
+      "T",
+      "H",
+      "I",
+      "D",
+      "I",
+      "F",
+      "F",
+      "I",
+      "C",
+      "U",
+      "L",
+      "T",
+      "clip_question",
+      "I",
+      "N",
+      "clip_school",
+      "clip_book",
+      "clip_help",
+      "clip_understand",
+      "clip_who"
+    ],
+    "gloss": "MY ME T H I D I F F I C U L T QUESTION I N SCHOOL BOOK HELP UNDERSTAND WHO"
+  },
+  {
+    "id": "sent_109",
+    "text": "When will you finish your college project and go back home",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_you",
+      "clip_your",
+      "clip_finish",
+      "clip_college",
+      "clip_project",
+      "A",
+      "N",
+      "D",
+      "B",
+      "A",
+      "C",
+      "K",
+      "clip_home",
+      "clip_go",
+      "clip_when"
+    ],
+    "gloss": "YOU YOUR FINISH COLLEGE PROJECT A N D B A C K HOME GO WHEN"
+  },
+  {
+    "id": "sent_110",
+    "text": "Why are you standing outside when you can come in and sit",
+    "category": "Questions (who, what, where, when, why, how)",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_you",
+      "clip_standing",
+      "O",
+      "U",
+      "T",
+      "S",
+      "I",
+      "D",
+      "E",
+      "I",
+      "N",
+      "A",
+      "N",
+      "D",
+      "clip_sit",
+      "clip_come",
+      "clip_why",
+      "clip_when"
+    ],
+    "gloss": "YOU STANDING O U T S I D E I N A N D SIT COME WHY WHEN"
+  },
+  {
+    "id": "sent_111",
+    "text": "What is time",
+    "category": "Time, days, weather",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_time",
+      "clip_what"
+    ],
+    "gloss": "TIME WHAT"
+  },
+  {
+    "id": "sent_112",
+    "text": "Wait one minute",
+    "category": "Time, days, weather",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "clip_wait",
+      "O",
+      "N",
+      "E",
+      "M",
+      "I",
+      "N",
+      "U",
+      "T",
+      "E"
+    ],
+    "gloss": "WAIT O N E M I N U T E"
+  },
+  {
+    "id": "sent_113",
+    "text": "Cold rainy day",
+    "category": "Time, days, weather",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "C",
+      "O",
+      "L",
+      "D",
+      "R",
+      "A",
+      "I",
+      "N",
+      "Y",
+      "D",
+      "A",
+      "Y"
+    ],
+    "gloss": "C O L D R A I N Y D A Y"
+  },
+  {
+    "id": "sent_114",
+    "text": "Start again now",
+    "category": "Time, days, weather",
+    "difficulty": "beginner",
+    "word_count": 3,
+    "signs": [
+      "N",
+      "O",
+      "W",
+      "clip_start",
+      "clip_again"
+    ],
+    "gloss": "N O W START AGAIN"
+  },
+  {
+    "id": "sent_115",
+    "text": "It is time for morning breakfast",
+    "category": "Time, days, weather",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_time",
+      "clip_morning",
+      "I",
+      "T",
+      "clip_breakfast"
+    ],
+    "gloss": "TIME MORNING I T BREAKFAST"
+  },
+  {
+    "id": "sent_116",
+    "text": "We are ready to begin now",
+    "category": "Time, days, weather",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "N",
+      "O",
+      "W",
+      "clip_i",
+      "clip_ready",
+      "clip_begin"
+    ],
+    "gloss": "N O W I READY BEGIN"
+  },
+  {
+    "id": "sent_117",
+    "text": "The train is late today morning",
+    "category": "Time, days, weather",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_late",
+      "T",
+      "O",
+      "D",
+      "A",
+      "Y",
+      "clip_morning",
+      "clip_train"
+    ],
+    "gloss": "LATE T O D A Y MORNING TRAIN"
+  },
+  {
+    "id": "sent_118",
+    "text": "Please wait five minutes for me",
+    "category": "Time, days, weather",
+    "difficulty": "intermediate",
+    "word_count": 6,
+    "signs": [
+      "clip_please",
+      "clip_wait",
+      "F",
+      "I",
+      "V",
+      "E",
+      "M",
+      "I",
+      "N",
+      "U",
+      "T",
+      "E",
+      "clip_me"
+    ],
+    "gloss": "PLEASE WAIT F I V E M I N U T E ME"
+  },
+  {
+    "id": "sent_119",
+    "text": "What time will the morning class begin and finish on Monday",
+    "category": "Time, days, weather",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "clip_time",
+      "clip_morning",
+      "clip_class",
+      "clip_begin",
+      "A",
+      "N",
+      "D",
+      "clip_finish",
+      "O",
+      "N",
+      "M",
+      "O",
+      "N",
+      "D",
+      "A",
+      "Y",
+      "clip_what"
+    ],
+    "gloss": "TIME MORNING CLASS BEGIN A N D FINISH O N M O N D A Y WHAT"
+  },
+  {
+    "id": "sent_120",
+    "text": "It is very cold outside today so please wear warm clothes",
+    "category": "Time, days, weather",
+    "difficulty": "advanced",
+    "word_count": 11,
+    "signs": [
+      "T",
+      "O",
+      "D",
+      "A",
+      "Y",
+      "I",
+      "T",
+      "V",
+      "E",
+      "R",
+      "Y",
+      "C",
+      "O",
+      "L",
+      "D",
+      "O",
+      "U",
+      "T",
+      "S",
+      "I",
+      "D",
+      "E",
+      "S",
+      "O",
+      "clip_please",
+      "W",
+      "E",
+      "A",
+      "R",
+      "W",
+      "A",
+      "R",
+      "M",
+      "clip_clothes"
+    ],
+    "gloss": "T O D A Y I T V E R Y C O L D O U T S I D E S O PLEASE W E A R W A R M CLOTHES"
+  },
+  {
+    "id": "sent_121",
+    "text": "We must start early in the morning before it gets too hot",
+    "category": "Time, days, weather",
+    "difficulty": "advanced",
+    "word_count": 12,
+    "signs": [
+      "clip_early",
+      "clip_morning",
+      "clip_i",
+      "clip_start",
+      "I",
+      "N",
+      "B",
+      "E",
+      "F",
+      "O",
+      "R",
+      "E",
+      "I",
+      "T",
+      "G",
+      "E",
+      "T",
+      "T",
+      "O",
+      "O",
+      "H",
+      "O",
+      "T"
+    ],
+    "gloss": "EARLY MORNING I START I N B E F O R E I T G E T T O O H O T"
+  }
+]

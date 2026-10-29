@@ -47,9 +47,22 @@ class QuietHTTPRequestHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
 
+def get_lan_ip():
+    """Detects primary LAN IP for sharing with partner on the same local network."""
+    try:
+        import socket
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return '127.0.0.1'
+
+
 def start_http_server(port=8000):
-    """Starts a local HTTP server in a daemon background thread."""
-    server_address = ('127.0.0.1', port)
+    """Starts a local HTTP server in a daemon background thread binding to all interfaces."""
+    server_address = ('0.0.0.0', port)
     try:
         httpd = HTTPServer(server_address, QuietHTTPRequestHandler)
         thread = threading.Thread(target=httpd.serve_forever, daemon=True)
@@ -62,13 +75,16 @@ def start_http_server(port=8000):
 
 
 def print_banner(ws_port, http_port):
+    lan_ip = get_lan_ip()
     print("=" * 72)
     print("   ASL INTERPRETER & WINDOWS OS GESTURE CONTROLLER   v2.5")
     print("=" * 72)
     print(" [+] Native Windows Automation Engine: ACTIVE")
-    print(f" [+] WebSocket Bridge:                 ws://127.0.0.1:{ws_port}")
+    print(f" [+] WebSocket Bridge:                 ws://127.0.0.1:{ws_port} (and ws://{lan_ip}:{ws_port})")
     if http_port:
-        print(f" [+] Web Application:                  http://localhost:{http_port}/index.html")
+        print(f" [+] Local Web Application:            http://localhost:{http_port}/index.html")
+        print(f" [+] Network Shareable URL:            http://{lan_ip}:{http_port}/index.html")
+        print(f"     (Open this Network URL on another phone/laptop to connect Two-Way Room!)")
     print("-" * 72)
     print(" GESTURE CONTROLS QUICK CHEATSHEET:")
     print("   - Steer Cursor:      Point Index Finger (Landmark 8)")
@@ -109,7 +125,7 @@ def main():
         except Exception:
             pass
 
-    bridge_server = WindowsBridgeServer(host="127.0.0.1", port=args.port)
+    bridge_server = WindowsBridgeServer(host="0.0.0.0", port=args.port)
     try:
         bridge_server.run()
     except KeyboardInterrupt:

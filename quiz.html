@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASL Academy — Interactive Practice & Speed Quiz</title>
+    <title>ASL & ISL Academy — Practice Lab & Speed Quiz</title>
     <meta name="description"
-        content="Interactive sign language learning game and real-time speed quiz with pose validation powered by MediaPipe and TensorFlow.js.">
+        content="Interactive sign language learning game, 3D avatar text-to-sign translator, and real-time speed quiz.">
 
     <!-- Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,8 +44,8 @@
                         </svg>
                     </div>
                     <div class="header-titles">
-                        <h1>ASL <span class="highlight">Academy</span> <span class="version-pill">v2.4</span></h1>
-                        <p>Interactive gesture practice & real-time speed quiz</p>
+                        <h1>Practice <span class="highlight">Lab & Academy</span> <span class="version-pill">v2.5</span></h1>
+                        <p>Interactive gesture practice, 3D text-to-sign avatar & speed quiz</p>
                     </div>
                 </div>
                 <nav class="nav-menu" aria-label="Primary Navigation">
@@ -65,7 +65,7 @@
                             <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
                             <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
                         </svg>
-                        <span>Practice Academy</span>
+                        <span>Practice Lab</span>
                     </a>
                     <a href="chat.html" class="nav-link">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -84,250 +84,695 @@
             </div>
         </header>
 
+        <!-- ==================== PRACTICE LAB MODE SWITCHER ==================== -->
+        <script>
+            function switchPracticeLabTab(tab) {
+                const pTab = document.getElementById('tab-mode-practice');
+                const sTab = document.getElementById('tab-mode-speed');
+                const tTab = document.getElementById('tab-mode-t2s');
+                const qWs = document.getElementById('quiz-workspace');
+                const tWs = document.getElementById('text-to-sign-workspace');
+                
+                [pTab, sTab, tTab].forEach(btn => {
+                    if (btn) {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-selected', 'false');
+                    }
+                });
+
+                const url = new URL(window.location.href);
+
+                if (tab === 't2s' || tab === 'text-to-sign') {
+                    if (tTab) { tTab.classList.add('active'); tTab.setAttribute('aria-selected', 'true'); }
+                    if (qWs) qWs.style.display = 'none';
+                    if (tWs) tWs.style.display = 'contents';
+                    url.searchParams.set('tab', 'text-to-sign');
+                    url.searchParams.delete('tool');
+                    url.searchParams.delete('mode');
+                    window.history.replaceState({}, '', url);
+                    window.dispatchEvent(new CustomEvent('t2s-tab-activated'));
+                } else if (tab === 'speed' || tab === 'speed-test') {
+                    if (sTab) { sTab.classList.add('active'); sTab.setAttribute('aria-selected', 'true'); }
+                    if (qWs) qWs.style.display = 'contents';
+                    if (tWs) tWs.style.display = 'none';
+                    qWs.setAttribute('data-tool', 'speed');
+                    url.searchParams.set('tab', 'speed-test');
+                    url.searchParams.delete('tool');
+                    window.history.replaceState({}, '', url);
+                    if (typeof window.setGameMode === 'function') {
+                        window.setGameMode('speed');
+                    }
+                    const titleEl = document.getElementById('quiz-panel-title');
+                    if (titleEl) titleEl.textContent = 'Speed Test Challenge';
+                    const badgeEl = document.getElementById('quiz-status-badge');
+                    if (badgeEl) badgeEl.textContent = 'Ready for Speed Run';
+                    const timerContainer = document.getElementById('quiz-timer-container');
+                    if (timerContainer) timerContainer.style.display = 'block';
+                    const speedAction = document.getElementById('speed-action-controls');
+                    if (speedAction) speedAction.style.display = 'flex';
+                    const practiceAction = document.getElementById('practice-action-controls');
+                    if (practiceAction) practiceAction.style.display = 'none';
+                    const practicePill = document.querySelector('[data-qmode="practice"]');
+                    const speedPill = document.querySelector('[data-qmode="speed"]');
+                    if (practicePill) practicePill.classList.remove('active');
+                    if (speedPill) speedPill.classList.add('active');
+                } else {
+                    // 'practice' mode (default)
+                    if (pTab) { pTab.classList.add('active'); pTab.setAttribute('aria-selected', 'true'); }
+                    if (qWs) qWs.style.display = 'contents';
+                    if (tWs) tWs.style.display = 'none';
+                    qWs.setAttribute('data-tool', 'practice');
+                    url.searchParams.set('tab', 'gesture-practice');
+                    url.searchParams.delete('tool');
+                    window.history.replaceState({}, '', url);
+                    if (typeof window.setGameMode === 'function') {
+                        window.setGameMode('practice');
+                    }
+                    const titleEl = document.getElementById('quiz-panel-title');
+                    if (titleEl) titleEl.textContent = 'Gesture Practice';
+                    const badgeEl = document.getElementById('quiz-status-badge');
+                    if (badgeEl) badgeEl.textContent = 'Free Practice Mode';
+                    const timerContainer = document.getElementById('quiz-timer-container');
+                    if (timerContainer) timerContainer.style.display = 'none';
+                    const speedAction = document.getElementById('speed-action-controls');
+                    if (speedAction) speedAction.style.display = 'none';
+                    const practiceAction = document.getElementById('practice-action-controls');
+                    if (practiceAction) practiceAction.style.display = 'flex';
+                    const practicePill = document.querySelector('[data-qmode="practice"]');
+                    const speedPill = document.querySelector('[data-qmode="speed"]');
+                    if (practicePill) practicePill.classList.add('active');
+                    if (speedPill) speedPill.classList.remove('active');
+                }
+            }
+            // Immediate check on load
+            (function() {
+                try {
+                    const p = new URLSearchParams(window.location.search);
+                    const tabParam = p.get('tab') || p.get('tool') || p.get('mode');
+                    document.addEventListener('DOMContentLoaded', function() {
+                        if (tabParam === 'text-to-sign' || tabParam === 't2s') {
+                            switchPracticeLabTab('t2s');
+                        } else if (tabParam === 'speed' || tabParam === 'speed-test') {
+                            switchPracticeLabTab('speed');
+                        } else {
+                            switchPracticeLabTab('practice');
+                        }
+                    });
+                } catch(e) {}
+            })();
+        </script>
+        <div class="practice-hub-banner glass-panel">
+            <div class="practice-mode-pills" role="tablist" aria-label="Practice Lab Tools">
+                <button type="button" class="tab-pill active" id="tab-mode-practice" role="tab" aria-selected="true" aria-controls="quiz-workspace" onclick="switchPracticeLabTab('practice')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                    <span>Gesture Practice</span>
+                </button>
+                <button type="button" class="tab-pill" id="tab-mode-speed" role="tab" aria-selected="false" aria-controls="quiz-workspace" onclick="switchPracticeLabTab('speed')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                    <span>Speed Test</span>
+                </button>
+                <button type="button" class="tab-pill" id="tab-mode-t2s" role="tab" aria-selected="false" aria-controls="text-to-sign-workspace" onclick="switchPracticeLabTab('t2s')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        <path d="M8 9h8"></path>
+                        <path d="M8 13h6"></path>
+                    </svg>
+                    <span>Text to Sign Lab</span>
+                </button>
+            </div>
+        </div>
+
         <!-- ==================== MAIN WORKSPACE ==================== -->
         <main class="vision-container">
 
-            <!-- ===== LEFT COLUMN (Webcam & Target HUD) ===== -->
-            <div class="left-column">
+            <!-- ==================== TOOL 1: QUIZ & GESTURE RECOGNITION WORKSPACE ==================== -->
+            <div id="quiz-workspace" class="workspace-grid active" style="display: contents;">
+                <!-- ===== LEFT COLUMN (Webcam & Target HUD) ===== -->
+                <div class="left-column">
 
-                <!-- Camera Feed Viewport -->
-                <div class="camera-wrapper glass-panel" id="camera-container">
-                    <video id="webcam" autoplay playsinline muted></video>
-                    <canvas class="output_canvas" id="output_canvas"></canvas>
+                    <!-- Camera Feed Viewport -->
+                    <div class="camera-wrapper glass-panel" id="camera-container">
+                        <video id="webcam" autoplay playsinline muted></video>
+                        <canvas class="output_canvas" id="output_canvas"></canvas>
 
-                    <!-- Camera Telemetry Overlay -->
-                    <div class="camera-status-bar">
-                        <div class="camera-badge"><span class="dot"></span> Camera Input</div>
-                        <div class="camera-badge" id="fps-badge">FPS: --</div>
-                        <select id="camera-device-select" class="camera-perf-select" title="Select Webcam Device" aria-label="Select Webcam Device">
-                            <option value="">Default Camera</option>
-                        </select>
-                        <button type="button" id="camera-mirror-btn" class="camera-ctrl-btn active" title="Toggle Mirror Mode" aria-label="Toggle Mirror Mode">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3m8-18h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/></svg>
-                            <span>Mirror</span>
-                        </button>
-                        <button type="button" id="camera-restart-btn" class="camera-ctrl-btn" title="Restart / Retry Camera" aria-label="Restart / Retry Camera">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-                            <span>Retry</span>
-                        </button>
-                    </div>
-
-                                        <!-- Camera Error & Diagnostic Overlay -->
-                    <div class="camera-error-overlay hidden" id="camera-error-overlay">
-                        <div class="camera-error-icon">⚠️</div>
-                        <h3 class="camera-error-title" id="camera-error-title">Camera Unavailable</h3>
-                        <p class="camera-error-desc" id="camera-error-desc">Unable to access your webcam.</p>
-                        <div class="camera-error-troubleshoot" id="camera-error-troubleshoot">
-                            <strong>Quick Fix Checklist:</strong>
-                            <ul id="camera-troubleshoot-list">
-                                <li>Check browser permissions (click 🔒 Lock or 🎥 Camera icon in address bar -> Allow).</li>
-                                <li>Ensure no other application (Zoom, Teams, Skype, OBS) is using the webcam.</li>
-                                <li>If multiple cameras exist, select a different device from the dropdown.</li>
-                            </ul>
+                        <!-- Camera Telemetry Overlay -->
+                        <div class="camera-status-bar">
+                            <div class="camera-badge"><span class="dot"></span> Camera Input</div>
+                            <div class="camera-badge" id="fps-badge">FPS: --</div>
+                            <select id="camera-device-select" class="camera-perf-select" title="Select Webcam Device" aria-label="Select Webcam Device">
+                                <option value="">Default Camera</option>
+                            </select>
+                            <button type="button" id="camera-mirror-btn" class="camera-ctrl-btn active" title="Toggle Mirror Mode" aria-label="Toggle Mirror Mode">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h3m8-18h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3M12 2v20"/></svg>
+                                <span>Mirror</span>
+                            </button>
+                            <button type="button" id="camera-restart-btn" class="camera-ctrl-btn" title="Restart / Retry Camera" aria-label="Restart / Retry Camera">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                                <span>Retry</span>
+                            </button>
                         </div>
-                        <div class="camera-error-actions">
-                            <button type="button" id="camera-simulate-btn" class="btn primary sm" style="background: linear-gradient(135deg, #10b981, #059669); border: 0;">🎮 Start Simulation Mode</button>
-                            <button type="button" id="camera-retry-action-btn" class="btn secondary sm">Retry Camera</button>
-                            <button type="button" id="camera-dismiss-err-btn" class="btn secondary sm">Dismiss</button>
+
+                        <!-- Camera Error & Diagnostic Overlay -->
+                        <div class="camera-error-overlay hidden" id="camera-error-overlay">
+                            <div class="camera-error-icon">⚠️</div>
+                            <h3 class="camera-error-title" id="camera-error-title">Camera Unavailable</h3>
+                            <p class="camera-error-desc" id="camera-error-desc">Unable to access your webcam.</p>
+                            <div class="camera-error-troubleshoot" id="camera-error-troubleshoot">
+                                <strong>Quick Fix Checklist:</strong>
+                                <ul id="camera-troubleshoot-list">
+                                    <li>Check browser permissions (click 🔒 Lock or 🎥 Camera icon in address bar -> Allow).</li>
+                                    <li>Ensure no other application (Zoom, Teams, Skype, OBS) is using the webcam.</li>
+                                    <li>If multiple cameras exist, select a different device from the dropdown.</li>
+                                </ul>
+                            </div>
+                            <div class="camera-error-actions">
+                                <button type="button" id="camera-simulate-btn" class="btn primary sm" style="background: linear-gradient(135deg, #10b981, #059669); border: 0;">🎮 Start Simulation Mode</button>
+                                <button type="button" id="camera-retry-action-btn" class="btn secondary sm">Retry Camera</button>
+                                <button type="button" id="camera-dismiss-err-btn" class="btn secondary sm">Dismiss</button>
+                            </div>
+                        </div>
+
+                        <!-- Loading / Initialization Overlay -->
+                        <div class="status-overlay" id="status-overlay">
+                            <div class="loader"></div>
+                            <p id="status-text">Preparing camera and gesture engine…</p>
                         </div>
                     </div>
 
-                    <!-- Loading / Initialization Overlay -->
-                    <div class="status-overlay" id="status-overlay">
-                        <div class="loader"></div>
-                        <p id="status-text">Preparing camera and gesture engine…</p>
+                    <!-- Target Sign & Pose Hold HUD -->
+                    <div class="quiz-target-hud glass-panel" id="quiz-target-hud">
+                        <div class="quiz-target-card" id="quiz-target-card">
+                            <!-- Circular Hold Progress SVG -->
+                            <svg class="hold-ring-svg" viewBox="0 0 140 140">
+                                <circle class="hold-ring-bg" cx="70" cy="70" r="64"></circle>
+                                <circle class="hold-ring-progress" id="hold-ring-progress" cx="70" cy="70" r="64"></circle>
+                            </svg>
+                            <span class="target-badge">Target</span>
+                            <span class="target-glyph" id="target-glyph">A</span>
+                            <span class="target-subtext" id="target-subtext">Letter A</span>
+                        </div>
+                        <div class="target-details">
+                            <div class="target-instructions-title">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="8" y1="12" x2="12.01" y2="12"></line>
+                                </svg>
+                                <span>Pose Instructions</span>
+                            </div>
+                            <div class="target-instructions-text" id="target-hint">
+                                Make a closed fist with thumb resting vertically along the side of index finger.
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
+                                <span class="target-hints-box" id="target-category-badge">Category: Alphabet</span>
+                                <span class="target-hints-box" id="target-hold-status">Hold pose for 0.4s</span>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
 
-                <!-- Target Sign & Pose Hold HUD -->
-                <div class="quiz-target-hud glass-panel" id="quiz-target-hud">
-                    <div class="quiz-target-card" id="quiz-target-card">
-                        <!-- Circular Hold Progress SVG -->
-                        <svg class="hold-ring-svg" viewBox="0 0 140 140">
-                            <circle class="hold-ring-bg" cx="70" cy="70" r="64"></circle>
-                            <circle class="hold-ring-progress" id="hold-ring-progress" cx="70" cy="70" r="64"></circle>
-                        </svg>
-                        <span class="target-badge">Target</span>
-                        <span class="target-glyph" id="target-glyph">A</span>
-                        <span class="target-subtext" id="target-subtext">Letter A</span>
+                <!-- ===== RIGHT COLUMN (Academy Hub & Telemetry) ===== -->
+                <div class="side-panel">
+
+                    <!-- Academy Scorecard & Live HUD -->
+                    <div class="sentence-panel glass-panel">
+                        <div class="panel-header-row">
+                            <h2 class="section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                                <span id="quiz-panel-title">Gesture Practice</span>
+                            </h2>
+                            <span id="quiz-status-badge" class="status-badge connected">Free Practice Mode</span>
+                        </div>
+
+                        <!-- Live Stats Grid -->
+                        <div class="quiz-stats-grid">
+                            <div class="quiz-stat-card">
+                                <span class="quiz-stat-label">Score</span>
+                                <span class="quiz-stat-value highlight-blue" id="quiz-score">0</span>
+                            </div>
+                            <div class="quiz-stat-card">
+                                <span class="quiz-stat-label">Streak</span>
+                                <div class="streak-container">
+                                    <svg class="flame-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                                    </svg>
+                                    <span class="quiz-stat-value highlight-green" id="quiz-streak">0</span>
+                                </div>
+                            </div>
+                            <div class="quiz-stat-card">
+                                <span class="quiz-stat-label">Accuracy</span>
+                                <span class="quiz-stat-value" id="quiz-accuracy">100%</span>
+                            </div>
+                        </div>
+
+                        <!-- Timer Bar for Speed Run (Speed Test tool only) -->
+                        <div id="quiz-timer-container" style="display: none;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 2px;">
+                                <span>Speed Run Countdown</span>
+                                <span id="quiz-timer-text" style="font-family: var(--font-mono); font-weight: 600; color: var(--text-primary);">60s</span>
+                            </div>
+                            <div class="timer-track-quiz">
+                                <div class="timer-fill-quiz" id="quiz-timer-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Speed Test Action Controls -->
+                        <div class="sentence-controls" id="speed-action-controls" style="display: none;">
+                            <button id="primary-action-btn" class="btn primary">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                <span id="primary-action-text">Start Speed Run</span>
+                            </button>
+                            <button id="speed-skip-btn" class="btn secondary" onclick="document.getElementById('skip-target-btn')?.click()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                                    <line x1="19" y1="5" x2="19" y2="19"></line>
+                                </svg>
+                                <span>Skip Sign</span>
+                            </button>
+                        </div>
+
+                        <!-- Gesture Practice Action Controls -->
+                        <div class="sentence-controls" id="practice-action-controls" style="display: flex;">
+                            <button id="skip-target-btn" class="btn primary" style="flex: 1;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                                    <line x1="19" y1="5" x2="19" y2="19"></line>
+                                </svg>
+                                <span>Next Gesture &rarr;</span>
+                            </button>
+                        </div>
+
+                        <!-- Camera-Free Testing Mode Controls -->
+                        <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.70rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); font-weight: 700;">
+                                    Camera-Free Testing Mode
+                                </span>
+                                <span style="font-size: 0.68rem; color: var(--accent-emerald); font-weight: 600;">Shortcuts: [Space] Match, [W] Wrong</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <button type="button" id="sim-correct-btn" class="btn secondary sm" style="border-color: rgba(16, 185, 129, 0.4); color: var(--accent-emerald);">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Simulate Match</span>
+                                </button>
+                                <button type="button" id="sim-wrong-btn" class="btn secondary sm" style="border-color: rgba(244, 63, 94, 0.4); color: var(--accent-rose);">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                    <span>Simulate Wrong</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="target-details">
-                        <div class="target-instructions-title">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+                    <!-- Challenge Configuration -->
+                    <div class="training-panel glass-panel">
+                        <h2 class="section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            <span>Challenge Setup</span>
+                        </h2>
+
+                        <div class="quiz-config-section">
+                            <!-- Mode Selector -->
+                            <div class="config-group">
+                                <span class="config-label">Practice Type</span>
+                                <div class="pill-group" id="quiz-mode-pills">
+                                    <button type="button" class="pill-btn active" data-qmode="practice">Free Practice</button>
+                                    <button type="button" class="pill-btn" data-qmode="speed">60s Speed Run</button>
+                                </div>
+                            </div>
+
+                            <!-- Category Selector -->
+                            <div class="config-group">
+                                <span class="config-label">Vocabulary Category</span>
+                                <div class="pill-group" id="quiz-category-pills">
+                                    <button type="button" class="pill-btn active" data-qcat="all">Mixed All</button>
+                                    <button type="button" class="pill-btn" data-qcat="alphabet">Letters (A–Z)</button>
+                                    <button type="button" class="pill-btn" data-qcat="numbers">Numbers (0–9)</button>
+                                    <button type="button" class="pill-btn" data-qcat="signs">Common Signs</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Career Records & Progress -->
+                    <div class="hardware-panel glass-panel">
+                        <h2 class="section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="8" r="7"></circle>
+                                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                            </svg>
+                            <span>Personal Records</span>
+                        </h2>
+                        <div class="data-grid">
+                            <div class="data-box">
+                                <div class="data-header">
+                                    <span class="data-label">High Score</span>
+                                </div>
+                                <span class="data-value" id="record-high-score">0</span>
+                            </div>
+                            <div class="data-box">
+                                <div class="data-header">
+                                    <span class="data-label">Best Streak</span>
+                                </div>
+                                <span class="data-value" id="record-best-streak">0</span>
+                            </div>
+                        </div>
+                        <div class="debug-divider">
+                            <div class="data-grid">
+                                <div class="data-box small">
+                                    <span class="data-label">Signs Solved</span>
+                                    <span class="data-value" id="record-total-signs">0</span>
+                                </div>
+                                <div class="data-box small">
+                                    <span class="data-label">Speed Runs</span>
+                                    <span class="data-value" id="record-total-rounds">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ==================== TOOL 2: TEXT TO SIGN WORKSPACE ==================== -->
+            <div id="text-to-sign-workspace" class="workspace-grid" style="display: none;">
+                <!-- ===== LEFT COLUMN (Input Form, 3D Avatar & Controls) ===== -->
+                <div class="left-column">
+
+                    <!-- Sentence Input & Settings Card -->
+                    <div class="glass-panel t2s-input-panel">
+                        <div class="panel-header-row">
+                            <h2 class="section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    <line x1="8" y1="9" x2="16" y2="9"></line>
+                                    <line x1="8" y1="13" x2="14" y2="13"></line>
+                                </svg>
+                                <span>Text to Sign Sequence</span>
+                            </h2>
+                            <span id="t2s-mode-badge" class="status-badge calibrated">Offline ISL NLP</span>
+                        </div>
+                        <p class="desc">Enter any sentence. The engine reorders grammar into Indian Sign Language (ISL) gloss and animates the 3D avatar.</p>
+
+                        <!-- Input Form -->
+                        <form id="t2s-form" class="t2s-form-box" onsubmit="return false;">
+                            <div class="t2s-input-wrapper">
+                                <input type="text" id="t2s-input" class="t2s-text-input"
+                                    placeholder="Type a sentence (e.g., Where is the hospital? or My name is Amit)..."
+                                    maxlength="250" autocomplete="off" spellcheck="false"
+                                    aria-label="Sentence to translate into sign language" />
+                                <span class="t2s-char-counter" id="t2s-char-count">0 / 250</span>
+                            </div>
+                            <div class="t2s-form-actions">
+                                <button type="submit" id="t2s-translate-btn" class="btn primary">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                    <span>Translate & Sign</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Validation Alert Box -->
+                        <div id="t2s-error-alert" class="t2s-alert-box" style="display: none;" role="alert">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <span id="t2s-error-text">Please enter a sentence.</span>
+                        </div>
+
+                        <!-- Quick Example Sentences -->
+                        <div class="t2s-examples-container">
+                            <span class="t2s-examples-label">Try Examples:</span>
+                            <div class="t2s-example-pills">
+                                <button type="button" class="t2s-example-chip" data-text="Hello, how are you?">Hello, how are you?</button>
+                                <button type="button" class="t2s-example-chip" data-text="Where is the hospital?">Where is the hospital?</button>
+                                <button type="button" class="t2s-example-chip" data-text="I need help please">I need help please</button>
+                                <button type="button" class="t2s-example-chip" data-text="Nice to meet you">Nice to meet you</button>
+                                <button type="button" class="t2s-example-chip" data-text="My name is Amit">My name is Amit</button>
+                                <button type="button" class="t2s-example-chip" data-text="Thank you very much">Thank you very much</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3D Humanoid Avatar Viewport -->
+                    <div class="glass-panel t2s-avatar-card">
+                        <div class="t2s-viewport-wrapper">
+                            <div id="t2s-avatar-container" class="t2s-avatar-canvas"></div>
+
+                            <!-- Loading Skeleton Overlay -->
+                            <div id="t2s-avatar-loading" class="status-overlay">
+                                <div class="loader"></div>
+                                <p>Loading 3D Signing Avatar…</p>
+                            </div>
+
+                            <!-- Active Sign Caption HUD -->
+                            <div class="t2s-caption-hud" id="t2s-caption-hud">
+                                <span class="t2s-caption-badge badge-emerald" id="t2s-caption-type">Ready</span>
+                                <span class="t2s-caption-title" id="t2s-caption-text">Ready to Sign</span>
+                            </div>
+
+                            <!-- Practice "Your Turn" Imitation Banner -->
+                            <div id="t2s-practice-banner" class="t2s-practice-banner hidden" role="region" aria-label="Practice Mode Notice">
+                                <div class="practice-banner-info">
+                                    <span class="practice-banner-badge">🎯 Your Turn</span>
+                                    <span class="practice-banner-desc">Practice imitating the sign, then continue.</span>
+                                </div>
+                                <button type="button" id="t2s-practice-next-btn" class="btn primary sm">
+                                    <span>Next Sign &rarr;</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Avatar Playback Controls -->
+                        <div class="t2s-controls-bar">
+                            <div class="t2s-controls-group-left">
+                                <button type="button" id="t2s-play-pause-btn" class="btn primary sm" title="Play or pause animation" aria-label="Play or pause">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                    </svg>
+                                    <span id="t2s-play-pause-text">Play</span>
+                                </button>
+                                <button type="button" id="t2s-replay-btn" class="btn secondary sm" title="Replay full sentence" aria-label="Replay sequence">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="1 4 1 10 7 10"></polyline>
+                                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                    </svg>
+                                    <span>Replay</span>
+                                </button>
+                                <div class="t2s-step-controls">
+                                    <button type="button" id="t2s-prev-sign-btn" class="btn secondary sm" title="Previous sign in sequence" aria-label="Previous sign">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                        <span>Prev</span>
+                                    </button>
+                                    <button type="button" id="t2s-next-sign-btn" class="btn secondary sm" title="Next sign in sequence" aria-label="Next sign">
+                                        <span>Next</span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="t2s-controls-group-right">
+                                <!-- Speed Control -->
+                                <div class="t2s-speed-control">
+                                    <label for="t2s-speed-select">Speed:</label>
+                                    <select id="t2s-speed-select" class="camera-perf-select sm" aria-label="Playback speed">
+                                        <option value="0.5">0.5x</option>
+                                        <option value="1.0" selected>1.0x</option>
+                                        <option value="1.5">1.5x</option>
+                                    </select>
+                                </div>
+
+                                <!-- Practice Mode Toggle -->
+                                <label class="t2s-practice-checkbox" title="Pauses after each sign so you can practice imitating it">
+                                    <input type="checkbox" id="t2s-practice-toggle" />
+                                    <span>Practice Mode</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice Sentence Library Browser Card -->
+                    <div class="glass-panel t2s-browser-card" id="t2s-browser-card">
+                        <div class="panel-header-row">
+                            <h2 class="section-title">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                </svg>
+                                <span>Practice Sentence Library</span>
+                            </h2>
+                            <div class="t2s-browser-header-actions">
+                                <span class="status-badge" id="t2s-browser-total-badge">120+ Sentences</span>
+                                <button type="button" id="t2s-browser-random-btn" class="btn secondary sm" title="Select a random practice sentence">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="16 3 21 3 21 8"></polyline>
+                                        <line x1="4" y1="20" x2="21" y2="3"></line>
+                                        <polyline points="21 16 21 21 16 21"></polyline>
+                                        <line x1="15" y1="15" x2="21" y2="21"></line>
+                                        <line x1="4" y1="4" x2="9" y2="9"></line>
+                                    </svg>
+                                    <span>Random</span>
+                                </button>
+                                <button type="button" id="t2s-browser-next-btn" class="btn secondary sm" title="Play next practice sentence">
+                                    <span>Next</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <p class="desc">Browse categorized practice sentences. Click any sentence to immediately load and animate it on the 3D avatar.</p>
+
+                        <!-- Filter & Search Toolbar -->
+                        <div class="t2s-browser-toolbar">
+                            <div class="t2s-browser-search-wrap">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <input type="search" id="t2s-browser-search" class="t2s-browser-search-input" placeholder="Search sentences or words..." aria-label="Search practice sentences" />
+                            </div>
+
+                            <div class="t2s-browser-filters">
+                                <div class="t2s-filter-group">
+                                    <label for="t2s-browser-category">Category:</label>
+                                    <select id="t2s-browser-category" class="camera-perf-select sm" aria-label="Filter by category">
+                                        <option value="all">All Categories (11)</option>
+                                        <option value="Greetings and introductions">Greetings &amp; introductions</option>
+                                        <option value="Daily routine">Daily routine</option>
+                                        <option value="Family and friends">Family &amp; friends</option>
+                                        <option value="School and college">School &amp; college</option>
+                                        <option value="Food and drinks">Food &amp; drinks</option>
+                                        <option value="Health and emergencies">Health &amp; emergencies</option>
+                                        <option value="Travel and directions">Travel &amp; directions</option>
+                                        <option value="Shopping and money">Shopping &amp; money</option>
+                                        <option value="Feelings and emotions">Feelings &amp; emotions</option>
+                                        <option value="Questions (who, what, where, when, why, how)">Questions</option>
+                                        <option value="Time, days, weather">Time, days &amp; weather</option>
+                                    </select>
+                                </div>
+
+                                <div class="t2s-filter-group">
+                                    <label for="t2s-browser-difficulty">Difficulty:</label>
+                                    <select id="t2s-browser-difficulty" class="camera-perf-select sm" aria-label="Filter by difficulty">
+                                        <option value="all">All Difficulties</option>
+                                        <option value="beginner">Beginner (2–4 words)</option>
+                                        <option value="intermediate">Intermediate (5–8 words)</option>
+                                        <option value="advanced">Advanced (9–15 words)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Filter Counter Info -->
+                        <div class="t2s-browser-meta-row">
+                            <span id="t2s-browser-showing-count" class="t2s-browser-showing-text">Loading practice sentences...</span>
+                        </div>
+
+                        <!-- Paginated Sentence Card Stream -->
+                        <div class="t2s-browser-list" id="t2s-browser-list" role="list" aria-label="Practice sentence items">
+                            <div class="t2s-empty-list-notice">Loading practice sentences...</div>
+                        </div>
+
+                        <!-- Pagination Controls -->
+                        <div class="t2s-browser-pagination" id="t2s-browser-pagination">
+                            <button type="button" id="t2s-browser-prev-page" class="btn secondary sm" disabled aria-label="Previous page">
+                                &larr; Prev
+                            </button>
+                            <span id="t2s-browser-page-info" class="t2s-page-indicator">Page 1 of 1</span>
+                            <button type="button" id="t2s-browser-next-page" class="btn secondary sm" aria-label="Next page">
+                                Next &rarr;
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ===== RIGHT COLUMN (Active Timeline, Signs Used, & ISL Guide) ===== -->
+                <div class="side-panel">
+
+                    <!-- Interactive Sign Sequence Timeline -->
+                    <div class="glass-panel t2s-timeline-panel">
+                        <div class="panel-header-row">
+                            <h2 class="section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                                <span>Sign Timeline</span>
+                            </h2>
+                            <span class="timeline-hint">Click chip to replay</span>
+                        </div>
+                        <p class="desc">Active token is highlighted during signing. Click any chip to replay that individual sign.</p>
+
+                        <!-- Timeline Chip Stream -->
+                        <div class="t2s-timeline-track" id="t2s-timeline" role="region" aria-label="Interactive gloss chips">
+                            <span class="t2s-empty-placeholder" id="t2s-timeline-placeholder">
+                                Type a sentence and click Translate to see the token sequence.
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Signs Used in Sequence -->
+                    <div class="glass-panel t2s-signs-summary-panel">
+                        <div class="panel-header-row">
+                            <h2 class="section-title">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                                <span>Signs Used</span>
+                            </h2>
+                            <span class="status-badge" id="t2s-signs-count">0 signs</span>
+                        </div>
+
+                        <!-- Signs List Cards -->
+                        <div class="t2s-signs-list-container" id="t2s-signs-list" role="list" aria-label="List of signs used">
+                            <div class="t2s-empty-list-notice">No sentence translated yet.</div>
+                        </div>
+                    </div>
+
+                    <!-- Linguistic Insights & Attribution Card -->
+                    <div class="glass-panel t2s-linguistics-panel">
+                        <h2 class="section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <line x1="12" y1="16" x2="12" y2="12"></line>
                                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
                             </svg>
-                            <span>Pose Instructions</span>
-                        </div>
-                        <div class="target-instructions-text" id="target-hint">
-                            Make a closed fist with thumb resting vertically along the side of index finger.
-                        </div>
-                        <div style="display: flex; gap: 8px; align-items: center; margin-top: 4px;">
-                            <span class="target-hints-box" id="target-category-badge">Category: Alphabet</span>
-                            <span class="target-hints-box" id="target-hold-status">Hold pose for 0.4s</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ===== RIGHT COLUMN (Academy Hub & Telemetry) ===== -->
-            <div class="side-panel">
-
-                <!-- Academy Scorecard & Live HUD -->
-                <div class="sentence-panel glass-panel">
-                    <div class="panel-header-row">
-                        <h2 class="section-title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                            <span>Live Performance</span>
+                            <span>Linguistic Insights</span>
                         </h2>
-                        <span id="quiz-status-badge" class="status-badge connected">Practice Mode</span>
+                        <ul class="t2s-tips-list">
+                            <li><strong>Grammar Order</strong>: ISL prioritizes Time markers first, followed by Subject-Object-Verb (SOV), with WH-questions and negations at the end.</li>
+                            <li><strong>Fingerspelling Fallback</strong>: Proper names and unsupported terms are gracefully fingerspelled using standard A–Z ISL alphabets.</li>
+                            <li><strong>Real-time Articulation</strong>: Coordinated skeletal animation of shoulders, arms, wrists, and individual 5-finger joints with turquoise armor highlights.</li>
+                        </ul>
                     </div>
 
-                    <!-- Live Stats Grid -->
-                    <div class="quiz-stats-grid">
-                        <div class="quiz-stat-card">
-                            <span class="quiz-stat-label">Score</span>
-                            <span class="quiz-stat-value highlight-blue" id="quiz-score">0</span>
-                        </div>
-                        <div class="quiz-stat-card">
-                            <span class="quiz-stat-label">Streak</span>
-                            <div class="streak-container">
-                                <svg class="flame-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
-                                </svg>
-                                <span class="quiz-stat-value highlight-green" id="quiz-streak">0</span>
-                            </div>
-                        </div>
-                        <div class="quiz-stat-card">
-                            <span class="quiz-stat-label">Accuracy</span>
-                            <span class="quiz-stat-value" id="quiz-accuracy">100%</span>
-                        </div>
-                    </div>
-
-                    <!-- Timer Bar for Speed Run -->
-                    <div id="quiz-timer-container" style="display: none;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-tertiary); margin-bottom: 2px;">
-                            <span>Time Remaining</span>
-                            <span id="quiz-timer-text" style="font-family: var(--font-mono); font-weight: 600; color: var(--text-primary);">60s</span>
-                        </div>
-                        <div class="timer-track-quiz">
-                            <div class="timer-fill-quiz" id="quiz-timer-fill" style="width: 100%;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Action Controls -->
-                    <div class="sentence-controls">
-                        <button id="primary-action-btn" class="btn primary">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                            </svg>
-                            <span id="primary-action-text">Start Speed Run</span>
-                        </button>
-                        <button id="skip-target-btn" class="btn secondary">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polygon points="5 4 15 12 5 20 5 4"></polygon>
-                                <line x1="19" y1="5" x2="19" y2="19"></line>
-                            </svg>
-                            <span>Skip Sign</span>
-                        </button>
-                    </div>
-
-                    <!-- Camera-Free Testing Mode Controls -->
-                    <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 0.70rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-tertiary); font-weight: 700;">
-                                Camera-Free Testing Mode
-                            </span>
-                            <span style="font-size: 0.68rem; color: var(--accent-emerald); font-weight: 600;">Shortcuts: [Space] Match, [W] Wrong</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <button type="button" id="sim-correct-btn" class="btn secondary sm" style="border-color: rgba(16, 185, 129, 0.4); color: var(--accent-emerald);">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Simulate Match</span>
-                            </button>
-                            <button type="button" id="sim-wrong-btn" class="btn secondary sm" style="border-color: rgba(244, 63, 94, 0.4); color: var(--accent-rose);">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                <span>Simulate Wrong</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
-
-                <!-- Challenge Configuration -->
-                <div class="training-panel glass-panel">
-                    <h2 class="section-title">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="3"></circle>
-                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                        </svg>
-                        <span>Challenge Setup</span>
-                    </h2>
-
-                    <div class="quiz-config-section">
-                        <!-- Mode Selector -->
-                        <div class="config-group">
-                            <span class="config-label">Practice Type</span>
-                            <div class="pill-group" id="quiz-mode-pills">
-                                <button type="button" class="pill-btn active" data-qmode="practice">Free Practice</button>
-                                <button type="button" class="pill-btn" data-qmode="speed">60s Speed Run</button>
-                            </div>
-                        </div>
-
-                        <!-- Category Selector -->
-                        <div class="config-group">
-                            <span class="config-label">Vocabulary Category</span>
-                            <div class="pill-group" id="quiz-category-pills">
-                                <button type="button" class="pill-btn active" data-qcat="all">Mixed All</button>
-                                <button type="button" class="pill-btn" data-qcat="alphabet">Letters (A–Z)</button>
-                                <button type="button" class="pill-btn" data-qcat="numbers">Numbers (0–9)</button>
-                                <button type="button" class="pill-btn" data-qcat="signs">Common Signs</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Career Records & Progress -->
-                <div class="hardware-panel glass-panel">
-                    <h2 class="section-title">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="8" r="7"></circle>
-                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
-                        </svg>
-                        <span>Personal Records</span>
-                    </h2>
-                    <div class="data-grid">
-                        <div class="data-box">
-                            <div class="data-header">
-                                <span class="data-label">High Score</span>
-                            </div>
-                            <span class="data-value" id="record-high-score">0</span>
-                        </div>
-                        <div class="data-box">
-                            <div class="data-header">
-                                <span class="data-label">Best Streak</span>
-                            </div>
-                            <span class="data-value" id="record-best-streak">0</span>
-                        </div>
-                    </div>
-                    <div class="debug-divider">
-                        <div class="data-grid">
-                            <div class="data-box small">
-                                <span class="data-label">Signs Solved</span>
-                                <span class="data-value" id="record-total-signs">0</span>
-                            </div>
-                            <div class="data-box small">
-                                <span class="data-label">Speed Runs</span>
-                                <span class="data-value" id="record-total-rounds">0</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
         </main>
 
         <!-- Round Summary Modal -->
@@ -402,6 +847,9 @@
     <!-- Sign Dictionary & Quiz Engine -->
     <script src="dictionary.js?v=3.2.0"></script>
     <script src="quiz.js?v=3.2.0"></script>
+
+    <!-- 3D Text-to-Sign Engine -->
+    <script type="module" src="src/text_to_sign/text_to_sign_ui.js"></script>
 </body>
 
 </html>

@@ -2004,7 +2004,11 @@ function initSpeechToSign() {
 // ==================== WINDOWS OS NATIVE CONTROLLER & WEBSOCKET BRIDGE ====================
 
 class WindowsOSBridgeClient {
-    constructor(url = 'ws://127.0.0.1:8765') {
+    constructor(url = null) {
+        if (!url) {
+            const host = window.location.hostname || '127.0.0.1';
+            url = `ws://${host}:8765`;
+        }
         this.url = url;
         this.ws = null;
         this.isConnected = false;
