@@ -29,6 +29,13 @@ from scripts.windows_bridge import WindowsBridgeServer
 
 class QuietHTTPRequestHandler(SimpleHTTPRequestHandler):
     """Custom HTTP handler serving the workspace with suppressed standard GET logs."""
+    extensions_map = SimpleHTTPRequestHandler.extensions_map.copy()
+    extensions_map.update({
+        ".glb": "model/gltf-binary",
+        ".gltf": "model/gltf+json",
+        ".wasm": "application/wasm",
+    })
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=ROOT_DIR, **kwargs)
 

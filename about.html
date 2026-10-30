@@ -72,6 +72,13 @@
                         </svg>
                         <span>Practice Lab</span>
                     </a>
+                    <a href="avatar.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Text to Sign</span>
+                    </a>
                     <a href="chat.html" class="nav-link">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -166,22 +173,24 @@
                         <span class="mono-code">Puter Vision</span>
                     </div>
                 </div>
+
+                <div class="about-card">
+                    <div class="about-card-badge">04 &bull; 3D Kinematics &amp; Sign Synthesis</div>
+                    <h2 class="about-card-title">Three.js 3D Text-to-Sign Engine</h2>
+                    <p class="about-card-text">
+                        The 3D avatar studio synthesizes written English and voice dictation into articulated American Sign Language using Three.js and WebGL. Input sentences pass through an offline grammar reordering layer (structuring English into ASL Time-Topic-Comment syntax) and execute smooth hierarchical joint transformations on an anatomical humanoid rig. The engine delivers real-time fingerspelling (A-Z, 0-9) and 35+ whole-word ASL signs with customizable shader themes.
+                    </p>
+                    <div class="about-card-meta">
+                        <span class="mono-code">Three.js WebGL</span>
+                        <span class="mono-code">Grammar Reordering</span>
+                        <span class="mono-code">Kinematic Rig</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- Hardware & System Notes (Disclosures) -->
+            <!-- System Notes (Disclosures) -->
             <div class="about-notes-section">
-                <!-- Note 1: Smart Glove -->
-                <div class="about-notice-box">
-                    <div class="about-notice-header">
-                        <span class="engine-status-dot" style="background: var(--accent-amber);"></span>
-                        <h3 class="about-notice-title">Hardware Note : Smart Glove Integration</h3>
-                    </div>
-                    <p class="about-notice-text">
-                        The custom Bluetooth Low Energy (BLE) sensor glove (ESP32 micro-controller and MPU-6050 6-axis IMU) was built as an experimental hardware extension to study rotational kinematics and trajectory disambiguation for dynamic gestures. <strong>The glove is completely optional and not required to use Sign Language Studio.</strong> All primary capabilities (alphabet finger-spelling, numerical counting, dynamic signs, practice quizzes, sign dictionary, and two-way rooms) function with 100% fidelity using any standard laptop or mobile camera through MediaPipe computer vision.
-                    </p>
-                </div>
-
-                <!-- Note 2: OS Gesture Controls -->
+                <!-- Note 1: OS Gesture Controls -->
                 <div class="about-notice-box">
                     <div class="about-notice-header">
                         <span class="engine-status-dot" style="background: var(--accent-emerald);"></span>
@@ -189,6 +198,17 @@
                     </div>
                     <p class="about-notice-text">
                         The Windows OS Controller module connects real-time computer vision tracking directly to native Windows operating system automation via an ultra-low-latency WebSocket bridge. <strong>Native desktop execution is fully functional and operational.</strong> Users can steer cursor coordinates across multi-monitor setups, perform left/right/double clicks, drag-and-drop windows and files, scroll documents, adjust master system volume and display brightness, trigger screenshot snipping tools, and virtually inject recognized text sentences into any focused Windows application.
+                    </p>
+                </div>
+
+                <!-- Note 2: 3D Avatar Kinematics & Reference -->
+                <div class="about-notice-box">
+                    <div class="about-notice-header">
+                        <span class="engine-status-dot" style="background: var(--accent-turquoise);"></span>
+                        <h3 class="about-notice-title">3D Kinematic Synthesis : Text-to-Sign Architecture</h3>
+                    </div>
+                    <p class="about-notice-text">
+                        The Text-to-Sign studio transforms written English and natural speech into articulated American Sign Language animations on a 3D humanoid mesh in real time. Sentences are parsed by a client-side linguistic reordering engine that restructures English Subject-Verb-Object phrasing into authentic ASL Time-Topic-Comment syntax. Individual signs are animated via hierarchical skeletal joint keyframes covering authentic one-handed fingerspelling (A through Z) and an expandable dictionary of whole-word signs. We acknowledge and credit <a href="https://github.com/maddyroxx/Sign-Flow.git" target="_blank" rel="noopener noreferrer" style="color: var(--accent-emerald); text-decoration: underline;">Sign-Flow (maddyroxx)</a> for architectural reference and inspiration regarding Three.js humanoid rig pipelines and client-side sign animation concepts.
                     </p>
                 </div>
             </div>
@@ -251,7 +271,7 @@
                 <span>&bull;</span>
                 <span class="landing-footer-chip">WebRTC P2P</span>
                 <span>&bull;</span>
-                <span class="landing-footer-chip">Web Bluetooth</span>
+                <span class="landing-footer-chip">Three.js WebGL</span>
             </div>
             <div>
                 <span class="mono-code" style="font-size: 0.68rem;">v4.0.0-prod &bull; Nominal</span>

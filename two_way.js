@@ -47,11 +47,31 @@ class TwoWaySessionManager {
         return raw.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '');
     }
 
+    static getCanonicalRoomToken(code) {
+        if (!code) return '';
+        let clean = code.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (!clean.startsWith('asl')) {
+            clean = 'asl' + clean;
+        }
+        return clean;
+    }
+
+    static normalizeRoomCode(raw) {
+        if (!raw) return '';
+        const cleaned = raw.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (!cleaned) return '';
+        if (cleaned.startsWith('ASL')) {
+            const suffix = cleaned.slice(3);
+            return suffix ? `ASL-${suffix}` : 'ASL';
+        }
+        return `ASL-${cleaned}`;
+    }
+
     initURLParams() {
         const urlParams = new URLSearchParams(window.location.search);
         const roomParam = urlParams.get('room') || urlParams.get('code');
         if (roomParam) {
-            this.pendingRoomCode = TwoWaySessionManager.sanitizeRoomCode(roomParam);
+            this.pendingRoomCode = TwoWaySessionManager.normalizeRoomCode(roomParam);
         }
     }
 
@@ -60,7 +80,7 @@ class TwoWaySessionManager {
         this.disconnect();
         this.role = role;
         this.isHost = true;
-        this.roomCode = TwoWaySessionManager.sanitizeRoomCode(customCode) || TwoWaySessionManager.generateRoomCode();
+        this.roomCode = customCode ? TwoWaySessionManager.normalizeRoomCode(customCode) : TwoWaySessionManager.generateRoomCode();
         this._notifyState('initializing', `Registering room ${this.roomCode}...`);
 
         const peerId = this._buildHostPeerId(this.roomCode);
@@ -72,24 +92,36 @@ class TwoWaySessionManager {
         this.disconnect();
         this.role = role;
         this.isHost = false;
-        this.roomCode = TwoWaySessionManager.sanitizeRoomCode(roomCode);
+        this.roomCode = TwoWaySessionManager.normalizeRoomCode(roomCode);
         if (!this.roomCode) {
             this._notifyError('Please enter a valid room code.');
             return;
         }
 
         this._notifyState('connecting', `Connecting to room ${this.roomCode}...`);
+
+        if (this.joinTimeout) clearTimeout(this.joinTimeout);
+        this.joinTimeout = setTimeout(() => {
+            if (!this.isConnected) {
+                console.warn('[TwoWay P2P] Join attempt timed out.');
+                this.disconnect();
+                this._notifyError(`Could not find active host for room ${this.roomCode}. Ensure the host is in the room and try again.`);
+            }
+        }, 14000);
+
         const guestId = this._buildGuestPeerId(this.roomCode);
         this._initializePeer(guestId, false);
     }
 
     _buildHostPeerId(code) {
-        return `asl-p2p-${code.toLowerCase().replace(/[^a-z0-9]/g, '')}-host`;
+        const token = TwoWaySessionManager.getCanonicalRoomToken(code);
+        return `asl-p2p-${token}-host`;
     }
 
     _buildGuestPeerId(code) {
+        const token = TwoWaySessionManager.getCanonicalRoomToken(code);
         const rand = Math.random().toString(36).substring(2, 7);
-        return `asl-p2p-${code.toLowerCase().replace(/[^a-z0-9]/g, '')}-guest-${rand}`;
+        return `asl-p2p-${token}-guest-${rand}`;
     }
 
     _initializePeer(peerId, isHosting) {
@@ -143,6 +175,10 @@ class TwoWaySessionManager {
 
             this.peer.on('error', (err) => {
                 console.warn('[TwoWay P2P] Peer error:', err.type, err);
+                if (this.joinTimeout) {
+                    clearTimeout(this.joinTimeout);
+                    this.joinTimeout = null;
+                }
                 if (err.type === 'unavailable-id') {
                     if (isHosting) {
                         this._notifyError(`Room code ${this.roomCode} is currently in use. Please try another code.`);
@@ -174,6 +210,10 @@ class TwoWaySessionManager {
 
         conn.on('open', () => {
             console.log(`[TwoWay P2P] WebRTC DataChannel OPEN with ${conn.peer}`);
+            if (this.joinTimeout) {
+                clearTimeout(this.joinTimeout);
+                this.joinTimeout = null;
+            }
             this.isConnected = true;
 
             // Send handshake
@@ -399,6 +439,10 @@ class TwoWaySessionManager {
     }
 
     disconnect() {
+        if (this.joinTimeout) {
+            clearTimeout(this.joinTimeout);
+            this.joinTimeout = null;
+        }
         if (this.mediaCall) {
             this.mediaCall.close();
             this.mediaCall = null;
@@ -473,6 +517,7 @@ function initTwoWayUI() {
 
     const joinInput = document.getElementById('two-way-join-input');
     const joinBtn = document.getElementById('two-way-join-btn');
+    const joinFeedback = document.getElementById('two-way-join-feedback');
 
     const sessionCodeDisplay = document.getElementById('two-way-session-code');
     const partnerBadge = document.getElementById('two-way-partner-badge');
@@ -599,10 +644,63 @@ function initTwoWayUI() {
         });
     }
 
-    // Guest: Format Join Input (Auto-uppercase & auto-hyphen)
+    function setJoinBtnLoading(isLoading, label = 'Connecting...') {
+        if (!joinBtn) return;
+        joinBtn.disabled = isLoading;
+        if (isLoading) {
+            joinBtn.innerHTML = `
+                <svg class="spin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                    <line x1="12" y1="18" x2="12" y2="22"></line>
+                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                    <line x1="2" y1="12" x2="6" y2="12"></line>
+                    <line x1="18" y1="12" x2="22" y2="12"></line>
+                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                </svg>
+                <span>${label}</span>
+            `;
+        } else {
+            joinBtn.innerHTML = `
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+                <span>Connect to Room</span>
+            `;
+        }
+    }
+
+    function showJoinFeedback(type, message) {
+        if (!joinFeedback) return;
+        if (!message) {
+            joinFeedback.style.display = 'none';
+            joinFeedback.className = 'two-way-join-feedback';
+            joinFeedback.textContent = '';
+            return;
+        }
+        joinFeedback.style.display = 'flex';
+        joinFeedback.className = `two-way-join-feedback ${type}`;
+        let icon = '';
+        if (type === 'connecting') {
+            icon = `<svg class="spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="10"></circle></svg>`;
+        } else if (type === 'error') {
+            icon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`;
+        } else if (type === 'success') {
+            icon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        }
+        joinFeedback.innerHTML = `${icon}<span>${message}</span>`;
+    }
+
+    // Guest: Format Join Input (Auto-uppercase & clean characters)
     if (joinInput) {
         joinInput.addEventListener('input', (e) => {
-            e.target.value = TwoWaySessionManager.sanitizeRoomCode(e.target.value);
+            const raw = e.target.value;
+            const cleaned = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '');
+            if (raw !== cleaned) {
+                e.target.value = cleaned;
+            }
+            showJoinFeedback(null, null);
         });
 
         joinInput.addEventListener('keydown', (e) => {
@@ -615,13 +713,15 @@ function initTwoWayUI() {
     // Guest: Join Room
     if (joinBtn && joinInput) {
         joinBtn.addEventListener('click', () => {
-            const code = TwoWaySessionManager.sanitizeRoomCode(joinInput.value);
-            if (!code) {
-                alert('Please enter a room code (e.g. ASL-842)');
+            const rawVal = joinInput.value.trim();
+            if (!rawVal) {
+                showJoinFeedback('error', 'Please enter a room code (e.g. ASL-842)');
                 joinInput.focus();
                 return;
             }
-            twoWayManager.joinRoom(code, currentRole);
+            showJoinFeedback('connecting', 'Locating room on peer network...');
+            setJoinBtnLoading(true, 'Connecting...');
+            twoWayManager.joinRoom(rawVal, currentRole);
         });
     }
 
@@ -629,7 +729,12 @@ function initTwoWayUI() {
     twoWayManager.onStateChange((state, msg) => {
         console.log(`[TwoWay UI State] ${state}: ${msg}`);
 
-        if (state === 'connected') {
+        if (state === 'connecting') {
+            showJoinFeedback('connecting', msg || 'Connecting to room...');
+            setJoinBtnLoading(true, 'Connecting...');
+        } else if (state === 'connected') {
+            showJoinFeedback('success', 'Connected! Entering room...');
+            setJoinBtnLoading(false);
             if (setupView && activeView) {
                 setupView.style.display = 'none';
                 activeView.style.display = 'flex';
@@ -643,6 +748,7 @@ function initTwoWayUI() {
             }
             if (typeof playDetectionSound === 'function') playDetectionSound();
         } else if (state === 'disconnected' || state === 'partner_left') {
+            setJoinBtnLoading(false);
             if (setupView && activeView) {
                 setupView.style.display = 'flex';
                 activeView.style.display = 'none';
@@ -654,13 +760,14 @@ function initTwoWayUI() {
             if (videoDrawer) videoDrawer.style.display = 'none';
             isVideoActive = false;
             if (state === 'partner_left') {
-                alert('Your partner has disconnected from the room.');
+                showJoinFeedback('error', 'Partner left the room.');
             }
         }
     });
 
     twoWayManager.onError((err) => {
-        alert(err);
+        setJoinBtnLoading(false);
+        showJoinFeedback('error', err);
     });
 
     // Leave Room Button
@@ -966,6 +1073,10 @@ function initTwoWayUI() {
 }
 
 // Initialize on DOM load
-window.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initTwoWayUI();
+    });
+} else {
     initTwoWayUI();
-});
+}

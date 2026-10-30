@@ -13,6 +13,13 @@ import sys
 class CustomRequestHandler(SimpleHTTPRequestHandler):
     """Custom request handler enabling CORS, landing page routing, and correct caching/MIME settings."""
 
+    extensions_map = SimpleHTTPRequestHandler.extensions_map.copy()
+    extensions_map.update({
+        ".glb": "model/gltf-binary",
+        ".gltf": "model/gltf+json",
+        ".wasm": "application/wasm",
+    })
+
     def translate_path(self, path):
         # Route root '/' or empty path to index.html
         if path == "/" or path == "":

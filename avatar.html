@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Studio - Text to Sign 3D Avatar</title>
+    <meta name="description"
+        content="Convert written text and natural voice into authentic American Sign Language (ASL) via real-time 3D kinematic avatar synthesis.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=4.0.0">
+
+    <!-- Three.js WebGL Engine & Loaders (r128) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- ==================== HEADER ==================== -->
+        <header class="app-header">
+            <div class="header-inner">
+                <a href="index.html" class="header-left brand-link" title="Return to Overview">
+                    <div class="brand-mark">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>
+                            <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path>
+                            <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path>
+                            <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+                        </svg>
+                    </div>
+                    <div class="header-titles">
+                        <div class="brand-title-row">
+                            <h1 class="brand-title">Sign Language <span class="brand-title-accent">Studio</span></h1>
+                            <span class="engine-badge"><span class="engine-status-dot"></span> Neural Vision v4.0</span>
+                        </div>
+                        <p class="brand-caption">Text to Sign &bull; Real-time 3D avatar kinematic synthesis for American Sign Language</p>
+                    </div>
+                </a>
+
+                <nav class="nav-menu" aria-label="Primary Navigation">
+                    <a href="index.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <span>Overview</span>
+                    </a>
+                    <a href="detector.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span>Detector</span>
+                    </a>
+                    <a href="quiz.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>Practice Lab</span>
+                    </a>
+                    <a href="avatar.html" class="nav-link active" aria-current="page">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Text to Sign</span>
+                    </a>
+                    <a href="chat.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>Gesture Assistant</span>
+                    </a>
+                    <a href="detector.html#two-way" class="nav-link nav-btn-modal" id="open-two-way-btn" title="Open Two-Way Speech &amp; Sign Room">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>Two-Way Room</span>
+                    </a>
+                    <button id="open-dictionary-btn" class="nav-link nav-btn-modal" type="button" aria-haspopup="dialog">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                        <span>Sign Library</span>
+                    </button>
+                    <a href="about.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>About</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- ==================== MAIN WORKSPACE ==================== -->
+        <main class="avatar-workspace">
+
+            <!-- ===== LEFT COLUMN (3D Avatar Player & Studio Controls) ===== -->
+            <div class="avatar-stage-column">
+
+                <!-- 3D Stage Card -->
+                <div class="glass-panel avatar-stage-card">
+
+                    <!-- Stage Top Toolbar -->
+                    <div class="stage-toolbar">
+                        <div class="stage-toolbar-left">
+                            <div id="avatar-status-badge" class="status-badge connected">
+                                <span class="dot"></span>
+                                <span>Avatar Ready</span>
+                            </div>
+                            <span class="stage-title">3D Kinematic Rig &bull; ASL Engine</span>
+                        </div>
+
+                        <div class="stage-toolbar-right">
+                            <!-- Model Style Selector -->
+                            <div class="stage-ctrl-group">
+                                <label for="avatar-model-select" class="stage-ctrl-label">Style:</label>
+                                <select id="avatar-model-select" class="stage-select" title="Change Avatar Visual Style">
+                                    <option value="turquoise" selected>Turquoise Robot (Signature)</option>
+                                    <option value="stealth">Cyber Stealth (Obsidian)</option>
+                                    <option value="titanium">Titanium Chrome</option>
+                                    <option value="human">Stylized Human (Face Rig)</option>
+                                </select>
+                            </div>
+
+                            <!-- Camera Reset Button -->
+                            <button type="button" id="btn-cam-reset" class="stage-btn-icon" title="Reset Camera View" aria-label="Reset Camera View">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                    <path d="M3 3v5h5"></path>
+                                </svg>
+                                <span>Reset Cam</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 3D Viewport View -->
+                    <div class="avatar-viewport-wrap">
+                        <canvas id="avatar-bg-canvas" class="avatar-bg-canvas"></canvas>
+                        <div id="avatar-stage" class="avatar-canvas-container"></div>
+
+                        <!-- Loading Overlay -->
+                        <div id="avatar-loading-overlay" class="avatar-loading-overlay">
+                            <div class="avatar-spinner"></div>
+                            <div class="loader-text">Loading 3D ASL Avatar…</div>
+                            <div class="loader-sub">Initializing bone kinematics &amp; shader materials</div>
+                        </div>
+
+                        <!-- Active Sign HUD Overlay -->
+                        <div id="avatar-active-hud" class="avatar-active-hud">
+                            <div class="hud-glyph" id="hud-active-glyph">A</div>
+                            <div class="hud-details">
+                                <div class="hud-row">
+                                    <span class="hud-name" id="hud-active-name">HELLO</span>
+                                    <span class="hud-badge" id="hud-active-badge">ASL Whole Sign</span>
+                                </div>
+                                <div class="hud-hint" id="hud-active-hint">Coordinated ASL gesture for 'HELLO'</div>
+                            </div>
+                        </div>
+
+                        <!-- Viewport Interaction Badge -->
+                        <div class="avatar-viewport-hint">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="m4.93 4.93 4.24 4.24"></path>
+                                <path d="m14.83 9.17 4.24-4.24"></path>
+                                <path d="m14.83 14.83 4.24 4.24"></path>
+                                <path d="m9.17 14.83-4.24 4.24"></path>
+                            </svg>
+                            <span>Left Drag: Orbit &bull; Right Drag: Pan &bull; Scroll: Zoom</span>
+                        </div>
+                    </div>
+
+                    <!-- Playback Transport Bar -->
+                    <div class="avatar-transport-bar">
+                        <div class="transport-controls-left">
+                            <button type="button" id="btn-avatar-play-pause" class="btn primary sm transport-btn" title="Toggle Play / Pause [Space]">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="6" y="4" width="4" height="16"></rect>
+                                    <rect x="14" y="4" width="4" height="16"></rect>
+                                </svg>
+                                <span>Pause</span>
+                            </button>
+
+                            <button type="button" id="btn-avatar-stop" class="btn secondary sm transport-btn" title="Stop signing and return to rest [Esc]">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                                </svg>
+                                <span>Stop</span>
+                            </button>
+
+                            <button type="button" id="btn-avatar-replay" class="btn secondary sm transport-btn" title="Replay current sequence [R]">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="1 4 1 10 7 10"></polyline>
+                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                </svg>
+                                <span>Replay</span>
+                            </button>
+                        </div>
+
+                        <div class="transport-controls-right">
+                            <div class="stage-ctrl-group">
+                                <label for="avatar-speed-select" class="stage-ctrl-label">Speed:</label>
+                                <select id="avatar-speed-select" class="stage-select speed-select" title="Adjust Sign Performance Speed">
+                                    <option value="0.5">0.5x Slow</option>
+                                    <option value="0.75">0.75x</option>
+                                    <option value="1.0" selected>1.0x Normal</option>
+                                    <option value="1.25">1.25x Fast</option>
+                                    <option value="1.5">1.5x Rapid</option>
+                                </select>
+                            </div>
+
+                            <span class="transport-shortcut-tag">[Space] Pause &bull; [R] Replay &bull; [Esc] Rest</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Telemetry & Kinematic Architecture Card -->
+                <div class="glass-panel avatar-card avatar-telemetry-card">
+                    <div class="avatar-card-header">
+                        <div class="avatar-header-left">
+                            <span class="avatar-sec-tag">KINEMATIC SPECIFICATIONS</span>
+                            <h2 class="avatar-sec-title">Client-Side Architecture</h2>
+                        </div>
+                        <span class="engine-badge"><span class="engine-status-dot"></span> ASL 1-Handed Dominant</span>
+                    </div>
+
+                    <div class="avatar-specs-grid">
+                        <div class="spec-cell">
+                            <span class="spec-label">Skeletal Rig</span>
+                            <span class="spec-val">Mixamo YBot Mesh</span>
+                            <span class="spec-detail">67 articulable bones</span>
+                        </div>
+                        <div class="spec-cell">
+                            <span class="spec-label">ASL Fingerspelling</span>
+                            <span class="spec-val">Authentic One-Handed</span>
+                            <span class="spec-detail">Full A through Z alphabet</span>
+                        </div>
+                        <div class="spec-cell">
+                            <span class="spec-label">NLP Reordering</span>
+                            <span class="spec-val">Time &bull; Topic &bull; Comment</span>
+                            <span class="spec-detail">Grammar rule synthesis</span>
+                        </div>
+                        <div class="spec-cell">
+                            <span class="spec-label">Local Latency</span>
+                            <span class="spec-val">&lt; 15 ms</span>
+                            <span class="spec-detail">Zero external API reliance</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ===== RIGHT COLUMN (Input, Gloss Timeline, Vocabulary) ===== -->
+            <div class="avatar-input-column">
+
+                <!-- Synthesis Input Card -->
+                <div class="glass-panel avatar-card">
+                    <div class="avatar-card-header">
+                        <div class="avatar-header-left">
+                            <span class="avatar-sec-tag">INPUT STREAM</span>
+                            <h2 class="avatar-sec-title">Natural Language to ASL</h2>
+                        </div>
+
+                        <!-- Mode tabs: Text vs Voice -->
+                        <div class="avatar-input-tabs" role="tablist">
+                            <button type="button" class="avatar-tab-btn active" id="tab-btn-text" role="tab" aria-selected="true">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                                    <line x1="9" y1="20" x2="15" y2="20"></line>
+                                    <line x1="12" y1="4" x2="12" y2="20"></line>
+                                </svg>
+                                <span>Text</span>
+                            </button>
+                            <button type="button" class="avatar-tab-btn" id="tab-btn-voice" role="tab" aria-selected="false">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                                <span>Voice</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Panel: Text Input -->
+                    <div id="panel-input-text" class="avatar-tab-panel active">
+                        <div class="avatar-textarea-wrap">
+                            <textarea id="avatar-input-text" class="avatar-textarea" rows="3" maxlength="250"
+                                placeholder="Type English text or phrase to translate (e.g., 'Hello, how are you?' or 'Thank you for your help')...">Hello, how are you?</textarea>
+                            <div class="avatar-textarea-footer">
+                                <div class="avatar-mode-toggle">
+                                    <label class="avatar-toggle-label" title="Force letter-by-letter one-handed ASL fingerspelling for every word">
+                                        <input type="checkbox" id="toggle-fingerspell-only" class="avatar-checkbox">
+                                        <span class="toggle-custom"></span>
+                                        <span class="toggle-text">Fingerspell Alphabet Only</span>
+                                    </label>
+                                </div>
+                                <div class="avatar-char-and-clear">
+                                    <span id="input-char-count" class="avatar-char-count">19 / 250</span>
+                                    <button type="button" id="btn-clear-input" class="avatar-subtle-btn" title="Clear text">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                        <span>Clear</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="avatar-actions-row">
+                            <button type="button" id="btn-translate-sign" class="btn primary avatar-primary-action">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                <span>Translate &amp; Sign</span>
+                                <span class="shortcut-pill">[Ctrl + Enter]</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Panel: Voice Input -->
+                    <div id="panel-input-voice" class="avatar-tab-panel voice-panel" style="display: none;">
+                        <div class="voice-capture-box">
+                            <div class="voice-pulse-container">
+                                <div class="voice-pulse-ring" id="voice-pulse-ring"></div>
+                                <button type="button" id="btn-voice-mic" class="voice-mic-btn" aria-label="Toggle Microphone Input" title="Click to start/stop voice dictation">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="voice-instructions">
+                                <div class="voice-status-heading">Speech-to-Sign Engine</div>
+                                <p id="voice-interim-display" class="voice-interim-text">Click the microphone and speak naturally in English. Words will be parsed and signed instantly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Example Phrases -->
+                    <div class="avatar-examples-sec">
+                        <span class="avatar-sub-label">QUICK PHRASES</span>
+                        <div class="avatar-examples-grid">
+                            <button type="button" class="example-chip" data-phrase="Hello, how are you?">Hello, how are you?</button>
+                            <button type="button" class="example-chip" data-phrase="Thank you">Thank you</button>
+                            <button type="button" class="example-chip" data-phrase="I need help">I need help</button>
+                            <button type="button" class="example-chip" data-phrase="Please wait">Please wait</button>
+                            <button type="button" class="example-chip" data-phrase="Nice to meet you">Nice to meet you</button>
+                            <button type="button" class="example-chip" data-phrase="I love you">I love you</button>
+                            <button type="button" class="example-chip" data-phrase="Where is water?">Where is water?</button>
+                            <button type="button" class="example-chip" data-phrase="Peace">Peace</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ASL Gloss Timeline Card -->
+                <div class="glass-panel avatar-card">
+                    <div class="avatar-card-header">
+                        <div class="avatar-header-left">
+                            <span class="avatar-sec-tag">TIMELINE SYNCHRONIZATION</span>
+                            <h2 class="avatar-sec-title">ASL Gloss Sequence</h2>
+                        </div>
+                        <div class="timeline-header-actions">
+                            <span id="gloss-token-count" class="gloss-counter-badge">3 signs</span>
+                            <button type="button" id="btn-copy-gloss" class="avatar-subtle-btn" title="Copy ASL Gloss tokens to clipboard">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                <span>Copy Gloss</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="timeline-container">
+                        <p class="timeline-caption">Interactive timeline showing token reordering by ASL grammar rules. Click any sign chip to jump and replay:</p>
+                        <div id="gloss-timeline-chips" class="gloss-chips-track">
+                            <!-- Populated dynamically by avatar.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick ASL Vocabulary Deck -->
+                <div class="glass-panel avatar-card">
+                    <div class="avatar-card-header">
+                        <div class="avatar-header-left">
+                            <span class="avatar-sec-tag">DIRECT DEMONSTRATION</span>
+                            <h2 class="avatar-sec-title">Core ASL Vocabulary</h2>
+                        </div>
+                        <span class="avatar-dict-hint">Click any sign to test avatar</span>
+                    </div>
+
+                    <div class="avatar-vocab-deck">
+                        <div class="vocab-group">
+                            <span class="vocab-group-title">Basic &amp; Social</span>
+                            <div class="vocab-chips-row">
+                                <button type="button" class="vocab-card-chip" data-token="HELLO">HELLO</button>
+                                <button type="button" class="vocab-card-chip" data-token="THANK_YOU">THANK YOU</button>
+                                <button type="button" class="vocab-card-chip" data-token="PLEASE">PLEASE</button>
+                                <button type="button" class="vocab-card-chip" data-token="SORRY">SORRY</button>
+                                <button type="button" class="vocab-card-chip" data-token="YES">YES</button>
+                                <button type="button" class="vocab-card-chip" data-token="NO">NO</button>
+                                <button type="button" class="vocab-card-chip" data-token="HELP">HELP</button>
+                                <button type="button" class="vocab-card-chip" data-token="STOP">STOP</button>
+                                <button type="button" class="vocab-card-chip" data-token="WAIT">WAIT</button>
+                                <button type="button" class="vocab-card-chip" data-token="GOOD">GOOD</button>
+                            </div>
+                        </div>
+
+                        <div class="vocab-group">
+                            <span class="vocab-group-title">People, Pronouns &amp; Questions</span>
+                            <div class="vocab-chips-row">
+                                <button type="button" class="vocab-card-chip" data-token="I">I / ME</button>
+                                <button type="button" class="vocab-card-chip" data-token="YOU">YOU</button>
+                                <button type="button" class="vocab-card-chip" data-token="MY">MY</button>
+                                <button type="button" class="vocab-card-chip" data-token="FRIEND">FRIEND</button>
+                                <button type="button" class="vocab-card-chip" data-token="NAME">NAME</button>
+                                <button type="button" class="vocab-card-chip" data-token="WHAT">WHAT</button>
+                                <button type="button" class="vocab-card-chip" data-token="WHERE">WHERE</button>
+                                <button type="button" class="vocab-card-chip" data-token="HOW">HOW</button>
+                                <button type="button" class="vocab-card-chip" data-token="WHO">WHO</button>
+                                <button type="button" class="vocab-card-chip" data-token="WHY">WHY</button>
+                            </div>
+                        </div>
+
+                        <div class="vocab-group">
+                            <span class="vocab-group-title">Everyday Verbs &amp; Concepts</span>
+                            <div class="vocab-chips-row">
+                                <button type="button" class="vocab-card-chip" data-token="LOVE">LOVE</button>
+                                <button type="button" class="vocab-card-chip" data-token="WATER">WATER</button>
+                                <button type="button" class="vocab-card-chip" data-token="EAT">EAT</button>
+                                <button type="button" class="vocab-card-chip" data-token="DRINK">DRINK</button>
+                                <button type="button" class="vocab-card-chip" data-token="PEACE">PEACE</button>
+                                <button type="button" class="vocab-card-chip" data-token="TIME">TIME</button>
+                                <button type="button" class="vocab-card-chip" data-token="WANT">WANT</button>
+                                <button type="button" class="vocab-card-chip" data-token="KNOW">KNOW</button>
+                                <button type="button" class="vocab-card-chip" data-token="UNDERSTAND">UNDERSTAND</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- System status footer -->
+        <footer class="footer-status" role="contentinfo">
+            <div class="footer-item">
+                <span class="dot-indicator" id="footer-avatar-dot"></span>
+                <span>Avatar: <strong id="footer-avatar-status">WebGL Active</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span class="dot-indicator" id="footer-grammar-dot"></span>
+                <span>Grammar: <strong id="footer-grammar-status">ASL Synthesizer</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span>FPS: <strong id="footer-fps">60</strong></span>
+            </div>
+            <span class="footer-separator"></span>
+            <div class="footer-item">
+                <span>Language: <strong>American Sign Language (ASL)</strong></span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Sign Dictionary & 3D Avatar Engine -->
+    <script src="dictionary.js?v=4.2.0"></script>
+    <script src="avatar.js?v=4.2.0"></script>
+</body>
+
+</html>

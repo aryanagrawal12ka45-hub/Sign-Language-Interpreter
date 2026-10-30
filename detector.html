@@ -73,6 +73,13 @@
                         </svg>
                         <span>Practice Lab</span>
                     </a>
+                    <a href="avatar.html" class="nav-link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Text to Sign</span>
+                    </a>
                     <a href="chat.html" class="nav-link">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -305,69 +312,6 @@
                     </div>
                 </div>
 
-                <!-- Two-Way Communication: Speech-to-Sign Panel -->
-                <div class="speech-to-sign-panel glass-panel">
-                    <div class="panel-header-row">
-                        <h2 class="section-title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                <line x1="12" y1="19" x2="12" y2="23"></line>
-                                <line x1="8" y1="23" x2="16" y2="23"></line>
-                            </svg>
-                            <span>Two-Way: Speech to Sign</span>
-                        </h2>
-                        <span id="speech-status-badge" class="status-badge disconnected">Mic Inactive</span>
-                    </div>
-                    <p class="desc">Hearing partner speaks into microphone &rarr; system visualizes corresponding sign sequence.</p>
-
-                    <div class="speech-controls-row">
-                        <button type="button" id="toggle-speech-rec-btn" class="btn primary">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                <line x1="12" y1="19" x2="12" y2="23"></line>
-                                <line x1="8" y1="23" x2="16" y2="23"></line>
-                            </svg>
-                            <span id="speech-rec-btn-text">Listen to Voice</span>
-                        </button>
-                        <button type="button" id="replay-sign-btn" class="btn secondary" disabled title="Replay current sign sequence">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="1 4 1 10 7 10"></polyline>
-                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-                            </svg>
-                            <span>Replay</span>
-                        </button>
-                        <select id="sign-playback-speed" class="speed-select" aria-label="Sign playback speed">
-                            <option value="1200">0.75x Speed</option>
-                            <option value="800" selected>1.0x Speed</option>
-                            <option value="500">1.5x Speed</option>
-                        </select>
-                    </div>
-
-                    <!-- Spoken Transcript Box -->
-                    <div class="speech-transcript-box" id="speech-transcript-box">
-                        <span class="transcript-placeholder" id="transcript-placeholder">Click &ldquo;Listen to Voice&rdquo; and speak into your microphone...</span>
-                        <span id="speech-transcript-text" class="transcript-text"></span>
-                    </div>
-
-                    <!-- Visual Sign Display Card & Sequence Timeline -->
-                    <div class="sign-player-container" id="sign-player-container" style="display: none;">
-                        <div class="active-sign-card" id="active-sign-card">
-                            <div class="active-sign-visual" id="active-sign-visual">
-                                <span class="active-sign-glyph" id="active-sign-glyph">-</span>
-                            </div>
-                            <div class="active-sign-info">
-                                <span class="active-sign-title" id="active-sign-title">Ready</span>
-                                <span class="active-sign-desc" id="active-sign-desc">Sign instruction will appear here</span>
-                            </div>
-                        </div>
-                        <!-- Sequence token stream -->
-                        <div class="sign-sequence-timeline" id="sign-sequence-timeline" role="region" aria-label="Sign token stream">
-                            <!-- Tokens injected by script.js -->
-                        </div>
-                    </div>
-                </div>
 
 
             </div>
@@ -375,8 +319,8 @@
             <!-- ===== RIGHT COLUMN (Telemetry, Controls & Translation) ===== -->
             <div class="side-panel">
 
-                <!-- Smart Glove IoT Telemetry Panel -->
-                <div class="hardware-panel glass-panel">
+                <!-- Smart Glove IoT Telemetry Panel (Internal Hardware - Hidden from UI) -->
+                <div class="hardware-panel glass-panel" id="smart-glove-panel" style="display: none;" aria-hidden="true">
                     <div class="panel-header-row">
                         <h2 class="section-title">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -529,6 +473,70 @@
                             </button>
                         </div>
                         <div id="translated-output" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Two-Way Communication: Speech-to-Sign Panel -->
+                <div class="speech-to-sign-panel glass-panel">
+                    <div class="panel-header-row">
+                        <h2 class="section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            <span>Two-Way: Speech to Sign</span>
+                        </h2>
+                        <span id="speech-status-badge" class="status-badge disconnected">Mic Inactive</span>
+                    </div>
+                    <p class="desc">Hearing partner speaks into microphone &rarr; system visualizes corresponding sign sequence.</p>
+
+                    <div class="speech-controls-row">
+                        <button type="button" id="toggle-speech-rec-btn" class="btn primary">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            <span id="speech-rec-btn-text">Listen to Voice</span>
+                        </button>
+                        <button type="button" id="replay-sign-btn" class="btn secondary" disabled title="Replay current sign sequence">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="1 4 1 10 7 10"></polyline>
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                            </svg>
+                            <span>Replay</span>
+                        </button>
+                        <select id="sign-playback-speed" class="speed-select" aria-label="Sign playback speed">
+                            <option value="1200">0.75x Speed</option>
+                            <option value="800" selected>1.0x Speed</option>
+                            <option value="500">1.5x Speed</option>
+                        </select>
+                    </div>
+
+                    <!-- Spoken Transcript Box -->
+                    <div class="speech-transcript-box" id="speech-transcript-box">
+                        <span class="transcript-placeholder" id="transcript-placeholder">Click &ldquo;Listen to Voice&rdquo; and speak into your microphone...</span>
+                        <span id="speech-transcript-text" class="transcript-text"></span>
+                    </div>
+
+                    <!-- Visual Sign Display Card & Sequence Timeline -->
+                    <div class="sign-player-container" id="sign-player-container" style="display: none;">
+                        <div class="active-sign-card" id="active-sign-card">
+                            <div class="active-sign-visual" id="active-sign-visual">
+                                <span class="active-sign-glyph" id="active-sign-glyph">-</span>
+                            </div>
+                            <div class="active-sign-info">
+                                <span class="active-sign-title" id="active-sign-title">Ready</span>
+                                <span class="active-sign-desc" id="active-sign-desc">Sign instruction will appear here</span>
+                            </div>
+                        </div>
+                        <!-- Sequence token stream -->
+                        <div class="sign-sequence-timeline" id="sign-sequence-timeline" role="region" aria-label="Sign token stream">
+                            <!-- Tokens injected by script.js -->
+                        </div>
                     </div>
                 </div>
 
@@ -803,11 +811,6 @@
             <span class="footer-separator"></span>
             <div class="footer-item">
                 <span>FPS: <strong id="footer-fps">--</strong></span>
-            </div>
-            <span class="footer-separator"></span>
-            <div class="footer-item">
-                <span class="dot-indicator disconnected" id="footer-glove-dot"></span>
-                <span>Glove BLE: <strong id="footer-glove-status">Disconnected</strong></span>
             </div>
             <span class="footer-separator"></span>
             <div class="footer-item">
@@ -1196,6 +1199,7 @@
                                     <span>Connect to Room</span>
                                 </button>
                             </div>
+                            <div id="two-way-join-feedback" class="two-way-join-feedback" style="display: none;"></div>
                             <div class="two-way-join-hint">
                                 Direct links with <code class="mono-code">?room=CODE</code> will prefill automatically.
                             </div>

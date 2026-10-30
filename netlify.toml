@@ -11,6 +11,16 @@
   status = 301
   force = true
 
+[[redirects]]
+  from = "/avatar"
+  to = "/avatar.html"
+  status = 200
+
+[[redirects]]
+  from = "/text-to-sign"
+  to = "/avatar.html"
+  status = 200
+
 # Security & Hardware Access Headers
 [[headers]]
   for = "/*"

@@ -21,9 +21,10 @@ Sign Language Studio addresses these challenges through a client-side, edge-firs
 
 1. **Client-Side Neural Vision (MediaPipe Hands + TensorFlow.js)**: Captures 21 3D hand landmarks at 30 to 60 FPS and classifies static manual formations into the 26 ASL alphabet letters via a 4-layer Sequential Deep Neural Network.
 2. **Interactive Practice Academy & Speed Quiz**: Features pose hold-and-verify progress rings, streak multiplier scoring, and a 60-second speed-run evaluation engine.
-3. **Bidirectional Communication Matrix (WebRTC)**: Pairs hearing and deaf participants across remote rooms, translating spoken audio into illustrated sign sequences while vocalizing camera-signed sentences into audible speech.
-4. **Multimodal Vision Assistant (Puter.js)**: Enables users to upload photographs of sign formations and receive step-by-step diagnostic feedback.
-5. **Interactive 46-Sign Reference Library**: Illustrated visual dictionary for the full alphabet (A-Z), counting digits (0-9), and common static gestures with high-resolution lightbox inspection.
+3. **Text-to-Sign 3D Kinematic Avatar (Three.js WebGL)**: Synthesizes written English and voice dictation into authentic American Sign Language on an articulated 67-bone humanoid rig, featuring authentic one-handed fingerspelling (A through Z), 35+ whole-word ASL signs, offline grammar reordering, and 4 customizable shader styles.
+4. **Bidirectional Communication Matrix (WebRTC)**: Pairs hearing and deaf participants across remote rooms, translating spoken audio into illustrated sign sequences while vocalizing camera-signed sentences into audible speech.
+5. **Multimodal Vision Assistant (Puter.js)**: Enables users to upload photographs of sign formations and receive step-by-step diagnostic feedback.
+6. **Interactive 46-Sign Reference Library**: Illustrated visual dictionary for the full alphabet (A-Z), counting digits (0-9), and common static gestures with high-resolution lightbox inspection.
 
 ---
 
@@ -67,6 +68,7 @@ The platform is structured into specialized, cohesive studios:
 | **B2B SaaS Overview** | [`/`](https://sign-language-studio.netlify.app/) | Ambient 60 FPS neural canvas, technical dossier card, and system capability metrics. |
 | **Vision Detector Studio** | [`/detector.html`](https://sign-language-studio.netlify.app/detector.html) | Real-time ASL camera detection, sentence builder, speech vocalization, and 14-language cloud translation. |
 | **Practice Laboratory** | [`/quiz.html`](https://sign-language-studio.netlify.app/quiz.html) | Interactive sign learning game, hold-to-confirm SVG progress ring, streak multipliers, and 60-second speed run. |
+| **Text to Sign 3D Studio** | [`/avatar.html`](https://sign-language-studio.netlify.app/avatar.html) | Real-time 3D humanoid avatar kinematic synthesis, voice-to-sign dictation, ASL grammar reordering, and interactive gloss timeline. |
 | **Multimodal Gesture Assistant** | [`/chat.html`](https://sign-language-studio.netlify.app/chat.html) | AI vision reasoning interface for analyzing uploaded sign images and answering gesture questions. |
 | **Two-Way Communication Room** | `/detector.html#two-way` | Peer-to-peer WebRTC room bridging spoken audio to visual sign sequences and vice-versa. |
 | **Sign Library & Lightbox** | Modal | Illustrated visual dictionary for all 26 manual letters, 10 numerical digits, and common signs. |
@@ -198,6 +200,8 @@ Measured performance benchmarks across standard laptop hardware (Intel Core i7 /
 Sign-Language-Interpreter/
 ├── index.html                     # B2B SaaS Overview and landing experience (root /)
 ├── detector.html                  # Core Real-Time Vision Detector Studio
+├── avatar.html                    # Text-to-Sign 3D Kinematic Avatar Studio
+├── avatar.js                      # Three.js WebGL humanoid avatar rig & ASL grammar engine
 ├── landing.html                   # Alias entry redirecting to root overview
 ├── landing_bg.js                  # 60 FPS ambient neural canvas animation
 ├── about.html                     # Architecture dossier, principles, and hardware disclosures
@@ -215,7 +219,8 @@ Sign-Language-Interpreter/
 ├── models/
 │   ├── keypoint.csv               # 36,403 landmark samples (42 features/row)
 │   ├── model.json                 # Keras / TensorFlow.js model topology
-│   └── group1-shard1of1.bin       # Serialized deep learning layer weights
+│   ├── group1-shard1of1.bin       # Serialized deep learning layer weights
+│   └── ybot.glb                   # 3D articulated humanoid mesh & skeletal bones
 │
 ├── assets/
 │   └── signs/                     # Illustrated sign cards and reference charts
@@ -235,6 +240,14 @@ Sign-Language-Interpreter/
     ├── roadmap.md                 # 5-phase engineering roadmap
     └── troubleshooting.md         # Diagnostic manual for camera and BLE
 ```
+
+---
+
+## Acknowledgments & Credits
+
+* Special thanks to [Sign-Flow by maddyroxx](https://github.com/maddyroxx/Sign-Flow.git) for architectural reference and inspiration regarding client-side 3D WebGL avatar sign kinematics and Three.js humanoid rig pipelines.
+* Built with [MediaPipe Hands](https://github.com/google/mediapipe) and [TensorFlow.js](https://www.tensorflow.org/js) for edge neural vision inference.
+* WebRTC peer-to-peer data transport enabled by [PeerJS](https://peerjs.com/).
 
 ---
 
