@@ -208,7 +208,7 @@ class TwoWaySessionManager {
     _setupConnection(conn) {
         this.connection = conn;
 
-        conn.on('open', () => {
+        const handleChannelOpen = () => {
             console.log(`[TwoWay P2P] WebRTC DataChannel OPEN with ${conn.peer}`);
             if (this.joinTimeout) {
                 clearTimeout(this.joinTimeout);
@@ -227,7 +227,13 @@ class TwoWaySessionManager {
             });
 
             this._notifyState('connected', `Connected with partner in room ${this.roomCode}`);
-        });
+        };
+
+        if (conn.open) {
+            handleChannelOpen();
+        } else {
+            conn.on('open', handleChannelOpen);
+        }
 
         conn.on('data', (data) => {
             this._handleIncomingPacket(data);
@@ -615,30 +621,58 @@ function initTwoWayUI() {
         });
     }
 
+    function copyTextSafe(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        }
+        return new Promise((resolve, reject) => {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try {
+                const successful = document.execCommand('copy');
+                document.body.removeChild(ta);
+                if (successful) resolve();
+                else reject(new Error('Copy failed'));
+            } catch (err) {
+                document.body.removeChild(ta);
+                reject(err);
+            }
+        });
+    }
+
     // Host: Copy Code
     if (copyCodeBtn) {
         copyCodeBtn.addEventListener('click', () => {
             if (twoWayManager.roomCode) {
-                navigator.clipboard.writeText(twoWayManager.roomCode).then(() => {
+                copyTextSafe(twoWayManager.roomCode).then(() => {
                     if (copyCodeText) copyCodeText.textContent = 'Copied!';
                     setTimeout(() => {
                         if (copyCodeText) copyCodeText.textContent = 'Copy Code';
                     }, 2000);
+                }).catch(() => {
+                    prompt('Room Code:', twoWayManager.roomCode);
                 });
             }
         });
     }
 
     // Host: Copy Link
-    if (copyRoomLinkBtn) {
-        copyRoomLinkBtn.addEventListener('click', () => {
+    if (copyLinkBtn) {
+        copyLinkBtn.addEventListener('click', () => {
             if (twoWayManager.roomCode) {
                 const link = `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(twoWayManager.roomCode)}`;
-                navigator.clipboard.writeText(link).then(() => {
+                copyTextSafe(link).then(() => {
                     if (copyLinkText) copyLinkText.textContent = 'Link Copied!';
                     setTimeout(() => {
                         if (copyLinkText) copyLinkText.textContent = 'Copy Link';
                     }, 2000);
+                }).catch(() => {
+                    prompt('Direct Join Link:', link);
                 });
             }
         });
@@ -1069,6 +1103,12 @@ function initTwoWayUI() {
         if (joinInput) {
             joinInput.value = twoWayManager.pendingRoomCode;
         }
+        setTimeout(() => {
+            if (joinBtn && joinInput && joinInput.value.trim()) {
+                console.log('[TwoWay UI] Automatically triggering room join from URL parameter');
+                joinBtn.click();
+            }
+        }, 600);
     }
 }
 

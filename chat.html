@@ -4,11 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Language Studio - Multimodal Gesture Assistant</title>
-    <meta name="description" content="Analyze ASL gesture images and ask questions about sign language.">
+    <title>AI Gesture Assistant - Sign Language Studio</title>
+    <meta name="description" content="Unauthenticated, privacy-preserving AI assistant for American Sign Language questions, fingerspelling guidance, sign grammar, and gesture analysis. No login required.">
+    <meta name="keywords" content="sign language AI, ASL gesture assistant, sign language chat, ASL questions, learn ASL fingerspelling, deaf culture, ASL grammar, non-manual markers, free sign language AI">
+    <meta name="author" content="Sign Language Studio Team">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="theme-color" content="#08080a">
+    <meta name="color-scheme" content="dark light">
 
-    <!-- Favicon -->
+    <!-- Canonical & Fallback URL references -->
+    <link rel="canonical" href="https://sign-language-studio.webdomain.live/chat.html">
+    <link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/chat.html">
+    <link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/chat.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sign Language Studio">
+    <meta property="og:title" content="AI Gesture Assistant - Sign Language Studio">
+    <meta property="og:description" content="Unauthenticated, privacy-preserving AI assistant for American Sign Language questions, fingerspelling guidance, sign grammar, and gesture analysis.">
+    <meta property="og:url" content="https://sign-language-studio.webdomain.live/chat.html">
+    <meta property="og:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:secure_url" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Sign Language Studio - AI Gesture Assistant">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:domain" content="sign-language-studio.webdomain.live">
+    <meta name="twitter:title" content="AI Gesture Assistant - Sign Language Studio">
+    <meta name="twitter:description" content="Unauthenticated, privacy-preserving AI assistant for American Sign Language questions, fingerspelling guidance, sign grammar, and gesture analysis.">
+    <meta name="twitter:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+
+    <!-- Favicons & Mobile Web Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sign Language Studio">
 
     <!-- Typography: Plus Jakarta Sans, Inter, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,8 +58,24 @@
     <!-- Link to global styles -->
     <link rel="stylesheet" href="style.css?v=4.0.0">
 
-    <!-- Puter.js for OpenAI Vision API Access -->
-    <script src="https://js.puter.com/v2/"></script>
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Sign Language Studio - AI Gesture Assistant",
+      "url": "https://sign-language-studio.webdomain.live/chat.html",
+      "description": "Unauthenticated, privacy-preserving AI assistant for American Sign Language questions, fingerspelling guidance, sign grammar, and gesture analysis.",
+      "applicationCategory": "EducationalApplication, AccessibilityApplication",
+      "operatingSystem": "All modern browsers",
+      "browserRequirements": "Requires JavaScript and modern browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
 </head>
 
 <body class="chat-body">
@@ -45,9 +101,9 @@
                     <div class="header-titles">
                         <div class="brand-title-row">
                             <h1 class="brand-title">Sign Language <span class="brand-title-accent">Studio</span></h1>
-                            <span class="engine-badge"><span class="engine-status-dot"></span> Multimodal AI</span>
+                            <span class="engine-badge"><span class="engine-status-dot"></span> Zero-Auth AI</span>
                         </div>
-                        <p class="brand-caption">Gesture Assistant &bull; Vision analysis, question answering &amp; conversational reasoning</p>
+                        <p class="brand-caption">Gesture Assistant &bull; Conversational reasoning, sign analysis &amp; learning guidance</p>
                     </div>
                 </a>
 
@@ -109,14 +165,6 @@
                         </svg>
                         <span>About</span>
                     </a>
-                    <button id="puter-signout-btn" class="nav-link nav-btn-modal nav-signout" aria-label="Sign out of Puter">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                            <polyline points="16 17 21 12 16 7"></polyline>
-                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                        </svg>
-                        <span>Sign Out</span>
-                    </button>
                 </nav>
             </div>
         </header>
@@ -136,14 +184,22 @@
                             </svg>
                         </div>
                         <div class="bubble-minimal">
-                            <p><strong>Gesture assistant</strong></p>
-                            <p>Upload an ASL hand shape or finger-spelling pose, or ask a question. Image interpretations are suggestions and may need to be verified.</p>
+                            <p><strong>AI Gesture Assistant</strong></p>
+                            <p>Ask any question about American Sign Language, fingerspelling, grammar, handshapes, or practice advice. Zero login required &mdash; completely unauthenticated, private, and frictionless.</p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Floating Command Bar Dock -->
                 <div class="command-bar-wrapper">
+
+                    <!-- Quick Suggestion Chips -->
+                    <div class="chat-suggestion-chips" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; justify-content: center;">
+                        <button type="button" class="quick-phrase-chip chip-suggestion" data-prompt="How do I sign 'Hello' and 'Thank you' in ASL?">Hello &amp; Thank You</button>
+                        <button type="button" class="quick-phrase-chip chip-suggestion" data-prompt="Explain the ASL fingerspelling rules and handshape for letters A, B, and C.">Fingerspelling A-B-C</button>
+                        <button type="button" class="quick-phrase-chip chip-suggestion" data-prompt="What are Non-Manual Markers (NMMs) and how does ASL facial grammar work?">ASL Facial Grammar</button>
+                        <button type="button" class="quick-phrase-chip chip-suggestion" data-prompt="What are the 5 basic parameters of every ASL sign?">5 Sign Parameters</button>
+                    </div>
 
                     <!-- Image Preview Card -->
                     <div id="image-preview-container" class="attachment-card-minimal hidden">
@@ -174,7 +230,7 @@
                             </svg>
                         </button>
 
-                        <textarea id="chat-input" placeholder="Ask about an ASL gesture or sign..." rows="1" aria-label="Message Input"></textarea>
+                        <textarea id="chat-input" placeholder="Ask about an ASL gesture, fingerspelling, or sign grammar..." rows="1" aria-label="Message Input"></textarea>
 
                         <button id="send-btn" class="icon-btn-minimal send-active" aria-label="Send message" title="Send message">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -184,7 +240,7 @@
                             </svg>
                         </button>
                     </div>
-                    <div class="ai-disclaimer-minimal">Multimodal AI interpretations may vary. Verify critical sign language communications.</div>
+                    <div class="ai-disclaimer-minimal">Zero-auth AI inference. Verify critical sign language communications using the on-device live Detector.</div>
                 </div>
             </div>
         </main>
@@ -192,7 +248,7 @@
 
     <script src="dictionary.js"></script>
     <script src="landing_bg.js"></script>
-    <script src="chat.js?v=2.4.0"></script>
+    <script src="chat.js?v=3.0.0"></script>
 </body>
 
 </html>

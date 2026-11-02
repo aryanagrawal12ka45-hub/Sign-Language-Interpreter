@@ -17,7 +17,7 @@ The **Sign Language Interpreter** is engineered as a modern, zero-install, clien
 | **Audio Feedback** | Web Audio API | Standard | Synthetic $880\text{ Hz}$ sine wave confirmation chime |
 | **Speech Synthesis** | Web SpeechSynthesis API | Standard | Native localized text-to-speech vocalization |
 | **Translation Engine** | Google Translate REST API | Client GTX | Real-time sentence translation to 14 languages |
-| **Multimodal Chatbot** | Puter.js + GPT-4o Vision | `v2` | Multimodal photo-based gesture analysis |
+| **AI Gesture Assistant** | Zero-Auth Serverless Proxy / Local KB | `v3` | Unauthenticated conversational sign language reasoning & guidance |
 | **Embedded Firmware** | C++ / Arduino Framework | ESP32 Core 2.0+ | Non-blocking sensor polling & BLE GATT server |
 | **Python Companion Suite** | Python 3.9+ / NumPy / scikit-learn | 3.10+ | Dataset validation, offline training, local dev server |
 

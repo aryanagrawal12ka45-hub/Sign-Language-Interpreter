@@ -2,30 +2,80 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Language Studio - Practice Laboratory</title>
-    <meta name="description"
-        content="Interactive sign language learning game and real-time speed quiz with pose validation powered by MediaPipe and TensorFlow.js.">
+    <title>ASL Practice Lab & Speed-Run Quiz - Sign Language Studio</title>
+    <meta name="description" content="Interactive American Sign Language practice laboratory with hold-and-verify feedback, circular progress metrics, and 60-second speed-run tests.">
+    <meta name="keywords" content="learn ASL, sign language quiz, ASL practice lab, sign language speed run, test sign language skills, fingerspelling game, interactive ASL learning, webcam ASL quiz">
+    <meta name="author" content="Sign Language Studio Team">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="theme-color" content="#08080a">
+    <meta name="color-scheme" content="dark light">
 
-    <!-- Favicon -->
+    <!-- Canonical & Alternate Multi-Domain Routing -->
+    <link rel="canonical" href="https://sign-language-studio.webdomain.live/quiz.html">
+    <link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/quiz.html">
+    <link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/quiz.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sign Language Studio">
+    <meta property="og:title" content="ASL Practice Lab & Speed-Run Quiz - Sign Language Studio">
+    <meta property="og:description" content="Interactive American Sign Language practice laboratory with hold-and-verify feedback, circular progress metrics, and 60-second speed-run tests.">
+    <meta property="og:url" content="https://sign-language-studio.webdomain.live/quiz.html">
+    <meta property="og:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:secure_url" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="ASL Practice Lab & Speed-Run Quiz - Sign Language Studio">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:domain" content="sign-language-studio.webdomain.live">
+    <meta name="twitter:title" content="ASL Practice Lab & Speed-Run Quiz - Sign Language Studio">
+    <meta name="twitter:description" content="Interactive American Sign Language practice laboratory with hold-and-verify feedback, circular progress metrics, and 60-second speed-run tests.">
+    <meta name="twitter:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+
+    <!-- Favicons & Mobile Web Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sign Language Studio">
 
-    <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
+    <!-- Typography: Plus Jakarta Sans, Inter, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="style.css?v=4.0.0">
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "ASL Practice Lab & Speed-Run Quiz - Sign Language Studio",
+      "url": "https://sign-language-studio.webdomain.live/quiz.html",
+      "description": "Interactive American Sign Language practice laboratory with hold-and-verify feedback, circular progress metrics, and 60-second speed-run tests.",
+      "learningResourceType": "Interactive Simulation, Quiz",
+      "educationalLevel": "Beginner to Advanced",
+      "inLanguage": "en-US",
+      "isAccessibleForFree": true
+    }
+    </script>
 
-    <!-- MediaPipe Libraries -->
+    <!-- Page Specific Styles & Scripts -->
+    <link rel="stylesheet" href="style.css?v=4.0.0">
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-
-    <!-- TensorFlow.js Library -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 </head>
 

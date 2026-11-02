@@ -55,7 +55,7 @@ To ensure transparency, this repository explicitly separates what is implemented
 | **Inference Mode** | Single-character stream with debounce lock-in | Continuous sentence-level sequence parsing (RNN/Transformer) |
 | **Hardware** | Laptop Webcam + Single ESP32 MPU-6050 Glove | Dual-glove bilateral tracking + optional depth camera support |
 | **Active Learning** | On-device k-NN override with LocalStorage persistence | Few-shot meta-learning model fine-tuning |
-| **Application Layer** | Sentence builder, 14-language translation, Puter GPT-4o chatbot | OS-level virtual HID input (mouse control, keyboard typing) |
+| **Application Layer** | Sentence builder, 14-language translation, Zero-Auth AI Assistant | OS-level virtual HID input (mouse control, keyboard typing) |
 
 ---
 

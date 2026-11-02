@@ -23,7 +23,7 @@ Sign Language Studio addresses these challenges through a client-side, edge-firs
 2. **Interactive Practice Academy & Speed Quiz**: Features pose hold-and-verify progress rings, streak multiplier scoring, and a 60-second speed-run evaluation engine.
 3. **Text-to-Sign 3D Kinematic Avatar (Three.js WebGL)**: Synthesizes written English and voice dictation into authentic American Sign Language on an articulated 67-bone humanoid rig, featuring authentic one-handed fingerspelling (A through Z), 35+ whole-word ASL signs, offline grammar reordering, and 4 customizable shader styles.
 4. **Bidirectional Communication Matrix (WebRTC)**: Pairs hearing and deaf participants across remote rooms, translating spoken audio into illustrated sign sequences while vocalizing camera-signed sentences into audible speech.
-5. **Multimodal Vision Assistant (Puter.js)**: Enables users to upload photographs of sign formations and receive step-by-step diagnostic feedback.
+5. **Zero-Auth AI Gesture Assistant**: Unauthenticated, privacy-preserving AI assistant for ASL fingerspelling questions, 5 sign parameters, and grammatical guidance with zero login or credentials required.
 6. **Interactive 46-Sign Reference Library**: Illustrated visual dictionary for the full alphabet (A-Z), counting digits (0-9), and common static gestures with high-resolution lightbox inspection.
 
 ---
@@ -206,7 +206,7 @@ Sign-Language-Interpreter/
 ├── landing_bg.js                  # 60 FPS ambient neural canvas animation
 ├── about.html                     # Architecture dossier, principles, and hardware disclosures
 ├── quiz.html                      # Interactive Practice Laboratory & Speed Quiz
-├── chat.html                      # Multimodal Vision Assistant (Puter.js GPT-4o Vision)
+├── chat.html                      # Zero-Auth AI Gesture Assistant & Offline Knowledge Base
 ├── style.css                      # Unified Design System tokens & components
 ├── script.js                      # Vision engine, MediaPipe, TF.js, and sentence builder
 ├── quiz.js                        # Practice quiz logic, hold ring engine, and simulator

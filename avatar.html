@@ -2,24 +2,79 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Language Studio - Text to Sign 3D Avatar</title>
-    <meta name="description"
-        content="Convert written text and natural voice into authentic American Sign Language (ASL) via real-time 3D kinematic avatar synthesis.">
+    <title>3D Text to Sign Language Avatar - Sign Language Studio</title>
+    <meta name="description" content="Convert written text and natural voice into authentic American Sign Language (ASL) via real-time 3D kinematic avatar synthesis and fingerspelling animation.">
+    <meta name="keywords" content="text to sign, 3D sign language avatar, ASL avatar, three.js sign language, voice to sign, fingerspelling animation, accessible sign synthesizer">
+    <meta name="author" content="Sign Language Studio Team">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="theme-color" content="#08080a">
+    <meta name="color-scheme" content="dark light">
 
-    <!-- Favicon -->
+    <!-- Canonical & Alternate Multi-Domain Routing -->
+    <link rel="canonical" href="https://sign-language-studio.webdomain.live/avatar.html">
+    <link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/avatar.html">
+    <link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/avatar.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sign Language Studio">
+    <meta property="og:title" content="3D Text to Sign Language Avatar - Sign Language Studio">
+    <meta property="og:description" content="Convert written text and natural voice into authentic American Sign Language (ASL) via real-time 3D kinematic avatar synthesis and fingerspelling animation.">
+    <meta property="og:url" content="https://sign-language-studio.webdomain.live/avatar.html">
+    <meta property="og:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:secure_url" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="3D Text to Sign Language Avatar - Sign Language Studio">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:domain" content="sign-language-studio.webdomain.live">
+    <meta name="twitter:title" content="3D Text to Sign Language Avatar - Sign Language Studio">
+    <meta name="twitter:description" content="Convert written text and natural voice into authentic American Sign Language (ASL) via real-time 3D kinematic avatar synthesis and fingerspelling animation.">
+    <meta name="twitter:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+
+    <!-- Favicons & Mobile Web Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sign Language Studio">
 
-    <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
+    <!-- Typography: Plus Jakarta Sans, Inter, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "3D Text to Sign Language Avatar - Sign Language Studio",
+      "url": "https://sign-language-studio.webdomain.live/avatar.html",
+      "description": "Convert written text and natural voice into authentic American Sign Language (ASL) via real-time 3D kinematic avatar synthesis and fingerspelling animation.",
+      "applicationCategory": "MultimediaApplication, AccessibilityApplication",
+      "operatingSystem": "All modern browsers",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
 
-    <!-- Main Stylesheet -->
+    <!-- Page Specific Styles & Scripts -->
     <link rel="stylesheet" href="style.css?v=4.0.0">
-
-    <!-- Three.js WebGL Engine & Loaders (r128) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>

@@ -53,4 +53,4 @@ The sentence builder sends the composed English text string to Google Translate'
 ### 5. Security & Privacy
 
 #### Is my camera stream private?
-**Yes.** All computer vision and landmark tracking operations occur strictly in client-side browser memory. The only feature that makes external API calls is the optional **AI Chatbot** (`chat.html`), which only sends user-uploaded photos to Puter.js / OpenAI when explicitly commanded by the user.
+**Yes.** All computer vision and landmark tracking operations occur strictly in client-side browser memory. The **AI Gesture Assistant** (`chat.html`) connects via an unauthenticated, privacy-first serverless proxy without requiring any user account, registration, login, or credentials.

@@ -1,3 +1,5 @@
-/landing.html    /              301
-/text-to-sign    /avatar.html   200
-/avatar          /avatar.html   200
+/landing.html    /                   301
+/text-to-sign    /avatar.html        200
+/avatar          /avatar.html        200
+/manifest.json   /site.webmanifest   200
+/sitemap         /sitemap.xml        301

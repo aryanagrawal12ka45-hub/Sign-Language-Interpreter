@@ -2,21 +2,105 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#000000">
-    <title>Sign Language Studio - Neural Vision & Multimodal Accessibility</title>
-    <meta name="description" content="Production-grade 21-landmark neural computer vision, ~400ms recognition lock-in, and bidirectional WebRTC communication for American Sign Language.">
+    <title>Sign Language Studio - Real-Time ASL Recognition & WebRTC Platform</title>
+    <meta name="description" content="Production-grade 21-landmark neural computer vision, ~400ms recognition lock-in, and bidirectional WebRTC communication for American Sign Language. 100% on-device and privacy-first.">
+    <meta name="keywords" content="sign language, american sign language, ASL, computer vision, mediapipe hands, tensorflow.js, speech to sign, text to sign, webrtc, deaf accessibility, gesture recognition, ASL alphabet, learn sign language, AI gesture assistant">
+    <meta name="author" content="Sign Language Studio Team">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="theme-color" content="#08080a">
+    <meta name="color-scheme" content="dark light">
 
-    <!-- Favicon -->
+    <!-- Canonical & Alternate Multi-Domain Routing -->
+    <link rel="canonical" href="https://sign-language-studio.webdomain.live/">
+    <link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/">
+    <link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sign Language Studio">
+    <meta property="og:title" content="Sign Language Studio - Real-Time ASL Recognition & WebRTC Platform">
+    <meta property="og:description" content="Production-grade 21-landmark neural computer vision, ~400ms recognition lock-in, and bidirectional WebRTC communication for American Sign Language. 100% on-device and privacy-first.">
+    <meta property="og:url" content="https://sign-language-studio.webdomain.live/">
+    <meta property="og:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:secure_url" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Sign Language Studio - Real-Time ASL Recognition & WebRTC Platform">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:domain" content="sign-language-studio.webdomain.live">
+    <meta name="twitter:title" content="Sign Language Studio - Real-Time ASL Recognition & WebRTC Platform">
+    <meta name="twitter:description" content="Production-grade 21-landmark neural computer vision, ~400ms recognition lock-in, and bidirectional WebRTC communication for American Sign Language. 100% on-device and privacy-first.">
+    <meta name="twitter:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+
+    <!-- Favicons & Mobile Web Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sign Language Studio">
 
-    <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
+    <!-- Typography: Plus Jakarta Sans, Inter, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://sign-language-studio.webdomain.live/#webapp",
+          "name": "Sign Language Studio",
+          "url": "https://sign-language-studio.webdomain.live/",
+          "description": "Production-grade 21-landmark neural computer vision, ~400ms recognition lock-in, and bidirectional WebRTC communication for American Sign Language.",
+          "applicationCategory": "EducationalApplication, AccessibilityApplication",
+          "operatingSystem": "All modern browsers (Chrome, Edge, Firefox, Safari, iOS, Android)",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": [
+            "21-landmark on-device neural computer vision with ~400ms lock-in",
+            "Bidirectional WebRTC P2P communication between deaf and hearing users",
+            "3D kinematic Text-to-Sign avatar animations and fingerspelling synthesizer",
+            "Interactive Practice Laboratory with hold-and-verify feedback and speed-run mode",
+            "Zero-auth conversational AI Gesture Assistant"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://sign-language-studio.webdomain.live/#website",
+          "url": "https://sign-language-studio.webdomain.live/",
+          "name": "Sign Language Studio",
+          "description": "Real-time client-side American Sign Language recognition & accessibility platform",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Sign Language Studio",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://sign-language-studio.webdomain.live/android-chrome-512x512.png"
+            }
+          }
+        }
+      ]
+    }
+    </script>
 
-    <!-- Global Design System -->
+    <!-- Page Specific Styles & Scripts -->
     <link rel="stylesheet" href="style.css?v=4.0.0">
 </head>
 

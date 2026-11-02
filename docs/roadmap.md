@@ -45,7 +45,7 @@ gantt
 - [x] **Active Learning Overrides**: On-device k-NN calibration for user-specific hand shapes.
 - [x] **Sentence Builder & Vocalizer**: Continuous typing stream, audio chime, and Web SpeechSynthesis.
 - [x] **Multilingual Translation**: Real-time translation to 14 languages.
-- [x] **Multimodal AI Chatbot**: Puter.js GPT-4o Vision photo analysis interface.
+- [x] **Zero-Auth AI Gesture Assistant**: Unauthenticated AI chat interface with serverless proxy and local dictionary fallback.
 
 ---
 

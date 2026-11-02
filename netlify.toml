@@ -1,8 +1,13 @@
 # Netlify Configuration for Sign Language Studio
-# Enables static zero-config deployment, camera/mic permissions, and optimal routing
+# Primary Domain: https://sign-language-studio.webdomain.live
+# Fallback Domain: https://sign-language-studio.netlify.app
 
 [build]
   publish = "."
+
+# Functions directory for zero-auth AI proxy
+[functions]
+  directory = "netlify/functions"
 
 # Redirect legacy /landing.html to root '/'
 [[redirects]]
@@ -20,6 +25,16 @@
   from = "/text-to-sign"
   to = "/avatar.html"
   status = 200
+
+[[redirects]]
+  from = "/manifest.json"
+  to = "/site.webmanifest"
+  status = 200
+
+[[redirects]]
+  from = "/sitemap"
+  to = "/sitemap.xml"
+  status = 301
 
 # Security & Hardware Access Headers
 [[headers]]
@@ -41,3 +56,32 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+# Caching for Favicons and Web App Manifest
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/site.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=utf-8"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml; charset=utf-8"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=86400"

@@ -2,21 +2,94 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#000000">
-    <title>Sign Language Studio - About & Architecture</title>
-    <meta name="description" content="Technical architecture, research principles, and system specifications of Sign Language Studio.">
+    <title>Architecture & Benchmarks - Sign Language Studio</title>
+    <meta name="description" content="Explore the technical architecture, on-device neural vision pipeline, WebRTC peer-to-peer protocol, and Windows OS bridge of Sign Language Studio.">
+    <meta name="keywords" content="sign language studio architecture, on-device AI computer vision, WebRTC peer-to-peer ASL, MediaPipe hand tracking, deep learning benchmarks, accessible technology">
+    <meta name="author" content="Sign Language Studio Team">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="theme-color" content="#08080a">
+    <meta name="color-scheme" content="dark light">
 
-    <!-- Favicon -->
+    <!-- Canonical & Alternate Multi-Domain Routing -->
+    <link rel="canonical" href="https://sign-language-studio.webdomain.live/about.html">
+    <link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/about.html">
+    <link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/about.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Sign Language Studio">
+    <meta property="og:title" content="Architecture & Benchmarks - Sign Language Studio">
+    <meta property="og:description" content="Explore the technical architecture, on-device neural vision pipeline, WebRTC peer-to-peer protocol, and Windows OS bridge of Sign Language Studio.">
+    <meta property="og:url" content="https://sign-language-studio.webdomain.live/about.html">
+    <meta property="og:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:secure_url" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Architecture & Benchmarks - Sign Language Studio">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:domain" content="sign-language-studio.webdomain.live">
+    <meta name="twitter:title" content="Architecture & Benchmarks - Sign Language Studio">
+    <meta name="twitter:description" content="Explore the technical architecture, on-device neural vision pipeline, WebRTC peer-to-peer protocol, and Windows OS bridge of Sign Language Studio.">
+    <meta name="twitter:image" content="https://sign-language-studio.webdomain.live/assets/images/banner.jpg">
+
+    <!-- Favicons & Mobile Web Manifest -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sign Language Studio">
 
-    <!-- Typography: Plus Jakarta Sans (Display), Inter (Body), JetBrains Mono (Telemetry) -->
+    <!-- Typography: Plus Jakarta Sans, Inter, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How does Sign Language Studio detect American Sign Language?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sign Language Studio utilizes MediaPipe Hands and client-side neural networks (TensorFlow.js) to track 21 3D hand landmarks directly in the user's browser, enabling real-time classification with zero cloud latency."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the Two-Way Communication Room work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Two-Way Room establishes an encrypted peer-to-peer WebRTC connection using PeerJS. Speech from hearing partners is transcribed into animated sign sequences, while signs from deaf partners are vocalized via speech synthesis."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my video sent to any remote server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. All computer vision inference and hand landmark tracking executes 100% on your local device. Video streams are never uploaded or stored on any cloud server."
+          }
+        }
+      ]
+    }
+    </script>
 
-    <!-- Global Design System -->
+    <!-- Page Specific Styles & Scripts -->
     <link rel="stylesheet" href="style.css?v=4.0.0">
 </head>
 
@@ -165,12 +238,12 @@
                     <div class="about-card-badge">03 &bull; Multimodal Education &amp; Telemetry</div>
                     <h2 class="about-card-title">Practice Academy &amp; Vision AI</h2>
                     <p class="about-card-text">
-                        The interactive Practice Laboratory provides pose hold-and-verify feedback, circular SVG progress rings, streak multiplier scoring, and a 60-second speed-run mode. An integrated vision assistant powered by Puter.js allows users to upload sign photographs and receive step-by-step diagnostic signing corrections.
+                        The interactive Practice Laboratory provides pose hold-and-verify feedback, circular SVG progress rings, streak multiplier scoring, and a 60-second speed-run mode. An integrated zero-auth AI gesture assistant allows users to ask questions about ASL, fingerspelling, grammar, and handshape formation with zero authentication or login required.
                     </p>
                     <div class="about-card-meta">
                         <span class="mono-code">SVG Hold Engine</span>
                         <span class="mono-code">Session Telemetry</span>
-                        <span class="mono-code">Puter Vision</span>
+                        <span class="mono-code">Zero-Auth AI</span>
                     </div>
                 </div>
 

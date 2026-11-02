@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+    <!-- Landing & Overview -->
+    <url>
+        <loc>https://sign-language-studio.webdomain.live/</loc>
+        <lastmod>2026-11-02</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/" />
+        <image:image>
+            <image:loc>https://sign-language-studio.webdomain.live/assets/images/banner.jpg</image:loc>
+            <image:title>Sign Language Studio - Neural Vision &amp; Multimodal Accessibility</image:title>
+            <image:caption>Client-side 21-landmark neural computer vision and bidirectional WebRTC communication platform for American Sign Language.</image:caption>
+        </image:image>
+    </url>
+
+    <!-- Real-time Live Camera Detector & Two-Way Room -->
+    <url>
+        <loc>https://sign-language-studio.webdomain.live/detector.html</loc>
+        <lastmod>2026-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.95</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/detector.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/detector.html" />
+    </url>
+
+    <!-- Practice Laboratory & Speed-Run Mode -->
+    <url>
+        <loc>https://sign-language-studio.webdomain.live/quiz.html</loc>
+        <lastmod>2026-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/quiz.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/quiz.html" />
+    </url>
+
+    <!-- 3D Text-to-Sign Avatar -->
+    <url>
+        <loc>https://sign-language-studio.webdomain.live/avatar.html</loc>
+        <lastmod>2026-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/avatar.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/avatar.html" />
+    </url>
+
+    <!-- AI Gesture Assistant -->
+    <url>
+        <loc>https://sign-language-studio.webdomain.live/chat.html</loc>
+        <lastmod>2026-11-02</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.85</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/chat.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/chat.html" />
+    </url>
+
+    <!-- Architecture, Benchmarks & Deep Learning Documentation -->
+    <url>
+        <loc>https://sign-language-studio.webdomain.live/about.html</loc>
+        <lastmod>2026-11-02</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://sign-language-studio.webdomain.live/about.html" />
+        <xhtml:link rel="alternate" hreflang="en" href="https://sign-language-studio.webdomain.live/about.html" />
+    </url>
+
+</urlset>
+

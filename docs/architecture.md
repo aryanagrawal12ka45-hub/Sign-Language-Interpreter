@@ -39,7 +39,7 @@ flowchart TB
         BUILDER[Sentence Builder & Continuous Typing]
         TTS[Web SpeechSynthesis Vocalizer]
         TRANS[14-Language Cloud Translator]
-        CHAT[Puter.js GPT-4o Vision Chatbot]
+        CHAT[Zero-Auth AI Gesture Assistant]
     end
 
     CAM --> V_STREAM --> MP --> NORM --> ARB
@@ -149,4 +149,4 @@ stateDiagram-v2
 ### 5. Assistive Output Subsystem
 - **Web SpeechSynthesis API**: Vocalization with pitch and rate modulation.
 - **Google Translate REST Endpoint**: Multilingual translation into 14 languages.
-- **Puter.js GPT-4o Vision**: Multimodal conversational assistant for asynchronous gesture photo analysis.
+- **Zero-Auth AI Gesture Assistant**: Conversational assistant with serverless edge proxy and local ASL dictionary fallback, eliminating user login friction.

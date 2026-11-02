@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Hybrid Active Learning (KNN Overrides)**: On-device k-Nearest Neighbors classifier allowing instant user calibration for difficult hand shapes.
 - **Sentence Builder & Speech Synthesis**: Real-time sign-to-text typing stream with debounce cooldown and native browser Web Speech API vocalization.
 - **Multilingual Translation**: Real-time translation to 14 languages (Tamil, Hindi, Telugu, Malayalam, Kannada, Spanish, French, German, Japanese, Korean, Chinese, Arabic, Portuguese, Russian) with localized speech synthesis voices.
-- **Multimodal AI Gesture Chatbot**: Integrated Puter.js GPT-4o Vision chatbot interface (`chat.html`) for analyzing uploaded gesture photographs.
+- **Zero-Auth AI Gesture Assistant**: Implemented zero-authentication conversational AI assistant (`chat.html`) with serverless edge proxy and local ASL dictionary fallback (no login/logout required).
 - **Python Companion Tooling**: Added `src/` modules (camera, feature extractor, classifier, BLE receiver) and `scripts/` (dataset evaluator, offline trainer, dev server).
 - **Engineering Documentation Suite**: 14 comprehensive technical guides under `docs/` covering architecture, hardware, preprocessing, communication, evaluation, and roadmap.
 
