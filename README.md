@@ -68,7 +68,7 @@ The platform is structured into specialized, cohesive studios:
 | **B2B SaaS Overview** | [`/`](https://sign-language-studio.netlify.app/) | Ambient 60 FPS neural canvas, technical dossier card, and system capability metrics. |
 | **Vision Detector Studio** | [`/detector.html`](https://sign-language-studio.netlify.app/detector.html) | Real-time ASL camera detection, sentence builder, speech vocalization, and 14-language cloud translation. |
 | **Practice Laboratory** | [`/quiz.html`](https://sign-language-studio.netlify.app/quiz.html) | Interactive sign learning game, hold-to-confirm SVG progress ring, streak multipliers, and 60-second speed run. |
-| **Text to Sign 3D Studio** | [`/avatar.html`](https://sign-language-studio.netlify.app/avatar.html) | Real-time 3D humanoid avatar kinematic synthesis, voice-to-sign dictation, ASL grammar reordering, and interactive gloss timeline. |
+| **Text to Sign 3D Studio** | [`/avatar.html`](https://sign-language-studio.netlify.app/avatar.html) | Scalable ASL Lexicon (zero-code-change data files), 7-tier smart NLP resolver, 3D humanoid avatar kinematic synthesis, voice-to-sign dictation, coverage meter, and Lexicon Explorer. |
 | **Multimodal Gesture Assistant** | [`/chat.html`](https://sign-language-studio.netlify.app/chat.html) | AI vision reasoning interface for analyzing uploaded sign images and answering gesture questions. |
 | **Two-Way Communication Room** | `/detector.html#two-way` | Peer-to-peer WebRTC room bridging spoken audio to visual sign sequences and vice-versa. |
 | **Sign Library & Lightbox** | Modal | Illustrated visual dictionary for all 26 manual letters, 10 numerical digits, and common signs. |
@@ -245,7 +245,6 @@ Sign-Language-Interpreter/
 
 ## Acknowledgments & Credits
 
-* Special thanks to [Sign-Flow by maddyroxx](https://github.com/maddyroxx/Sign-Flow.git) for architectural reference and inspiration regarding client-side 3D WebGL avatar sign kinematics and Three.js humanoid rig pipelines.
 * Built with [MediaPipe Hands](https://github.com/google/mediapipe) and [TensorFlow.js](https://www.tensorflow.org/js) for edge neural vision inference.
 * WebRTC peer-to-peer data transport enabled by [PeerJS](https://peerjs.com/).
 

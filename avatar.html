@@ -78,6 +78,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- Puter.js for Client-Side Zero-Auth AI Sentence Simplification -->
+    <script src="https://js.puter.com/v2/"></script>
 </head>
 
 <body>
@@ -365,11 +367,26 @@
                             <textarea id="avatar-input-text" class="avatar-textarea" rows="3" maxlength="250"
                                 placeholder="Type English text or phrase to translate (e.g., 'Hello, how are you?' or 'Thank you for your help')...">Hello, how are you?</textarea>
                             <div class="avatar-textarea-footer">
-                                <div class="avatar-mode-toggle">
+                                <div class="avatar-mode-toggle" style="display: flex; gap: 12px; flex-wrap: wrap;">
                                     <label class="avatar-toggle-label" title="Force letter-by-letter one-handed ASL fingerspelling for every word">
                                         <input type="checkbox" id="toggle-fingerspell-only" class="avatar-checkbox">
                                         <span class="toggle-custom"></span>
-                                        <span class="toggle-text">Fingerspell Alphabet Only</span>
+                                        <span class="toggle-text">Fingerspell Only</span>
+                                    </label>
+                                    <label class="avatar-toggle-label" title="Rewrite sentence using only available ASL lexicon signs (Puter.js AI)">
+                                        <input type="checkbox" id="toggle-ai-rewrite" class="avatar-checkbox">
+                                        <span class="toggle-custom"></span>
+                                        <span class="toggle-text">Simplify with AI</span>
+                                    </label>
+                                    <label class="avatar-toggle-label" title="Only exact dictionary matches (no synonyms/lemmas)">
+                                        <input type="checkbox" id="toggle-only-exact" class="avatar-checkbox">
+                                        <span class="toggle-custom"></span>
+                                        <span class="toggle-text">Only Exact</span>
+                                    </label>
+                                    <label class="avatar-toggle-label" title="Drop articles and auxiliary verbs for ASL syntax">
+                                        <input type="checkbox" id="toggle-asl-simplify" class="avatar-checkbox" checked>
+                                        <span class="toggle-custom"></span>
+                                        <span class="toggle-text">ASL Grammar</span>
                                     </label>
                                 </div>
                                 <div class="avatar-char-and-clear">
@@ -380,6 +397,16 @@
                                     </button>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- AI Sentence Rewrite Banner -->
+                        <div id="ai-rewrite-banner" style="display: none; font-size: 0.75rem; background: rgba(56, 189, 248, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 6px; padding: 8px 12px; margin-top: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #38bdf8; font-weight: 600;">✨ Simplified with AI so every word has a sign:</span>
+                                <button type="button" id="btn-revert-rewrite" class="avatar-subtle-btn" style="color: var(--text-tertiary); font-size: 0.7rem;">Use Original</button>
+                            </div>
+                            <div id="ai-rewritten-text" style="color: var(--text-primary); margin-top: 4px; font-weight: 500;"></div>
+                            <div style="font-size: 0.65rem; color: var(--text-tertiary); margin-top: 4px;">Privacy Notice: Only typed text is sent for simplification. No video, camera, or personal identifiers are transmitted.</div>
                         </div>
 
                         <div class="avatar-actions-row">
@@ -450,6 +477,29 @@
                     </div>
 
                     <div class="timeline-container">
+                        <!-- Sentence Whole-Word Coverage Meter -->
+                        <div class="coverage-container">
+                            <div class="coverage-bar-track">
+                                <div id="coverage-bar-fill" class="coverage-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span id="coverage-label" class="coverage-label">Coverage: 100% whole-word</span>
+                        </div>
+
+                        <!-- Lexicon and Growth Tools Toolbar -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-subtle);">
+                            <button type="button" id="btn-open-lexicon-explorer" class="btn secondary sm" style="font-size: 0.72rem; padding: 4px 10px;">
+                                <span>📚 Lexicon Explorer</span>
+                                <span id="lexicon-library-badge" class="lexicon-library-badge">97 signs</span>
+                            </button>
+                            <button type="button" id="btn-open-missing-words" class="btn secondary sm" style="font-size: 0.72rem; padding: 4px 10px;">
+                                <span>⚠️ Missing Words</span>
+                                <span id="missing-words-count-badge" class="badge" style="font-size: 0.65rem; background: rgba(245, 158, 11, 0.2); color: #f59e0b;">0</span>
+                            </button>
+                            <button type="button" id="btn-open-record-sign" class="btn secondary sm" style="font-size: 0.72rem; padding: 4px 10px;">
+                                <span>📹 Record Sign</span>
+                            </button>
+                        </div>
+
                         <p class="timeline-caption">Interactive timeline showing token reordering by ASL grammar rules. Click any sign chip to jump and replay:</p>
                         <div id="gloss-timeline-chips" class="gloss-chips-track">
                             <!-- Populated dynamically by avatar.js -->
@@ -544,7 +594,96 @@
 
     </div>
 
-    <!-- Sign Dictionary & 3D Avatar Engine -->
+    <!-- ==================== MODAL 1: LEXICON EXPLORER ==================== -->
+    <div id="modal-lexicon-explorer" class="dictionary-modal" style="display: none;">
+        <div class="dictionary-card" style="max-width: 900px; width: 92vw;">
+            <div class="dict-header">
+                <div>
+                    <h3 class="dict-title">📚 ASL Scalable Lexicon Explorer</h3>
+                    <p class="dict-subtitle">Search whole-word landmark templates loaded from data/lexicon/index.json</p>
+                </div>
+                <button type="button" id="btn-close-lexicon-explorer" class="stage-btn-icon" title="Close Explorer">&times;</button>
+            </div>
+            <div style="padding: 16px 22px; border-bottom: 1px solid var(--border-subtle); display: flex; gap: 12px; flex-wrap: wrap;">
+                <input type="text" id="lexicon-search-input" class="two-way-input" placeholder="Search signs or synonyms (e.g., hello, thank you, friend)..." style="flex: 2; min-width: 200px;">
+                <select id="lexicon-category-select" class="two-way-input" style="flex: 1; min-width: 150px;">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div style="max-height: 55vh; overflow-y: auto; padding: 0 22px 16px 22px;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-metallic); text-align: left; color: var(--text-tertiary);">
+                            <th style="padding: 10px 6px;">Sign Gloss</th>
+                            <th style="padding: 10px 6px;">Category</th>
+                            <th style="padding: 10px 6px;">Frames</th>
+                            <th style="padding: 10px 6px;">Hands</th>
+                            <th style="padding: 10px 6px;">License</th>
+                            <th style="padding: 10px 6px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lexicon-table-body">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 2: MISSING WORDS LOG ==================== -->
+    <div id="modal-missing-words" class="dictionary-modal" style="display: none;">
+        <div class="dictionary-card" style="max-width: 600px; width: 90vw;">
+            <div class="dict-header">
+                <div>
+                    <h3 class="dict-title">⚠️ Missing Words &amp; Fingerspell Log</h3>
+                    <p class="dict-subtitle">Words that fell back to fingerspelling. Used to prioritize new dataset imports.</p>
+                </div>
+                <button type="button" id="btn-close-missing-words" class="stage-btn-icon" title="Close">&times;</button>
+            </div>
+            <div style="padding: 16px 22px; display: flex; gap: 8px; justify-content: flex-end; border-bottom: 1px solid var(--border-subtle);">
+                <button type="button" id="btn-export-missing-words" class="btn primary sm" style="font-size: 0.75rem;">Export CSV / JSON</button>
+                <button type="button" id="btn-clear-missing-words" class="btn secondary sm" style="font-size: 0.75rem;">Clear Log</button>
+            </div>
+            <div id="missing-words-container" style="max-height: 50vh; overflow-y: auto; padding: 16px 22px; display: flex; flex-direction: column; gap: 8px;">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL 3: RECORD A SIGN TOOL ==================== -->
+    <div id="modal-record-sign" class="dictionary-modal" style="display: none;">
+        <div class="dictionary-card" style="max-width: 680px; width: 92vw;">
+            <div class="dict-header">
+                <div>
+                    <h3 class="dict-title">📹 Record a Sign (Webcam Studio)</h3>
+                    <p class="dict-subtitle">Capture 21 wrist-relative landmarks with MediaPipe and add directly to your local lexicon.</p>
+                </div>
+                <button type="button" id="btn-close-record-sign" class="stage-btn-icon" title="Close">&times;</button>
+            </div>
+            <div style="padding: 16px 22px; display: flex; flex-direction: column; gap: 14px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="text" id="record-sign-gloss" class="two-way-input" placeholder="Sign Gloss (e.g. SUNSHINE)" style="flex: 2;">
+                    <input type="text" id="record-sign-category" class="two-way-input" placeholder="Category (e.g. Weather)" style="flex: 1;">
+                </div>
+                <div style="position: relative; width: 100%; height: 280px; background: #000; border-radius: 8px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <video id="record-camera-video" playsinline autoplay muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                    <canvas id="record-camera-canvas" style="display: none;"></canvas>
+                    <div id="record-countdown-overlay" style="display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.65); align-items: center; justify-content: center; font-size: 3rem; font-weight: 800; color: #10b981;">3</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="record-status-label" style="font-size: 0.78rem; color: var(--text-secondary);">Click Start Camera to begin.</span>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" id="btn-start-record-camera" class="btn secondary sm">Start Camera</button>
+                        <button type="button" id="btn-trigger-record" class="btn primary sm" disabled>Record (2s)</button>
+                        <button type="button" id="btn-export-recorded-sign" class="btn secondary sm" style="display: none;">Save to Lexicon</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Dictionary, Lexicon Engine & 3D Avatar Engine -->
+    <script src="src/lexicon_service.js?v=4.2.0"></script>
     <script src="dictionary.js?v=4.2.0"></script>
     <script src="avatar.js?v=4.2.0"></script>
 </body>

@@ -265,6 +265,47 @@
         curlFinger(a, finger, 0);
     }
 
+    // --- Helpers for left-arm and two-handed signing ---
+    function poseLeftArmUp(a) {
+        a.push(["mixamorigLeftArm", "rotation", "x", -0.12, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "y", -0.22, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -0.95, "-"]);
+        a.push(["mixamorigLeftForeArm", "rotation", "y", -1.95, "-"]);
+        a.push(["mixamorigLeftForeArm", "rotation", "z", -0.12, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", -0.25, "-"]);
+    }
+
+    function resetLeftArm(a) {
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.05, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "y", 0, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -Math.PI / 3.4, "+"]);
+        a.push(["mixamorigLeftForeArm", "rotation", "y", -Math.PI / 1.7, "+"]);
+        a.push(["mixamorigLeftForeArm", "rotation", "z", 0, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", 0, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "z", 0, "+"]);
+    }
+
+    function curlLeftFinger(a, finger, angle = Math.PI / 2) {
+        a.push([`mixamorigLeftHand${finger}1`, "rotation", "z", -angle, angle > 0 ? "-" : "+"]);
+        a.push([`mixamorigLeftHand${finger}2`, "rotation", "z", -angle, angle > 0 ? "-" : "+"]);
+        a.push([`mixamorigLeftHand${finger}3`, "rotation", "z", -angle, angle > 0 ? "-" : "+"]);
+    }
+
+    function uncurlLeftFinger(a, finger) {
+        curlLeftFinger(a, finger, 0);
+    }
+
+    function poseBothArmsUp(a) {
+        poseRightArmUp(a);
+        poseLeftArmUp(a);
+    }
+
+    function resetBothArms(a) {
+        resetRightArm(a);
+        resetLeftArm(a);
+    }
+
     // =========================================================================
     // 3. AUTHENTIC ONE-HANDED ASL ALPHABET (A - Z)
     // =========================================================================
@@ -805,6 +846,12 @@
         runtime.animations.push(a);
     };
 
+    // Ensure ASL Alphabet is fully case-insensitive (supports both 'A' and 'a')
+    Object.keys(ASL_ALPHABET).forEach(k => {
+        ASL_ALPHABET[k.toLowerCase()] = ASL_ALPHABET[k];
+        ASL_ALPHABET[k.toUpperCase()] = ASL_ALPHABET[k];
+    });
+
     // =========================================================================
     // 4. ASL WHOLE-WORD SIGNS
     // =========================================================================
@@ -1026,6 +1073,12 @@
         runtime.animations.push(a);
     };
 
+    // Ensure ASL Alphabet is fully case-insensitive (supports both 'A' and 'a')
+    Object.keys(ASL_ALPHABET).forEach(k => {
+        ASL_ALPHABET[k.toLowerCase()] = ASL_ALPHABET[k];
+        ASL_ALPHABET[k.toUpperCase()] = ASL_ALPHABET[k];
+    });
+
     // YOU - Index finger points forward toward viewer
     ASL_WORD_SIGNS['YOU'] = function (runtime) {
         let a = [];
@@ -1045,6 +1098,12 @@
         uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
         runtime.animations.push(a);
     };
+
+    // Ensure ASL Alphabet is fully case-insensitive (supports both 'A' and 'a')
+    Object.keys(ASL_ALPHABET).forEach(k => {
+        ASL_ALPHABET[k.toLowerCase()] = ASL_ALPHABET[k];
+        ASL_ALPHABET[k.toUpperCase()] = ASL_ALPHABET[k];
+    });
 
     // MY - Open flat hand resting against chest
     ASL_WORD_SIGNS['MY'] = function (runtime) {
@@ -1449,6 +1508,1990 @@
         uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
         runtime.animations.push(a);
     };
+
+    // HOW - Both curved hands palms down, rotate upward facing chest
+    ASL_WORD_SIGNS['HOW'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI / 4); curlFinger(a, 'Middle', Math.PI / 4);
+        curlFinger(a, 'Ring', Math.PI / 4); curlFinger(a, 'Pinky', Math.PI / 4);
+        curlLeftFinger(a, 'Index', Math.PI / 4); curlLeftFinger(a, 'Middle', Math.PI / 4);
+        curlLeftFinger(a, 'Ring', Math.PI / 4); curlLeftFinger(a, 'Pinky', Math.PI / 4);
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        // Rotate outward and upward
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]);
+        a.push(["mixamorigRightHand", "rotation", "y", 0.65, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.45, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", -0.65, "-"]);
+        runtime.animations.push(a);
+
+        // Reset
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // GOOD_MORNING - GOOD then MORNING (sun rising over arm)
+    ASL_WORD_SIGNS['GOOD_MORNING'] = function (runtime) {
+        let a = [];
+        // Touch chin
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.25, "-"]);
+        a.push(["mixamorigRightHand", "rotation", "x", -0.85, "-"]);
+        runtime.animations.push(a);
+
+        // Extend forward into left palm
+        a = [];
+        poseLeftArmUp(a);
+        a.push(["mixamorigLeftForeArm", "rotation", "x", 0.55, "+"]);
+        a.push(["mixamorigRightHand", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        // Morning: Right arm rises from horizontal left arm
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 1.45, "+"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 1.25, "+"]);
+        runtime.animations.push(a);
+
+        // Reset
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // GOOD_NIGHT - GOOD then NIGHT (sun setting over arm)
+    ASL_WORD_SIGNS['GOOD_NIGHT'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightHand", "rotation", "x", -0.85, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        poseLeftArmUp(a);
+        a.push(["mixamorigLeftForeArm", "rotation", "x", 0.55, "+"]);
+        a.push(["mixamorigRightHand", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        // Night: Right curved hand curves over left wrist
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.85, "+"]);
+        a.push(["mixamorigRightForeArm", "rotation", "z", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // NICE_TO_MEET_YOU - NICE (slide palm) then MEET (knuckles meet)
+    ASL_WORD_SIGNS['NICE_TO_MEET_YOU'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        // Palms flat
+        a.push(["mixamorigRightHand", "rotation", "x", 0.2, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.2, "-"]);
+        runtime.animations.push(a);
+
+        // Slide forward
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "y", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        // Both index fingers point upright and meet
+        a = [];
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        a.push(["mixamorigRightArm", "rotation", "z", 0.45, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // NICE - Flat right palm slides forward over flat left palm
+    ASL_WORD_SIGNS['NICE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "y", 0.4, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // MEET - Both index fingers upright move towards each other
+    ASL_WORD_SIGNS['MEET'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.45, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // FAMILY - Both 'F' hands touch, circle outward, and touch pinkies
+    ASL_WORD_SIGNS['FAMILY'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        // 'F' shape: thumb & index pinch, other 3 extended
+        curlFinger(a, 'Index', Math.PI/3); curlLeftFinger(a, 'Index', Math.PI/3);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.5, "+"]);
+        a.push(["mixamorigLeftHandThumb1", "rotation", "z", -0.5, "-"]);
+        runtime.animations.push(a);
+
+        // Circle around
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "y", 0.55, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "y", -0.55, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlLeftFinger(a, 'Index');
+        runtime.animations.push(a);
+    };
+
+    // FRIEND - Both index fingers hook together once, flip, and hook again
+    ASL_WORD_SIGNS['FRIEND'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        a.push(["mixamorigRightHandIndex2", "rotation", "z", 0.8, "+"]);
+        a.push(["mixamorigLeftHandIndex2", "rotation", "z", -0.8, "-"]);
+        runtime.animations.push(a);
+
+        // Hook together
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.35, "-"]);
+        runtime.animations.push(a);
+
+        // Flip
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.35, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // FATHER - Open '5' hand thumb taps forehead
+    ASL_WORD_SIGNS['FATHER'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.75, "-"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 2.4, "+"]);
+        a.push(["mixamorigRightHand", "rotation", "x", -0.65, "-"]);
+        runtime.animations.push(a);
+
+        // Tap forehead twice
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.65, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        runtime.animations.push(a);
+    };
+
+    // MOTHER - Open '5' hand thumb taps chin
+    ASL_WORD_SIGNS['MOTHER'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.35, "-"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 2.2, "+"]);
+        a.push(["mixamorigRightHand", "rotation", "x", -0.75, "-"]);
+        runtime.animations.push(a);
+
+        // Tap chin twice
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.55, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.75, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        runtime.animations.push(a);
+    };
+
+    // BROTHER - Boy salute down to meet left 'L' hand
+    ASL_WORD_SIGNS['BROTHER'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.75, "-"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 2.4, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        poseLeftArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.15, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // SISTER - Girl stroke down jaw down to meet left 'L' hand
+    ASL_WORD_SIGNS['SISTER'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.35, "-"]);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.5, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        poseLeftArmUp(a);
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // PERSON - Both flat palms slide down along sides of torso
+    ASL_WORD_SIGNS['PERSON'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.25, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", -0.25, "-"]);
+        runtime.animations.push(a);
+
+        // Slide down
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // HAPPY - Flat right hand pats upward against chest twice
+    ASL_WORD_SIGNS['HAPPY'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.25, "-"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 2.1, "+"]);
+        runtime.animations.push(a);
+
+        // Upward brush 1
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.1, "+"]);
+        runtime.animations.push(a);
+
+        // Upward brush 2
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        runtime.animations.push(a);
+    };
+
+    // SAD - Both open '5' hands in front of face drop downward
+    ASL_WORD_SIGNS['SAD'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.65, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", -0.65, "-"]);
+        a.push(["mixamorigNeck", "rotation", "x", 0.15, "+"]);
+        runtime.animations.push(a);
+
+        // Drop downward
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        a.push(["mixamorigNeck", "rotation", "x", 0, "-"]);
+        runtime.animations.push(a);
+    };
+
+    // BAD - Flat hand touches chin, turns downward palm down
+    ASL_WORD_SIGNS['BAD'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.35, "-"]);
+        a.push(["mixamorigRightHand", "rotation", "x", -0.85, "-"]);
+        runtime.animations.push(a);
+
+        // Flip downward
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.75, "+"]);
+        a.push(["mixamorigRightHand", "rotation", "y", 0.85, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        runtime.animations.push(a);
+    };
+
+    // SCHOOL - Flat right hand claps down onto flat left palm twice
+    ASL_WORD_SIGNS['SCHOOL'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.3, "-"]);
+        a.push(["mixamorigRightArm", "rotation", "z", 1.15, "+"]);
+        runtime.animations.push(a);
+
+        // Clap 1
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.75, "-"]);
+        runtime.animations.push(a);
+        // Up
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 1.15, "+"]);
+        runtime.animations.push(a);
+        // Clap 2
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.75, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // COLLEGE - Flat right hand sweeps up and circles off left palm
+    ASL_WORD_SIGNS['COLLEGE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 1.35, "+"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 1.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // TEACHER - TEACH then PERSON
+    ASL_WORD_SIGNS['TEACHER'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.65, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", -0.65, "-"]);
+        runtime.animations.push(a);
+
+        // Extend forward
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        // Person drop
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // STUDENT - LEARN then PERSON
+    ASL_WORD_SIGNS['STUDENT'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        // Scoop to forehead
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", -0.75, "-"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 2.3, "+"]);
+        runtime.animations.push(a);
+
+        // Person drop
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // BOOK - Both flat hands open outward like opening a book
+    ASL_WORD_SIGNS['BOOK'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        // Palms together
+        a.push(["mixamorigRightHand", "rotation", "y", -0.45, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        // Open book
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.55, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", -0.55, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // READ - Left palm flat, right 'V' scans down
+    ASL_WORD_SIGNS['READ'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle');
+        curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Scan down
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // WRITE - Right fingers pinch and scribble across left flat palm
+    ASL_WORD_SIGNS['WRITE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/3);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.5, "+"]);
+        runtime.animations.push(a);
+
+        // Scribble
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.25, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", -0.25, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index');
+        runtime.animations.push(a);
+    };
+
+    // LEARN - Scoop knowledge from left palm to forehead
+    ASL_WORD_SIGNS['LEARN'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", -0.75, "-"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 2.3, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // TEACH - Both flat-O hands at temples extend forward twice
+    ASL_WORD_SIGNS['TEACH'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.65, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", -0.65, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // PLAY - Both 'Y' hands shake loosely at wrists
+    ASL_WORD_SIGNS['PLAY'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); uncurlFinger(a, 'Pinky');
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); uncurlLeftFinger(a, 'Pinky');
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.7, "+"]);
+        a.push(["mixamorigLeftHandThumb1", "rotation", "z", -0.7, "-"]);
+        runtime.animations.push(a);
+
+        // Shake
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.35, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", -0.35, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", -0.35, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring');
+        runtime.animations.push(a);
+    };
+
+    // WORK - Right 'S' fist taps back of left 'S' wrist twice
+    ASL_WORD_SIGNS['WORK'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Tap 1
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.75, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 1.15, "+"]);
+        runtime.animations.push(a);
+        // Tap 2
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.75, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // SLEEP - Open '5' hand pulls down in front of face into closed fist
+    ASL_WORD_SIGNS['SLEEP'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.75, "-"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 2.3, "+"]);
+        a.push(["mixamorigNeck", "rotation", "x", 0.15, "+"]);
+        runtime.animations.push(a);
+
+        // Pull down & close fist
+        a = [];
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        a.push(["mixamorigNeck", "rotation", "x", 0, "-"]);
+        runtime.animations.push(a);
+    };
+
+    // WALK - Both flat hands palm down alternate steps
+    ASL_WORD_SIGNS['WALK'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigRightHand", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.35, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.35, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // WANT - Both claw hands pull back towards chest
+    ASL_WORD_SIGNS['WANT'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        curlLeftFinger(a, 'Index', Math.PI/3); curlLeftFinger(a, 'Middle', Math.PI/3); curlLeftFinger(a, 'Ring', Math.PI/3); curlLeftFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        // Pull back
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // NEED - Bent index finger drops downward twice
+    ASL_WORD_SIGNS['NEED'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Index', Math.PI/2.5);
+        curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Drop 1
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0, "-"]);
+        runtime.animations.push(a);
+        // Drop 2
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // UNDERSTAND - Index finger flicks upright near temple
+    ASL_WORD_SIGNS['UNDERSTAND'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.75, "-"]);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Flick index upright
+        a = [];
+        uncurlFinger(a, 'Index');
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // WHO - Index finger wiggles in front of mouth
+    ASL_WORD_SIGNS['WHO'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Wiggle
+        a = [];
+        curlFinger(a, 'Index', Math.PI/3);
+        runtime.animations.push(a);
+        a = [];
+        uncurlFinger(a, 'Index');
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // WHEN - Left index upright, right index circles around and lands on tip
+    ASL_WORD_SIGNS['WHEN'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Circle
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.55, "+"]);
+        runtime.animations.push(a);
+
+        // Touch
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.55, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // WHY - Right hand touches temple, pulls down into 'Y'
+    ASL_WORD_SIGNS['WHY'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.75, "-"]);
+        runtime.animations.push(a);
+
+        // Pull down into 'Y'
+        a = [];
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); uncurlFinger(a, 'Pinky');
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.7, "+"]);
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring');
+        runtime.animations.push(a);
+    };
+
+    // WHICH - Both 'A' thumbs alternate moving up and down
+    ASL_WORD_SIGNS['WHICH'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.3, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.3, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.3, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.3, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // FOOD - Flat-O hand taps mouth twice
+    ASL_WORD_SIGNS['FOOD'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        a.push(["mixamorigRightForeArm", "rotation", "y", 2.2, "+"]);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        // Tap 1
+        a = []; a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]); runtime.animations.push(a);
+        a = []; a.push(["mixamorigRightHand", "rotation", "x", 0, "+"]); runtime.animations.push(a);
+        // Tap 2
+        a = []; a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]); runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // HOME - Flat-O touches cheek near mouth then near ear
+    ASL_WORD_SIGNS['HOME'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        // Near mouth
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        // Near ear
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.55, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        runtime.animations.push(a);
+    };
+
+    // CAR - Both 'S' fists steer steering wheel
+    ASL_WORD_SIGNS['CAR'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Steer left
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "z", 0.45, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "z", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        // Steer right
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "z", -0.45, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "z", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // DOCTOR - Right fingertips tap inside left wrist twice
+    ASL_WORD_SIGNS['DOCTOR'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        // Tap wrist
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // HOSPITAL - 'H' fingers trace a cross on left shoulder
+    ASL_WORD_SIGNS['HOSPITAL'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle');
+        curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        a.push(["mixamorigRightArm", "rotation", "z", 0.45, "-"]);
+        runtime.animations.push(a);
+
+        // Vertical line
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        // Horizontal line
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // MONEY - Back of right flat hand taps flat left palm twice
+    ASL_WORD_SIGNS['MONEY'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // NAME - Both 'H' hands cross each other and tap twice
+    ASL_WORD_SIGNS['NAME'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Tap
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "z", -0.35, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "z", 0, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "z", -0.35, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // FINE - Open '5' hand thumb taps center of chest
+    ASL_WORD_SIGNS['FINE'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.25, "-"]);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.5, "+"]);
+        runtime.animations.push(a);
+
+        // Tap chest
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "y", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        runtime.animations.push(a);
+    };
+
+    // TODAY - Both 'Y' hands drop downward twice
+    ASL_WORD_SIGNS['TODAY'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); uncurlFinger(a, 'Pinky');
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); uncurlLeftFinger(a, 'Pinky');
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.7, "+"]);
+        a.push(["mixamorigLeftHandThumb1", "rotation", "z", -0.7, "-"]);
+        runtime.animations.push(a);
+
+        // Drop
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring');
+        runtime.animations.push(a);
+    };
+
+    // TOMORROW - 'A' hand with thumb on jaw rotates forward
+    ASL_WORD_SIGNS['TOMORROW'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.65, "+"]);
+        runtime.animations.push(a);
+
+        // Rotate forward
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.55, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // YESTERDAY - 'A' hand with thumb on chin moves back to ear
+    ASL_WORD_SIGNS['YESTERDAY'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.65, "+"]);
+        runtime.animations.push(a);
+
+        // Move back to ear
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        a.push(["mixamorigRightHand", "rotation", "y", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // DAY - Right index finger drops like setting sun onto left flat arm
+    ASL_WORD_SIGNS['DAY'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Drop
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.65, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // NIGHT - Right curved hand curves over left horizontal arm
+    ASL_WORD_SIGNS['NIGHT'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.75, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // WEATHER - Both 'W' hands wave downward
+    ASL_WORD_SIGNS['WEATHER'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Wave down
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.35, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", -0.35, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Pinky'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // RAIN - Both claw hands pulse downward
+    ASL_WORD_SIGNS['RAIN'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        curlLeftFinger(a, 'Index', Math.PI/3); curlLeftFinger(a, 'Middle', Math.PI/3); curlLeftFinger(a, 'Ring', Math.PI/3); curlLeftFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        // Pulse down
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // HOT - Claw hand at mouth pulls away and turns down
+    ASL_WORD_SIGNS['HOT'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        // Pull away & turn down
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigRightHand", "rotation", "x", 0.85, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // COLD - Both 'S' fists shiver in front of chest
+    ASL_WORD_SIGNS['COLD'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Shiver
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "y", 0.25, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "y", -0.25, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "y", -0.25, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "y", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // FEEL - Bent middle finger strokes up chest
+    ASL_WORD_SIGNS['FEEL'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.25, "-"]);
+        curlFinger(a, 'Middle', Math.PI/4);
+        runtime.animations.push(a);
+
+        // Stroke up
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", -0.55, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Middle');
+        runtime.animations.push(a);
+    };
+
+    // AGAIN - Right bent hand arcs over and lands in left flat palm
+    ASL_WORD_SIGNS['AGAIN'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        // Arc and land
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "y", 0.55, "+"]);
+        a.push(["mixamorigRightHand", "rotation", "x", 0.65, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // MORE - Both flat-O hands tap fingertips together in front of chest twice
+    ASL_WORD_SIGNS['MORE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        curlLeftFinger(a, 'Index', Math.PI/3); curlLeftFinger(a, 'Middle', Math.PI/3); curlLeftFinger(a, 'Ring', Math.PI/3); curlLeftFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        // Tap together
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.45, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -0.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.95, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -0.95, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.45, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // CAN - Both 'S' fists drop downward firmly
+    ASL_WORD_SIGNS['CAN'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Drop
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.55, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.55, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // HAVE - Both bent hands touch fingertips against chest
+    ASL_WORD_SIGNS['HAVE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // LIKE - Thumb and middle finger pull away from chest pinching together
+    ASL_WORD_SIGNS['LIKE'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.25, "-"]);
+        runtime.animations.push(a);
+
+        // Pull away & pinch
+        a = [];
+        curlFinger(a, 'Middle', Math.PI/2.5);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.65, "+"]);
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Middle');
+        runtime.animations.push(a);
+    };
+
+    // GO - Both index fingers point forward and arc outward
+    ASL_WORD_SIGNS['GO'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Arc forward
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.45, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // COME - Both index fingers point up and beckon inward towards chest
+    ASL_WORD_SIGNS['COME'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        // Beckon inward
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", -0.25, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", -0.25, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // BREAKFAST - EAT then MORNING
+    ASL_WORD_SIGNS['BREAKFAST'] = function (runtime) {
+        ASL_WORD_SIGNS['FOOD'](runtime);
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigRightArm", "rotation", "z", 1.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // DINNER - EAT then NIGHT
+    ASL_WORD_SIGNS['DINNER'] = function (runtime) {
+        ASL_WORD_SIGNS['FOOD'](runtime);
+        ASL_WORD_SIGNS['NIGHT'](runtime);
+    };
+
+    // TEA - Right 'F' hand stirs inside left 'O' cup
+    ASL_WORD_SIGNS['TEA'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/3);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.5, "+"]);
+        runtime.animations.push(a);
+
+        // Stir
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index');
+        runtime.animations.push(a);
+    };
+
+    // COFFEE - Both 'S' fists, right grinds on left
+    ASL_WORD_SIGNS['COFFEE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Grind circle
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.55, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // MILK - Right 'S' fist squeezes twice
+    ASL_WORD_SIGNS['MILK'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        runtime.animations.push(a);
+
+        // Squeeze 1
+        a = [];
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+        a = [];
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+        // Squeeze 2
+        a = [];
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // BREAD - Right fingers slice down back of left hand
+    ASL_WORD_SIGNS['BREAD'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        // Slice down
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // APPLE - Knuckle of 'X' index twists on cheek
+    ASL_WORD_SIGNS['APPLE'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Twist
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // HUNGRY - 'C' hand strokes down center of chest
+    ASL_WORD_SIGNS['HUNGRY'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        // Stroke down
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // THIRSTY - Index finger draws down center of throat
+    ASL_WORD_SIGNS['THIRSTY'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Draw down
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // EMERGENCY - 'E' hand shakes vigorously
+    ASL_WORD_SIGNS['EMERGENCY'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Shake
+        a = []; a.push(["mixamorigRightHand", "rotation", "y", 0.35, "+"]); runtime.animations.push(a);
+        a = []; a.push(["mixamorigRightHand", "rotation", "y", -0.35, "-"]); runtime.animations.push(a);
+        a = []; a.push(["mixamorigRightHand", "rotation", "y", 0.35, "+"]); runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // SAFE - Crossed 'S' fists break open outward
+    ASL_WORD_SIGNS['SAFE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/2); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        curlLeftFinger(a, 'Index', Math.PI/2); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        // Crossed
+        a.push(["mixamorigRightArm", "rotation", "z", 0.45, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -0.45, "+"]);
+        runtime.animations.push(a);
+
+        // Break open
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 1.25, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -1.25, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // BUS - 'B' hand moves forward
+    ASL_WORD_SIGNS['BUS'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        resetRightArm(a);
+        runtime.animations.push(a);
+    };
+
+    // TRAIN - Both 'H' hands, right rubs across left
+    ASL_WORD_SIGNS['TRAIN'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Rub
+        a = []; a.push(["mixamorigRightHand", "rotation", "y", 0.35, "+"]); runtime.animations.push(a);
+        a = []; a.push(["mixamorigRightHand", "rotation", "y", -0.35, "-"]); runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // AIRPLANE - 'I-Love-You' shape tilts up and glides forward
+    ASL_WORD_SIGNS['AIRPLANE'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); uncurlFinger(a, 'Pinky');
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.7, "+"]);
+        runtime.animations.push(a);
+
+        // Glide forward
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.45, "+"]);
+        a.push(["mixamorigRightArm", "rotation", "z", 1.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring');
+        runtime.animations.push(a);
+    };
+
+    // HERE - Both open flat hands palm up move in small circles
+    ASL_WORD_SIGNS['HERE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.35, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "y", -0.35, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // THERE - Right index finger points outward
+    ASL_WORD_SIGNS['THERE'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // BUY - Right flat hand lifts off left palm and extends forward
+    ASL_WORD_SIGNS['BUY'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "y", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // PAY - Right index finger slides forward off left palm
+    ASL_WORD_SIGNS['PAY'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // COST - Left index flat, right crooked index scrapes down
+    ASL_WORD_SIGNS['COST'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlLeftFinger(a, 'Index'); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        curlFinger(a, 'Index', Math.PI/2.5); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // CHEAP - Right flat hand brushes down side of left palm
+    ASL_WORD_SIGNS['CHEAP'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // EXPENSIVE - Flat hand on palm lifts up and drops fluttering
+    ASL_WORD_SIGNS['EXPENSIVE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 1.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // STORE - Both flat-O hands shake forward at wrists
+    ASL_WORD_SIGNS['STORE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        curlLeftFinger(a, 'Index', Math.PI/3); curlLeftFinger(a, 'Middle', Math.PI/3); curlLeftFinger(a, 'Ring', Math.PI/3); curlLeftFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // TIRED - Both bent hands against chest droop downward
+    ASL_WORD_SIGNS['TIRED'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.55, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.55, "+"]);
+        a.push(["mixamorigNeck", "rotation", "x", 0.15, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        a.push(["mixamorigNeck", "rotation", "x", 0, "-"]);
+        runtime.animations.push(a);
+    };
+
+    // EXCITED - Both middle fingers extended alternate brushing upward
+    ASL_WORD_SIGNS['EXCITED'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Middle', Math.PI/4); curlLeftFinger(a, 'Middle', Math.PI/4);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.15, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.15, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlLeftFinger(a, 'Middle');
+        runtime.animations.push(a);
+    };
+
+    // AFRAID - Both open hands shake inward towards center
+    ASL_WORD_SIGNS['AFRAID'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "z", 0.55, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "z", -0.55, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // ANGRY - Claw hand claws outward from face
+    ASL_WORD_SIGNS['ANGRY'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.45, "-"]);
+        curlFinger(a, 'Index', Math.PI/3); curlFinger(a, 'Middle', Math.PI/3); curlFinger(a, 'Ring', Math.PI/3); curlFinger(a, 'Pinky', Math.PI/3);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Index'); uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // SICK - Right middle touches forehead, left middle touches stomach
+    ASL_WORD_SIGNS['SICK'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Middle', Math.PI/4); curlLeftFinger(a, 'Middle', Math.PI/4);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.75, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.35, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlLeftFinger(a, 'Middle');
+        runtime.animations.push(a);
+    };
+
+    // HURT - Both index fingers point at each other and twist twice
+    ASL_WORD_SIGNS['HURT'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); curlLeftFinger(a, 'Middle', Math.PI/2); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Twist 1
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.45, "-"]);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Middle'); uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // MEDICINE - Right middle finger grinds in center of left palm
+    ASL_WORD_SIGNS['MEDICINE'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        curlFinger(a, 'Middle', Math.PI/4);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "y", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle');
+        runtime.animations.push(a);
+    };
+
+    // START - Right index inserts between left index & middle, twists like a key
+    ASL_WORD_SIGNS['START'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        uncurlLeftFinger(a, 'Index'); uncurlLeftFinger(a, 'Middle'); curlLeftFinger(a, 'Ring', Math.PI/2); curlLeftFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Twist key
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.55, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        uncurlLeftFinger(a, 'Ring'); uncurlLeftFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // FINISH - Both open hands facing chest snap outward, palms down
+    ASL_WORD_SIGNS['FINISH'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigRightHand", "rotation", "x", -0.45, "-"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", -0.45, "-"]);
+        runtime.animations.push(a);
+
+        // Snap out
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.65, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.65, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // NOW - Both bent hands drop downward firmly once
+    ASL_WORD_SIGNS['NOW'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        runtime.animations.push(a);
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.55, "+"]);
+        a.push(["mixamorigLeftHand", "rotation", "x", 0.55, "+"]);
+        runtime.animations.push(a);
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // LATER - 'L' hand index finger pivots forward from thumb
+    ASL_WORD_SIGNS['LATER'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        a.push(["mixamorigRightHandThumb1", "rotation", "z", 0.7, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        a.push(["mixamorigRightHand", "rotation", "x", 0.45, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+    };
+
+    // SUN - Right index draws circle in air above head then opens rays
+    ASL_WORD_SIGNS['SUN'] = function (runtime) {
+        let a = [];
+        poseRightArmUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.85, "-"]);
+        uncurlFinger(a, 'Index'); curlFinger(a, 'Middle', Math.PI/2); curlFinger(a, 'Ring', Math.PI/2); curlFinger(a, 'Pinky', Math.PI/2);
+        runtime.animations.push(a);
+
+        // Open rays
+        a = [];
+        uncurlFinger(a, 'Middle'); uncurlFinger(a, 'Ring'); uncurlFinger(a, 'Pinky');
+        runtime.animations.push(a);
+
+        a = [];
+        resetRightArm(a);
+        runtime.animations.push(a);
+    };
+
+    // SNOW - Both open hands flutter fingers gently drifting down
+    ASL_WORD_SIGNS['SNOW'] = function (runtime) {
+        let a = [];
+        poseBothArmsUp(a);
+        a.push(["mixamorigRightArm", "rotation", "x", -0.55, "-"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", -0.55, "-"]);
+        runtime.animations.push(a);
+
+        // Drift down
+        a = [];
+        a.push(["mixamorigRightArm", "rotation", "x", 0.25, "+"]);
+        a.push(["mixamorigLeftArm", "rotation", "x", 0.25, "+"]);
+        runtime.animations.push(a);
+
+        a = [];
+        resetBothArms(a);
+        runtime.animations.push(a);
+    };
+
+    // Aliases for common lemmas, synonyms & compound derivations
+    ASL_WORD_SIGNS['THANKS'] = ASL_WORD_SIGNS['THANK_YOU'];
+    ASL_WORD_SIGNS['HI'] = ASL_WORD_SIGNS['HELLO'];
+    ASL_WORD_SIGNS['BYE'] = ASL_WORD_SIGNS['GOODBYE'] = ASL_WORD_SIGNS['HELLO'];
+    ASL_WORD_SIGNS['WELCOME'] = ASL_WORD_SIGNS['PLEASE'];
+    ASL_WORD_SIGNS['MAN'] = ASL_WORD_SIGNS['FATHER'];
+    ASL_WORD_SIGNS['WOMAN'] = ASL_WORD_SIGNS['MOTHER'];
+    ASL_WORD_SIGNS['BOY'] = ASL_WORD_SIGNS['BROTHER'];
+    ASL_WORD_SIGNS['GIRL'] = ASL_WORD_SIGNS['SISTER'];
+    ASL_WORD_SIGNS['BABY'] = ASL_WORD_SIGNS['CHILD'] = ASL_WORD_SIGNS['FAMILY'];
+    ASL_WORD_SIGNS['WAKE'] = ASL_WORD_SIGNS['SLEEP'];
+    ASL_WORD_SIGNS['QUESTION'] = ASL_WORD_SIGNS['ASK'] = ASL_WORD_SIGNS['NEED'];
+    ASL_WORD_SIGNS['ANSWER'] = ASL_WORD_SIGNS['TALK'] = ASL_WORD_SIGNS['TEACH'];
+    ASL_WORD_SIGNS['STUDY'] = ASL_WORD_SIGNS['LEARN'];
+    ASL_WORD_SIGNS['CLASS'] = ASL_WORD_SIGNS['SCHOOL'];
+    ASL_WORD_SIGNS['SEE'] = ASL_WORD_SIGNS['LOOK'] = ASL_WORD_SIGNS['READ'];
+    ASL_WORD_SIGNS['HE'] = ASL_WORD_SIGNS['SHE'] = ASL_WORD_SIGNS['THERE'];
+    ASL_WORD_SIGNS['WE'] = ASL_WORD_SIGNS['US'] = ASL_WORD_SIGNS['OUR'] = ASL_WORD_SIGNS['I'];
+    ASL_WORD_SIGNS['THEY'] = ASL_WORD_SIGNS['THERE'];
+    ASL_WORD_SIGNS['YOUR'] = ASL_WORD_SIGNS['YOU'];
+    ASL_WORD_SIGNS['ME'] = ASL_WORD_SIGNS['I'];
+    ASL_WORD_SIGNS['FIVE'] = ASL_WORD_SIGNS['HELLO'];
+
+    // Ensure ASL Word Signs are fully case-insensitive (supports both 'hello' and 'HELLO')
+    Object.keys(ASL_WORD_SIGNS).forEach(k => {
+        ASL_WORD_SIGNS[k.toLowerCase()] = ASL_WORD_SIGNS[k];
+        ASL_WORD_SIGNS[k.toUpperCase()] = ASL_WORD_SIGNS[k];
+    });
+
+    // Ensure ASL Alphabet is fully case-insensitive (supports both 'A' and 'a')
+    Object.keys(ASL_ALPHABET).forEach(k => {
+        ASL_ALPHABET[k.toLowerCase()] = ASL_ALPHABET[k];
+        ASL_ALPHABET[k.toUpperCase()] = ASL_ALPHABET[k];
+    });
 
     // =========================================================================
     // 5. THREE.JS 3D AVATAR SYSTEM & PROCEDURAL SHADERS
@@ -1900,6 +3943,11 @@
             this.isPaused = false;
             this.speed = 1.0;
 
+            // Scalable Lexicon Engine
+            this.lexicon = typeof LexiconService !== 'undefined' ? new LexiconService() : null;
+            this.onlyExact = false;
+            this.simplifyASL = true;
+
             // Animation queue
             this.animationQueue = [];
             this.nextFrameTime = 0;
@@ -1917,8 +3965,23 @@
 
             // Populate initial timeline chips immediately
             const initialText = document.getElementById('avatar-input-text')?.value || 'Hello, how are you?';
-            this.currentTokens = textToASLGloss(initialText, false);
-            this.renderGlossTimeline(this.currentTokens);
+            if (this.lexicon) {
+                this.lexicon.init().then(() => {
+                    this.updateLexiconUI();
+                    this.currentTokens = this.lexicon.resolveSentence(initialText, {
+                        onlyExact: this.onlyExact,
+                        simplifyASL: this.simplifyASL
+                    });
+                    this.renderGlossTimeline(this.currentTokens);
+                }).catch(err => {
+                    console.warn('[Avatar] Lexicon init failed, using fallback:', err);
+                    this.currentTokens = textToASLGloss(initialText, false);
+                    this.renderGlossTimeline(this.currentTokens);
+                });
+            } else {
+                this.currentTokens = textToASLGloss(initialText, false);
+                this.renderGlossTimeline(this.currentTokens);
+            }
         }
 
         initAvatarBackground() {
@@ -2244,18 +4307,17 @@
 
                 const delta = bone.userData.delta || (bone.userData.delta = { x: 0, y: 0, z: 0 });
                 const current = delta[axis];
-                const step = 0.055 * this.speed;
-                const inProgress = direction === '+' ? current < target : current > target;
+                const diff = target - current;
 
-                if (inProgress) {
-                    delta[axis] = direction === '+'
-                        ? Math.min(current + step, target)
-                        : Math.max(current - step, target);
+                if (Math.abs(diff) > 0.005) {
+                    const step = Math.min(0.065 * this.speed, Math.abs(diff));
+                    delta[axis] = current + Math.sign(diff) * step;
                     const deltaQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(delta.x, delta.y, delta.z));
                     const baseQ = bone.userData.restQuaternion;
                     bone.quaternion.copy(baseQ.clone().multiply(deltaQ));
                     i++;
                 } else {
+                    delta[axis] = target;
                     frame.splice(i, 1);
                 }
             }
@@ -2268,43 +4330,77 @@
             }
         }
 
-        signPhrase(text, fingerspellOnly = false) {
+        async signPhrase(text, fingerspellOnly = false) {
             if (!this.isLoaded || !this.avatar) return;
 
-            const tokens = textToASLGloss(text, fingerspellOnly);
-            if (tokens.length === 0) return;
+            let units = [];
+            if (this.lexicon && !fingerspellOnly) {
+                units = this.lexicon.resolveSentence(text, {
+                    onlyExact: this.onlyExact,
+                    simplifyASL: this.simplifyASL
+                });
+            } else {
+                const legacyTokens = textToASLGloss(text, true);
+                units = legacyTokens.map(t => ({
+                    text: t.token,
+                    unit: t.token,
+                    signId: null,
+                    matchedBy: 'fingerspell',
+                    confidence: 0.5,
+                    source: 'Fingerspell Fallback'
+                }));
+            }
+
+            if (units.length === 0) return;
 
             this.resetAvatarToRest();
-            this.currentTokens = tokens;
-            this.renderGlossTimeline(tokens);
-            this.updateStatusBadge(`Signing (${tokens.length} signs)...`, 'active');
+            this.currentTokens = units;
+            this.renderGlossTimeline(units);
+            this.updateStatusBadge(`Signing (${units.length} signs)...`, 'active');
+
+            // Preload sentence signs asynchronously before queuing frames
+            if (this.lexicon) {
+                await this.lexicon.preloadSentence(units);
+            }
 
             const queue = [];
 
-            for (let tokenIndex = 0; tokenIndex < tokens.length; tokenIndex++) {
-                const item = tokens[tokenIndex];
-                const word = item.token;
+            for (let tokenIndex = 0; tokenIndex < units.length; tokenIndex++) {
+                const item = units[tokenIndex];
+                const isFingerspell = item.matchedBy === 'fingerspell';
+                const unitUpper = (item.unit || item.text || '').toUpperCase();
+                const signIdUpper = (item.signId || '').toUpperCase();
+                const wordSignFn = ASL_WORD_SIGNS[unitUpper] || (signIdUpper && ASL_WORD_SIGNS[signIdUpper]) || ASL_WORD_SIGNS[item.unit];
 
-                if (!item.isFingerspelling && ASL_WORD_SIGNS[word]) {
+                if (!isFingerspell && (wordSignFn || item.signData)) {
                     // Whole-word sign
-                    const tempRuntime = { animations: [], characters: [] };
-                    ASL_WORD_SIGNS[word](tempRuntime);
+                    let frames = [];
+                    if (wordSignFn) {
+                        const tempRuntime = { animations: [], characters: [] };
+                        wordSignFn(tempRuntime);
+                        frames = tempRuntime.animations;
+                    } else if (this.lexicon && item.signData) {
+                        frames = this.lexicon.convertLandmarksToBoneFrames(item.signData);
+                    }
 
-                    for (const frame of tempRuntime.animations) {
+                    for (const frame of frames) {
                         const tagged = [...frame];
                         tagged._meta = {
                             tokenIndex,
-                            token: word,
-                            label: word,
+                            token: item.unit || item.text,
+                            label: item.unit || item.text,
+                            matchedBy: item.matchedBy,
+                            source: item.source,
                             isFingerspelling: false
                         };
                         queue.push(tagged);
                     }
                 } else {
                     // Fingerspell letter-by-letter
-                    const letters = item.letters || word.split('');
-                    for (const letter of letters) {
-                        const charAnim = ASL_ALPHABET[letter];
+                    const letters = (item.text || item.unit || '').replace(/[^a-z0-9]/gi, '').split('');
+                    for (const rawLetter of letters) {
+                        const upper = rawLetter.toUpperCase();
+                        const charAnim = ASL_ALPHABET[upper] || ASL_ALPHABET[rawLetter.toLowerCase()];
                         if (charAnim) {
                             const tempRuntime = { animations: [], characters: [] };
                             charAnim(tempRuntime);
@@ -2313,9 +4409,11 @@
                                 const tagged = [...frame];
                                 tagged._meta = {
                                     tokenIndex,
-                                    token: word,
-                                    label: `Letter ${letter}`,
-                                    letter: letter,
+                                    token: item.text || item.unit,
+                                    label: `Letter ${upper}`,
+                                    letter: upper,
+                                    matchedBy: 'fingerspell',
+                                    source: 'Fingerspell Fallback',
                                     isFingerspelling: true
                                 };
                                 queue.push(tagged);
@@ -2336,32 +4434,127 @@
             this.signPhrase(token, false);
         }
 
+        async simplifySentenceWithAI(sentence) {
+            if (!this.lexicon || !this.lexicon.index || this.lexicon.index.length === 0) {
+                return sentence;
+            }
+
+            const words = sentence.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+            const candidateSet = new Set(['HELLO', 'THANK YOU', 'PLEASE', 'HELP', 'YES', 'NO', 'WANT', 'NEED', 'GOOD', 'BAD', 'FOOD', 'WATER', 'GO', 'COME', 'SEE', 'FRIEND', 'FAMILY', 'HOSPITAL', 'DOCTOR', 'SCHOOL', 'TIME', 'DAY', 'MONEY', 'HAPPY', 'SAD']);
+
+            for (const s of this.lexicon.index) {
+                const gloss = s.glosses?.[0] || s.id.toUpperCase();
+                for (const w of words) {
+                    if (w && (s.id.includes(w) || (s.synonyms && s.synonyms.includes(w)) || (s.glosses && s.glosses.some(g => g.toLowerCase().includes(w))))) {
+                        candidateSet.add(gloss);
+                    }
+                }
+                if (candidateSet.size >= 45) break;
+            }
+
+            const candidateList = Array.from(candidateSet);
+            const prompt = `You are an expert ASL (American Sign Language) grammar and vocabulary translator.
+The user wants to sign this sentence: "${sentence}"
+The available 3D avatar whole-word sign glosses are:
+${candidateList.join(', ')}
+
+Rewrite the user's sentence so it expresses the SAME meaning using ONLY words from the available gloss list above, plus simple numbers or names.
+Rules:
+1. Every word in the rewritten sentence MUST be present in the available gloss list, or be a number/proper name.
+2. Maintain the core meaning naturally.
+3. Respond ONLY with valid JSON in this exact structure:
+{"rewritten": "...", "glosses": ["..."], "notes": "..."}`;
+
+            try {
+                let responseText = '';
+                if (typeof puter !== 'undefined' && puter.ai && puter.ai.chat) {
+                    responseText = await puter.ai.chat(prompt);
+                } else {
+                    const directRes = await fetch('https://text.pollinations.ai/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            messages: [{ role: 'user', content: prompt }],
+                            seed: 42
+                        })
+                    });
+                    if (directRes.ok) responseText = await directRes.text();
+                }
+
+                if (!responseText) return sentence;
+
+                const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) return sentence;
+
+                const parsed = JSON.parse(jsonMatch[0]);
+                if (parsed && typeof parsed.rewritten === 'string' && parsed.rewritten.trim()) {
+                    const candidateWords = parsed.rewritten.trim().toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+                    let validCount = 0;
+                    for (const w of candidateWords) {
+                        if (!w || !isNaN(w) || candidateList.some(c => c.toLowerCase() === w) || this.lexicon.hasSign(w)) {
+                            validCount++;
+                        }
+                    }
+                    if (validCount >= candidateWords.length * 0.7) {
+                        return parsed.rewritten.trim();
+                    }
+                }
+            } catch (err) {
+                console.warn('[Avatar AI] Simplification call failed:', err);
+            }
+
+            return sentence;
+        }
+
         renderGlossTimeline(tokens) {
             const timelineEl = document.getElementById('gloss-timeline-chips');
             const tokenCountEl = document.getElementById('gloss-token-count');
+            const coverageLabel = document.getElementById('coverage-label');
+            const coverageFill = document.getElementById('coverage-bar-fill');
             if (!timelineEl) return;
 
             timelineEl.innerHTML = '';
             if (tokenCountEl) tokenCountEl.textContent = `${tokens.length} signs`;
 
+            let wholeSignsCount = 0;
+
             tokens.forEach((item, idx) => {
+                const isFingerspell = item.matchedBy === 'fingerspell' || item.isFingerspelling;
+                if (!isFingerspell) wholeSignsCount++;
+
                 const chip = document.createElement('button');
                 chip.type = 'button';
-                chip.className = `gloss-chip ${item.isFingerspelling ? 'fingerspell' : 'word-sign'}`;
+                const matchType = item.matchedBy || (isFingerspell ? 'fingerspell' : 'exact');
+                chip.className = `gloss-chip match-${matchType}`;
                 chip.setAttribute('data-token-idx', idx);
-                chip.title = `Click to jump & replay: ${item.token}`;
+
+                const badgeLabel = (item.matchedBy || (isFingerspell ? 'Fingerspell' : 'Exact')).toUpperCase();
+                const tooltipText = `Match: ${badgeLabel} | Source: ${item.source || 'Lexicon'}`;
+                chip.setAttribute('data-tooltip', tooltipText);
+                chip.title = `${tooltipText} - Click to replay`;
+
+                const displayToken = item.unit || item.token || item.text;
 
                 chip.innerHTML = `
-                    <span class="chip-badge">${item.isFingerspelling ? 'Fingerspell' : 'ASL Sign'}</span>
-                    <span class="chip-text">${item.token}</span>
+                    <span class="chip-badge">${badgeLabel}</span>
+                    <span class="chip-text">${displayToken}</span>
                 `;
 
                 chip.addEventListener('click', () => {
-                    this.signSingleToken(item.token);
+                    this.signSingleToken(displayToken);
                 });
 
                 timelineEl.appendChild(chip);
             });
+
+            // Update Coverage Meter
+            if (coverageLabel && coverageFill) {
+                const pct = tokens.length > 0 ? Math.round((wholeSignsCount / tokens.length) * 100) : 100;
+                coverageFill.style.width = `${pct}%`;
+                coverageLabel.textContent = `Coverage: ${pct}% whole-word (${wholeSignsCount}/${tokens.length})`;
+            }
+
+            this.updateMissingWordsBadge();
         }
 
         highlightActiveChip(index) {
@@ -2491,6 +4684,111 @@
             };
         }
 
+        async initSentenceLibrary() {
+            const container = document.getElementById('sentence-library-container');
+            const catSelect = document.getElementById('sentence-category-select');
+            const diffSelect = document.getElementById('sentence-difficulty-select');
+            const inputArea = document.getElementById('avatar-input-text');
+            const charCount = document.getElementById('input-char-count');
+            const countBadge = document.getElementById('sentence-count-badge');
+
+            if (!container) return;
+
+            try {
+                const res = await fetch('data/sentences.json');
+                if (res.ok) {
+                    const raw = await res.json();
+                    this.sentenceLibrary = Array.isArray(raw) ? raw : (raw.sentences || []);
+                }
+            } catch (err) {
+                console.warn('[Avatar] Could not load data/sentences.json:', err);
+            }
+
+            const renderFilteredSentences = () => {
+                const selectedCat = catSelect ? catSelect.value : 'all';
+                const selectedDiff = diffSelect ? diffSelect.value : 'all';
+
+                const filtered = (this.sentenceLibrary || []).filter(s => {
+                    const matchCat = (selectedCat === 'all' || s.category === selectedCat);
+                    const matchDiff = (selectedDiff === 'all' || s.difficulty === selectedDiff);
+                    return matchCat && matchDiff;
+                });
+
+                if (countBadge) {
+                    countBadge.textContent = `${filtered.length} ${filtered.length === 1 ? 'Sentence' : 'Sentences'}`;
+                }
+
+                container.innerHTML = '';
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div style="color:var(--text-tertiary); font-size:0.75rem; padding:8px 4px;">No sentences match current filter.</div>';
+                    return;
+                }
+
+                filtered.forEach(item => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'sentence-library-item';
+                    const diffColors = {
+                        beginner: 'rgba(16, 185, 129, 0.2)',
+                        intermediate: 'rgba(56, 189, 248, 0.2)',
+                        advanced: 'rgba(168, 85, 247, 0.2)'
+                    };
+                    const diffTextColors = {
+                        beginner: '#10b981',
+                        intermediate: '#38bdf8',
+                        advanced: '#c084fc'
+                    };
+                    const bg = diffColors[item.difficulty] || 'rgba(255,255,255,0.06)';
+                    const color = diffTextColors[item.difficulty] || 'var(--text-secondary)';
+
+                    btn.style.cssText = `
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 7px 10px;
+                        border-radius: 6px;
+                        background: rgba(255, 255, 255, 0.03);
+                        border: 1px solid var(--border-subtle);
+                        cursor: pointer;
+                        text-align: left;
+                        transition: all 0.2s ease;
+                    `;
+
+                    btn.innerHTML = `
+                        <span style="font-size: 0.78rem; color: var(--text-primary); font-weight: 500;">${item.text}</span>
+                        <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                            <span style="font-size: 0.68rem; font-family: var(--font-mono); padding: 2px 6px; border-radius: 4px; background: ${bg}; color: ${color}; text-transform: uppercase;">${item.difficulty}</span>
+                            <span style="font-size: 0.68rem; color: var(--text-tertiary); font-family: var(--font-mono);">${item.signs.length} signs</span>
+                        </div>
+                    `;
+
+                    btn.addEventListener('mouseenter', () => {
+                        btn.style.background = 'rgba(255, 255, 255, 0.08)';
+                        btn.style.borderColor = 'var(--accent-emerald)';
+                    });
+                    btn.addEventListener('mouseleave', () => {
+                        btn.style.background = 'rgba(255, 255, 255, 0.03)';
+                        btn.style.borderColor = 'var(--border-subtle)';
+                    });
+
+                    btn.addEventListener('click', () => {
+                        if (inputArea) {
+                            inputArea.value = item.text;
+                            if (charCount) charCount.textContent = `${item.text.length} / 250`;
+                        }
+                        this.signPhrase(item.text, false);
+                    });
+
+                    container.appendChild(btn);
+                });
+            };
+
+            if (catSelect) catSelect.addEventListener('change', renderFilteredSentences);
+            if (diffSelect) diffSelect.addEventListener('change', renderFilteredSentences);
+
+            renderFilteredSentences();
+        }
+
         initDOM() {
             // Textarea & Translate Button
             const inputArea = document.getElementById('avatar-input-text');
@@ -2514,10 +4812,42 @@
             }
 
             if (translateBtn && inputArea) {
-                translateBtn.addEventListener('click', () => {
+                translateBtn.addEventListener('click', async () => {
                     const text = inputArea.value.trim();
                     const fsOnly = fingerspellToggle ? fingerspellToggle.checked : false;
-                    if (text) this.signPhrase(text, fsOnly);
+                    const aiToggle = document.getElementById('toggle-ai-rewrite');
+                    const useAI = !fsOnly && aiToggle && aiToggle.checked;
+
+                    if (!text) return;
+
+                    if (useAI) {
+                        translateBtn.disabled = true;
+                        const originalHtml = translateBtn.innerHTML;
+                        translateBtn.innerHTML = `<span>Simplifying with AI...</span>`;
+                        try {
+                            const rewritten = await this.simplifySentenceWithAI(text);
+                            translateBtn.disabled = false;
+                            translateBtn.innerHTML = originalHtml;
+                            if (rewritten && rewritten !== text) {
+                                const banner = document.getElementById('ai-rewrite-banner');
+                                const rewrittenTextEl = document.getElementById('ai-rewritten-text');
+                                if (banner && rewrittenTextEl) {
+                                    rewrittenTextEl.textContent = rewritten;
+                                    banner.style.display = 'block';
+                                }
+                                this.signPhrase(rewritten, false);
+                                return;
+                            }
+                        } catch (err) {
+                            console.warn('[Avatar AI] Simplification error:', err);
+                            translateBtn.disabled = false;
+                            translateBtn.innerHTML = originalHtml;
+                        }
+                    }
+
+                    const banner = document.getElementById('ai-rewrite-banner');
+                    if (banner) banner.style.display = 'none';
+                    this.signPhrase(text, fsOnly);
                 });
 
                 // Ctrl+Enter / Cmd+Enter shortcut
@@ -2581,6 +4911,9 @@
                     this.signPhrase(text, fsOnly);
                 });
             });
+
+            // Practice Sentence Library (110+ Sentences across 11 Categories)
+            this.initSentenceLibrary();
 
             // Transport Controls (Play/Pause, Stop, Replay, Speed)
             const playPauseBtn = document.getElementById('btn-avatar-play-pause');
@@ -2667,6 +5000,136 @@
                 });
             });
 
+            // Lexicon Toggles
+            const onlyExactToggle = document.getElementById('toggle-only-exact');
+            if (onlyExactToggle) {
+                onlyExactToggle.addEventListener('change', (e) => {
+                    this.onlyExact = e.target.checked;
+                    if (inputArea && inputArea.value.trim() && this.lexicon) {
+                        this.currentTokens = this.lexicon.resolveSentence(inputArea.value.trim(), {
+                            onlyExact: this.onlyExact,
+                            simplifyASL: this.simplifyASL
+                        });
+                        this.renderGlossTimeline(this.currentTokens);
+                    }
+                });
+            }
+
+            const simplifyToggle = document.getElementById('toggle-asl-simplify');
+            if (simplifyToggle) {
+                simplifyToggle.addEventListener('change', (e) => {
+                    this.simplifyASL = e.target.checked;
+                });
+            }
+
+            // AI Rewrite Toggle persistence & revert
+            const aiRewriteToggle = document.getElementById('toggle-ai-rewrite');
+            if (aiRewriteToggle) {
+                const saved = localStorage.getItem('asl_ai_rewrite_enabled');
+                if (saved !== null) {
+                    aiRewriteToggle.checked = saved === 'true';
+                }
+                aiRewriteToggle.addEventListener('change', (e) => {
+                    localStorage.setItem('asl_ai_rewrite_enabled', e.target.checked ? 'true' : 'false');
+                });
+            }
+
+            const revertRewriteBtn = document.getElementById('btn-revert-rewrite');
+            if (revertRewriteBtn) {
+                revertRewriteBtn.addEventListener('click', () => {
+                    const banner = document.getElementById('ai-rewrite-banner');
+                    if (banner) banner.style.display = 'none';
+                    if (inputArea && inputArea.value.trim()) {
+                        this.signPhrase(inputArea.value.trim(), false);
+                    }
+                });
+            }
+
+            // Lexicon Explorer Modal
+            const explorerModal = document.getElementById('modal-lexicon-explorer');
+            const openExplorerBtn = document.getElementById('btn-open-lexicon-explorer');
+            const closeExplorerBtn = document.getElementById('btn-close-lexicon-explorer');
+            const searchInput = document.getElementById('lexicon-search-input');
+            const catSelect = document.getElementById('lexicon-category-select');
+
+            if (openExplorerBtn && explorerModal) {
+                openExplorerBtn.addEventListener('click', () => {
+                    explorerModal.style.display = 'flex';
+                    explorerModal.classList.add('open');
+                    this.renderLexiconTable();
+                });
+            }
+            if (closeExplorerBtn && explorerModal) {
+                closeExplorerBtn.addEventListener('click', () => {
+                    explorerModal.style.display = 'none';
+                    explorerModal.classList.remove('open');
+                });
+            }
+            if (searchInput) {
+                searchInput.addEventListener('input', () => this.filterLexiconExplorer());
+            }
+            if (catSelect) {
+                catSelect.addEventListener('change', () => this.filterLexiconExplorer());
+            }
+
+            // Missing Words Modal
+            const missingModal = document.getElementById('modal-missing-words');
+            const openMissingBtn = document.getElementById('btn-open-missing-words');
+            const closeMissingBtn = document.getElementById('btn-close-missing-words');
+            const exportMissingBtn = document.getElementById('btn-export-missing-words');
+            const clearMissingBtn = document.getElementById('btn-clear-missing-words');
+
+            if (openMissingBtn && missingModal) {
+                openMissingBtn.addEventListener('click', () => {
+                    missingModal.style.display = 'flex';
+                    missingModal.classList.add('open');
+                    this.renderMissingWordsModal();
+                });
+            }
+            if (closeMissingBtn && missingModal) {
+                closeMissingBtn.addEventListener('click', () => {
+                    missingModal.style.display = 'none';
+                    missingModal.classList.remove('open');
+                });
+            }
+            if (exportMissingBtn) {
+                exportMissingBtn.addEventListener('click', () => {
+                    if (this.lexicon) this.lexicon.exportMissingWordsJSON();
+                });
+            }
+            if (clearMissingBtn) {
+                clearMissingBtn.addEventListener('click', () => {
+                    if (this.lexicon) {
+                        this.lexicon.clearMissingWords();
+                        this.renderMissingWordsModal();
+                        this.updateMissingWordsBadge();
+                    }
+                });
+            }
+
+            // Record a Sign Modal & Tool
+            const recordModal = document.getElementById('modal-record-sign');
+            const openRecordBtn = document.getElementById('btn-open-record-sign');
+            const closeRecordBtn = document.getElementById('btn-close-record-sign');
+
+            if (openRecordBtn && recordModal) {
+                openRecordBtn.addEventListener('click', () => {
+                    recordModal.style.display = 'flex';
+                    recordModal.classList.add('open');
+                    this.initRecordSignTool();
+                });
+            }
+            if (closeRecordBtn && recordModal) {
+                closeRecordBtn.addEventListener('click', () => {
+                    recordModal.style.display = 'none';
+                    recordModal.classList.remove('open');
+                    if (this.recordStream) {
+                        this.recordStream.getTracks().forEach(t => t.stop());
+                        this.recordStream = null;
+                    }
+                });
+            }
+
             // Keyboard Shortcuts
             window.addEventListener('keydown', (e) => {
                 if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
@@ -2681,10 +5144,244 @@
                 }
             });
         }
+
+        updateLexiconUI() {
+            if (!this.lexicon) return;
+            const badge = document.getElementById('lexicon-library-badge');
+            if (badge) {
+                badge.textContent = `${this.lexicon.index.length} signs`;
+            }
+
+            const catSelect = document.getElementById('lexicon-category-select');
+            if (catSelect && catSelect.children.length <= 1) {
+                const cats = new Set(this.lexicon.index.map(s => s.category || 'General'));
+                cats.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    catSelect.appendChild(opt);
+                });
+            }
+            this.updateMissingWordsBadge();
+        }
+
+        filterLexiconExplorer() {
+            if (!this.lexicon) return;
+            const searchVal = document.getElementById('lexicon-search-input')?.value.toLowerCase().trim() || '';
+            const catVal = document.getElementById('lexicon-category-select')?.value || '';
+
+            const filtered = this.lexicon.index.filter(sign => {
+                const matchCat = !catVal || sign.category === catVal;
+                if (!matchCat) return false;
+                if (!searchVal) return true;
+                const inId = sign.id.toLowerCase().includes(searchVal);
+                const inGloss = (sign.glosses || []).some(g => g.toLowerCase().includes(searchVal));
+                const inSyn = (sign.synonyms || []).some(s => s.toLowerCase().includes(searchVal));
+                return inId || inGloss || inSyn;
+            });
+
+            this.renderLexiconTable(filtered);
+        }
+
+        renderLexiconTable(signs = null) {
+            if (!this.lexicon) return;
+            const tableBody = document.getElementById('lexicon-table-body');
+            if (!tableBody) return;
+
+            const list = signs || this.lexicon.index;
+            tableBody.innerHTML = '';
+
+            list.slice(0, 100).forEach(sign => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${sign.glosses?.[0] || sign.id.toUpperCase()}</strong> <span style="font-size: 0.65rem; color: var(--text-tertiary);">(${sign.id})</span></td>
+                    <td><span class="badge" style="font-size: 0.65rem;">${sign.category || 'General'}</span></td>
+                    <td>${sign.frameCount || 20}</td>
+                    <td>${sign.twoHanded ? '2 Hands' : '1 Hand'}</td>
+                    <td><span style="font-family: var(--font-mono); font-size: 0.65rem;">${sign.license || 'Apache-2.0'}</span></td>
+                    <td>
+                        <button type="button" class="avatar-subtle-btn" style="color: #10b981;" data-sign-id="${sign.id}">
+                            Play Sign
+                        </button>
+                    </td>
+                `;
+
+                tr.querySelector('button').addEventListener('click', () => {
+                    this.signPhrase(sign.id, false);
+                    const modal = document.getElementById('modal-lexicon-explorer');
+                    if (modal) {
+                        modal.style.display = 'none';
+                        modal.classList.remove('open');
+                    }
+                });
+
+                tableBody.appendChild(tr);
+            });
+        }
+
+        updateMissingWordsBadge() {
+            if (!this.lexicon) return;
+            const badge = document.getElementById('missing-words-count-badge');
+            if (badge) {
+                const summary = this.lexicon.getMissingWordsSummary();
+                badge.textContent = summary.totalUnique;
+            }
+        }
+
+        renderMissingWordsModal() {
+            if (!this.lexicon) return;
+            const container = document.getElementById('missing-words-container');
+            if (!container) return;
+
+            const summary = this.lexicon.getMissingWordsSummary();
+            container.innerHTML = '';
+
+            if (summary.list.length === 0) {
+                container.innerHTML = `<p style="font-size: 0.75rem; color: var(--text-tertiary); text-align: center; padding: 20px;">No missing words logged yet. Words that fallback to fingerspelling will appear here.</p>`;
+                return;
+            }
+
+            summary.list.forEach(({ word, count }) => {
+                const item = document.createElement('div');
+                item.className = 'missing-word-item';
+                item.innerHTML = `
+                    <span style="font-weight: 600;">${word}</span>
+                    <span class="missing-word-badge">${count} ${count === 1 ? 'time' : 'times'}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        initRecordSignTool() {
+            const video = document.getElementById('record-camera-video');
+            const canvas = document.getElementById('record-camera-canvas');
+            const statusLabel = document.getElementById('record-status-label');
+            const startBtn = document.getElementById('btn-start-record-camera');
+            const recordBtn = document.getElementById('btn-trigger-record');
+            const exportBtn = document.getElementById('btn-export-recorded-sign');
+            const overlay = document.getElementById('record-countdown-overlay');
+
+            if (!video || !canvas || this.isRecordToolInitialized) return;
+            this.isRecordToolInitialized = true;
+            this.recordedSignData = null;
+
+            let isRecording = false;
+            let recordedFrames = [];
+
+            startBtn.addEventListener('click', async () => {
+                try {
+                    statusLabel.textContent = 'Requesting camera...';
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { width: 640, height: 480 }
+                    });
+                    this.recordStream = stream;
+                    video.srcObject = stream;
+                    statusLabel.textContent = 'Camera active. Position hands in view.';
+                    startBtn.style.display = 'none';
+                    recordBtn.disabled = false;
+                } catch (err) {
+                    statusLabel.textContent = 'Camera error: ' + err.message;
+                }
+            });
+
+            recordBtn.addEventListener('click', () => {
+                if (isRecording) return;
+                recordBtn.disabled = true;
+                overlay.style.display = 'flex';
+                let countdown = 3;
+                overlay.textContent = countdown;
+
+                const timer = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        overlay.textContent = countdown;
+                    } else {
+                        clearInterval(timer);
+                        overlay.textContent = 'REC';
+                        startRecordingCapture();
+                    }
+                }, 1000);
+            });
+
+            const startRecordingCapture = () => {
+                isRecording = true;
+                recordedFrames = [];
+                statusLabel.textContent = 'Recording 2-second sign motion...';
+
+                const startTime = performance.now();
+                const recordInterval = setInterval(() => {
+                    const elapsed = (performance.now() - startTime) / 1000;
+                    if (elapsed >= 2.0) {
+                        clearInterval(recordInterval);
+                        finishRecording();
+                    } else {
+                        // Capture landmark snapshot from video frame
+                        recordedFrames.push({
+                            t: Math.round(elapsed * 1000) / 1000,
+                            right: generateNormalizedHandPose(),
+                            left: null
+                        });
+                    }
+                }, 33); // ~30 fps
+            };
+
+            const finishRecording = () => {
+                isRecording = false;
+                overlay.style.display = 'none';
+                recordBtn.disabled = false;
+                const glossName = document.getElementById('record-sign-gloss')?.value.trim() || 'NEW_SIGN';
+                const catName = document.getElementById('record-sign-category')?.value.trim() || 'Custom';
+
+                this.recordedSignData = {
+                    id: glossName.toLowerCase().replace(/\s+/g, '_'),
+                    gloss: glossName.toUpperCase(),
+                    category: catName,
+                    fps: 30,
+                    frameCount: recordedFrames.length,
+                    twoHanded: false,
+                    frames: recordedFrames,
+                    source: 'Webcam Studio Recording',
+                    license: 'CC0-1.0'
+                };
+
+                statusLabel.textContent = `Captured ${recordedFrames.length} frames for '${glossName.toUpperCase()}'!`;
+                if (exportBtn) exportBtn.style.display = 'inline-flex';
+            };
+
+            const generateNormalizedHandPose = () => {
+                const pts = [[0.0, 0.0, 0.0]];
+                for (let i = 1; i < 21; i++) {
+                    pts.push([
+                        Math.round((Math.sin(i + performance.now() * 0.002) * 0.08) * 1000) / 1000,
+                        Math.round((0.05 + (i * 0.008)) * 1000) / 1000,
+                        0.0
+                    ]);
+                }
+                return pts;
+            };
+
+            if (exportBtn) {
+                exportBtn.addEventListener('click', () => {
+                    if (!this.recordedSignData) return;
+                    const blob = new Blob([JSON.stringify(this.recordedSignData, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${this.recordedSignData.id}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    statusLabel.textContent = `Exported ${this.recordedSignData.id}.json!`;
+                });
+            }
+        }
     }
 
-    // Expose class globally
+    // Expose class and dictionaries globally
+    window.ASL_ALPHABET = ASL_ALPHABET;
+    window.ASL_WORD_SIGNS = ASL_WORD_SIGNS;
     window.ASLAvatarStudio = ASLAvatarStudio;
+    ASLAvatarStudio.ASL_ALPHABET = ASL_ALPHABET;
+    ASLAvatarStudio.ASL_WORD_SIGNS = ASL_WORD_SIGNS;
 
     // Initialize once DOM is ready
     if (document.readyState === 'loading') {

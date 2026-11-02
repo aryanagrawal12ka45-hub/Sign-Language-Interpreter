@@ -1,0 +1,1530 @@
+{
+  "version": "2.0.0",
+  "totalSigns": 97,
+  "license": "Apache-2.0",
+  "signs": [
+    {
+      "id": "thank_you",
+      "glosses": [
+        "THANK YOU",
+        "THANKS",
+        "THANK"
+      ],
+      "synonyms": [
+        "grateful"
+      ],
+      "category": "Greetings",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/thank_you.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "good_morning",
+      "glosses": [
+        "GOOD MORNING"
+      ],
+      "synonyms": [
+        "morning"
+      ],
+      "category": "Greetings",
+      "frameCount": 26,
+      "twoHanded": false,
+      "file": "signs/good_morning.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "good_night",
+      "glosses": [
+        "GOOD NIGHT"
+      ],
+      "synonyms": [
+        "night"
+      ],
+      "category": "Greetings",
+      "frameCount": 26,
+      "twoHanded": false,
+      "file": "signs/good_night.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "nice_to_meet_you",
+      "glosses": [
+        "NICE TO MEET YOU",
+        "PLEASED TO MEET YOU"
+      ],
+      "synonyms": [
+        "meet you"
+      ],
+      "category": "Greetings",
+      "frameCount": 30,
+      "twoHanded": true,
+      "file": "signs/nice_to_meet_you.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "hello",
+      "glosses": [
+        "HELLO",
+        "HI",
+        "HEY"
+      ],
+      "synonyms": [
+        "greetings"
+      ],
+      "category": "Greetings",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/hello.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "please",
+      "glosses": [
+        "PLEASE"
+      ],
+      "synonyms": [
+        "kindly"
+      ],
+      "category": "Greetings",
+      "frameCount": 24,
+      "twoHanded": false,
+      "file": "signs/please.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "sorry",
+      "glosses": [
+        "SORRY",
+        "APOLOGIZE"
+      ],
+      "synonyms": [
+        "apology"
+      ],
+      "category": "Greetings",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/sorry.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "yes",
+      "glosses": [
+        "YES",
+        "YEAH"
+      ],
+      "synonyms": [
+        "affirmative"
+      ],
+      "category": "Basic",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/yes.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "no",
+      "glosses": [
+        "NO",
+        "NOPE"
+      ],
+      "synonyms": [
+        "negative"
+      ],
+      "category": "Basic",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/no.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "help",
+      "glosses": [
+        "HELP",
+        "AID"
+      ],
+      "synonyms": [
+        "assist"
+      ],
+      "category": "Emergency",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/help.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "stop",
+      "glosses": [
+        "STOP",
+        "HALT"
+      ],
+      "synonyms": [
+        "cease"
+      ],
+      "category": "Actions",
+      "frameCount": 20,
+      "twoHanded": true,
+      "file": "signs/stop.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "wait",
+      "glosses": [
+        "WAIT",
+        "HOLD"
+      ],
+      "synonyms": [
+        "pause"
+      ],
+      "category": "Actions",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/wait.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "good",
+      "glosses": [
+        "GOOD",
+        "WELL"
+      ],
+      "synonyms": [
+        "fine"
+      ],
+      "category": "Basic",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/good.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "bad",
+      "glosses": [
+        "BAD",
+        "POOR"
+      ],
+      "synonyms": [
+        "awful"
+      ],
+      "category": "Basic",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/bad.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "happy",
+      "glosses": [
+        "HAPPY",
+        "JOY"
+      ],
+      "synonyms": [
+        "glad",
+        "cheerful",
+        "delighted"
+      ],
+      "category": "Feelings",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/happy.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "sad",
+      "glosses": [
+        "SAD",
+        "UNHAPPY"
+      ],
+      "synonyms": [
+        "sorrowful"
+      ],
+      "category": "Feelings",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/sad.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "peace",
+      "glosses": [
+        "PEACE",
+        "VICTORY"
+      ],
+      "synonyms": [
+        "calm"
+      ],
+      "category": "Social",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/peace.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "love",
+      "glosses": [
+        "LOVE",
+        "I LOVE YOU"
+      ],
+      "synonyms": [
+        "adore"
+      ],
+      "category": "Feelings",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/love.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "person",
+      "glosses": [
+        "PERSON",
+        "INDIVIDUAL"
+      ],
+      "synonyms": [
+        "human"
+      ],
+      "category": "People",
+      "frameCount": 20,
+      "twoHanded": true,
+      "file": "signs/person.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "friend",
+      "glosses": [
+        "FRIEND",
+        "PAL"
+      ],
+      "synonyms": [
+        "buddy"
+      ],
+      "category": "People",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/friend.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "family",
+      "glosses": [
+        "FAMILY",
+        "HOUSEHOLD"
+      ],
+      "synonyms": [
+        "relatives"
+      ],
+      "category": "People",
+      "frameCount": 26,
+      "twoHanded": true,
+      "file": "signs/family.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "mother",
+      "glosses": [
+        "MOTHER",
+        "MOM"
+      ],
+      "synonyms": [
+        "mommy"
+      ],
+      "category": "Family",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/mother.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "father",
+      "glosses": [
+        "FATHER",
+        "DAD"
+      ],
+      "synonyms": [
+        "daddy"
+      ],
+      "category": "Family",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/father.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "brother",
+      "glosses": [
+        "BROTHER"
+      ],
+      "synonyms": [
+        "bro"
+      ],
+      "category": "Family",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/brother.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "sister",
+      "glosses": [
+        "SISTER"
+      ],
+      "synonyms": [
+        "sis"
+      ],
+      "category": "Family",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/sister.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "i",
+      "glosses": [
+        "I",
+        "ME"
+      ],
+      "synonyms": [
+        "myself"
+      ],
+      "category": "Pronouns",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/i.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "you",
+      "glosses": [
+        "YOU"
+      ],
+      "synonyms": [
+        "yourself"
+      ],
+      "category": "Pronouns",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/you.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "my",
+      "glosses": [
+        "MY",
+        "MINE"
+      ],
+      "synonyms": [
+        "belonging to me"
+      ],
+      "category": "Pronouns",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/my.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "eat",
+      "glosses": [
+        "EAT",
+        "ATE",
+        "EATING"
+      ],
+      "synonyms": [
+        "consume"
+      ],
+      "category": "Daily",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/eat.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "drink",
+      "glosses": [
+        "DRINK",
+        "DRANK",
+        "DRINKING"
+      ],
+      "synonyms": [
+        "sip"
+      ],
+      "category": "Daily",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/drink.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "go",
+      "glosses": [
+        "GO",
+        "WENT",
+        "GOING"
+      ],
+      "synonyms": [
+        "depart"
+      ],
+      "category": "Actions",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/go.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "come",
+      "glosses": [
+        "COME",
+        "CAME",
+        "COMING"
+      ],
+      "synonyms": [
+        "arrive"
+      ],
+      "category": "Actions",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/come.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "read",
+      "glosses": [
+        "READ",
+        "READING"
+      ],
+      "synonyms": [
+        "peruse"
+      ],
+      "category": "Education",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/read.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "write",
+      "glosses": [
+        "WRITE",
+        "WRITING",
+        "WROTE"
+      ],
+      "synonyms": [
+        "compose"
+      ],
+      "category": "Education",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/write.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "learn",
+      "glosses": [
+        "LEARN",
+        "LEARNING"
+      ],
+      "synonyms": [
+        "study"
+      ],
+      "category": "Education",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/learn.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "teach",
+      "glosses": [
+        "TEACH",
+        "TEACHING"
+      ],
+      "synonyms": [
+        "instruct"
+      ],
+      "category": "Education",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/teach.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "play",
+      "glosses": [
+        "PLAY",
+        "PLAYING"
+      ],
+      "synonyms": [
+        "compete"
+      ],
+      "category": "Actions",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/play.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "work",
+      "glosses": [
+        "WORK",
+        "WORKING"
+      ],
+      "synonyms": [
+        "labor"
+      ],
+      "category": "Daily",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/work.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "sleep",
+      "glosses": [
+        "SLEEP",
+        "SLEEPING"
+      ],
+      "synonyms": [
+        "rest"
+      ],
+      "category": "Daily",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/sleep.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "walk",
+      "glosses": [
+        "WALK",
+        "WALKING"
+      ],
+      "synonyms": [
+        "step"
+      ],
+      "category": "Actions",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/walk.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "want",
+      "glosses": [
+        "WANT",
+        "DESIRE"
+      ],
+      "synonyms": [
+        "wish"
+      ],
+      "category": "States",
+      "frameCount": 20,
+      "twoHanded": true,
+      "file": "signs/want.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "need",
+      "glosses": [
+        "NEED",
+        "REQUIRE"
+      ],
+      "synonyms": [
+        "must"
+      ],
+      "category": "States",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/need.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "understand",
+      "glosses": [
+        "UNDERSTAND",
+        "COMPREHEND"
+      ],
+      "synonyms": [
+        "get it"
+      ],
+      "category": "States",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/understand.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "who",
+      "glosses": [
+        "WHO"
+      ],
+      "synonyms": [
+        "whom"
+      ],
+      "category": "Questions",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/who.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "what",
+      "glosses": [
+        "WHAT"
+      ],
+      "synonyms": [
+        "which"
+      ],
+      "category": "Questions",
+      "frameCount": 20,
+      "twoHanded": true,
+      "file": "signs/what.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "where",
+      "glosses": [
+        "WHERE"
+      ],
+      "synonyms": [
+        "location"
+      ],
+      "category": "Questions",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/where.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "when",
+      "glosses": [
+        "WHEN"
+      ],
+      "synonyms": [
+        "time"
+      ],
+      "category": "Questions",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/when.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "why",
+      "glosses": [
+        "WHY"
+      ],
+      "synonyms": [
+        "reason"
+      ],
+      "category": "Questions",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/why.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "how",
+      "glosses": [
+        "HOW"
+      ],
+      "synonyms": [
+        "method"
+      ],
+      "category": "Questions",
+      "frameCount": 20,
+      "twoHanded": true,
+      "file": "signs/how.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "water",
+      "glosses": [
+        "WATER",
+        "H2O"
+      ],
+      "synonyms": [
+        "aqua"
+      ],
+      "category": "Food",
+      "frameCount": 20,
+      "twoHanded": false,
+      "file": "signs/water.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "food",
+      "glosses": [
+        "FOOD",
+        "MEAL"
+      ],
+      "synonyms": [
+        "nutrition"
+      ],
+      "category": "Food",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/food.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "book",
+      "glosses": [
+        "BOOK",
+        "BOOKS"
+      ],
+      "synonyms": [
+        "volume"
+      ],
+      "category": "Education",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/book.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "school",
+      "glosses": [
+        "SCHOOL",
+        "ACADEMY"
+      ],
+      "synonyms": [
+        "institute"
+      ],
+      "category": "Places",
+      "frameCount": 24,
+      "twoHanded": true,
+      "file": "signs/school.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "home",
+      "glosses": [
+        "HOME",
+        "HOUSE"
+      ],
+      "synonyms": [
+        "residence"
+      ],
+      "category": "Places",
+      "frameCount": 22,
+      "twoHanded": false,
+      "file": "signs/home.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "car",
+      "glosses": [
+        "CAR",
+        "AUTO"
+      ],
+      "synonyms": [
+        "automobile"
+      ],
+      "category": "Travel",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/car.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "doctor",
+      "glosses": [
+        "DOCTOR",
+        "PHYSICIAN"
+      ],
+      "synonyms": [
+        "medic"
+      ],
+      "category": "Health",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/doctor.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "hospital",
+      "glosses": [
+        "HOSPITAL",
+        "CLINIC"
+      ],
+      "synonyms": [
+        "infirmary"
+      ],
+      "category": "Health",
+      "frameCount": 24,
+      "twoHanded": false,
+      "file": "signs/hospital.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "money",
+      "glosses": [
+        "MONEY",
+        "CASH"
+      ],
+      "synonyms": [
+        "funds"
+      ],
+      "category": "Shopping",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/money.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "time",
+      "glosses": [
+        "TIME",
+        "CLOCK"
+      ],
+      "synonyms": [
+        "hour"
+      ],
+      "category": "Time",
+      "frameCount": 20,
+      "twoHanded": true,
+      "file": "signs/time.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "name",
+      "glosses": [
+        "NAME",
+        "TITLED"
+      ],
+      "synonyms": [
+        "called"
+      ],
+      "category": "Basic",
+      "frameCount": 22,
+      "twoHanded": true,
+      "file": "signs/name.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_0",
+      "glosses": [
+        "ZERO"
+      ],
+      "synonyms": [
+        "zero",
+        "0"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_0.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_1",
+      "glosses": [
+        "ONE"
+      ],
+      "synonyms": [
+        "one",
+        "1"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_1.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_2",
+      "glosses": [
+        "TWO"
+      ],
+      "synonyms": [
+        "two",
+        "2"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_2.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_3",
+      "glosses": [
+        "THREE"
+      ],
+      "synonyms": [
+        "three",
+        "3"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_3.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_4",
+      "glosses": [
+        "FOUR"
+      ],
+      "synonyms": [
+        "four",
+        "4"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_4.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_5",
+      "glosses": [
+        "FIVE"
+      ],
+      "synonyms": [
+        "five",
+        "5"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_5.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_6",
+      "glosses": [
+        "SIX"
+      ],
+      "synonyms": [
+        "six",
+        "6"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_6.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_7",
+      "glosses": [
+        "SEVEN"
+      ],
+      "synonyms": [
+        "seven",
+        "7"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_7.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_8",
+      "glosses": [
+        "EIGHT"
+      ],
+      "synonyms": [
+        "eight",
+        "8"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_8.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_9",
+      "glosses": [
+        "NINE"
+      ],
+      "synonyms": [
+        "nine",
+        "9"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_9.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "num_10",
+      "glosses": [
+        "TEN"
+      ],
+      "synonyms": [
+        "ten",
+        "10"
+      ],
+      "category": "Numbers",
+      "frameCount": 18,
+      "twoHanded": false,
+      "file": "signs/num_10.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_a",
+      "glosses": [
+        "A"
+      ],
+      "synonyms": [
+        "letter A"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_a.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_b",
+      "glosses": [
+        "B"
+      ],
+      "synonyms": [
+        "letter B"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_b.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_c",
+      "glosses": [
+        "C"
+      ],
+      "synonyms": [
+        "letter C"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_c.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_d",
+      "glosses": [
+        "D"
+      ],
+      "synonyms": [
+        "letter D"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_d.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_e",
+      "glosses": [
+        "E"
+      ],
+      "synonyms": [
+        "letter E"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_e.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_f",
+      "glosses": [
+        "F"
+      ],
+      "synonyms": [
+        "letter F"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_f.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_g",
+      "glosses": [
+        "G"
+      ],
+      "synonyms": [
+        "letter G"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_g.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_h",
+      "glosses": [
+        "H"
+      ],
+      "synonyms": [
+        "letter H"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_h.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_i",
+      "glosses": [
+        "I"
+      ],
+      "synonyms": [
+        "letter I"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_i.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_j",
+      "glosses": [
+        "J"
+      ],
+      "synonyms": [
+        "letter J"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_j.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_k",
+      "glosses": [
+        "K"
+      ],
+      "synonyms": [
+        "letter K"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_k.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_l",
+      "glosses": [
+        "L"
+      ],
+      "synonyms": [
+        "letter L"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_l.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_m",
+      "glosses": [
+        "M"
+      ],
+      "synonyms": [
+        "letter M"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_m.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_n",
+      "glosses": [
+        "N"
+      ],
+      "synonyms": [
+        "letter N"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_n.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_o",
+      "glosses": [
+        "O"
+      ],
+      "synonyms": [
+        "letter O"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_o.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_p",
+      "glosses": [
+        "P"
+      ],
+      "synonyms": [
+        "letter P"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_p.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_q",
+      "glosses": [
+        "Q"
+      ],
+      "synonyms": [
+        "letter Q"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_q.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_r",
+      "glosses": [
+        "R"
+      ],
+      "synonyms": [
+        "letter R"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_r.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_s",
+      "glosses": [
+        "S"
+      ],
+      "synonyms": [
+        "letter S"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_s.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_t",
+      "glosses": [
+        "T"
+      ],
+      "synonyms": [
+        "letter T"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_t.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_u",
+      "glosses": [
+        "U"
+      ],
+      "synonyms": [
+        "letter U"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_u.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_v",
+      "glosses": [
+        "V"
+      ],
+      "synonyms": [
+        "letter V"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_v.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_w",
+      "glosses": [
+        "W"
+      ],
+      "synonyms": [
+        "letter W"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_w.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_x",
+      "glosses": [
+        "X"
+      ],
+      "synonyms": [
+        "letter X"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_x.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_y",
+      "glosses": [
+        "Y"
+      ],
+      "synonyms": [
+        "letter Y"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_y.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "letter_z",
+      "glosses": [
+        "Z"
+      ],
+      "synonyms": [
+        "letter Z"
+      ],
+      "category": "Alphabet",
+      "frameCount": 16,
+      "twoHanded": false,
+      "file": "signs/letter_z.json",
+      "source": "Sign Language Studio Core ASL",
+      "license": "Apache-2.0"
+    }
+  ]
+}

@@ -1035,9 +1035,11 @@ function updateFps() {
 }
 
 // --- MediaPipe Hands Setup ---
-const hands = new Hands({
-    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
-});
+const hands = (window.sharedHandsPipeline && window.sharedHandsPipeline.hands)
+    ? window.sharedHandsPipeline.hands
+    : new Hands({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+    });
 
 hands.setOptions({
     maxNumHands: 1,

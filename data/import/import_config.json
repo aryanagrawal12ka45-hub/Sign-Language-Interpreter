@@ -1,0 +1,39 @@
+{
+  "$schema": "./import_config.schema.json",
+  "comment": "Antigravity Sign Language Dataset Import Configuration",
+  "official_sources": {
+    "WLASL": {
+      "name": "Word-Level American Sign Language (WLASL) Video Dataset",
+      "download_url": "https://github.com/dxli94/WLASL",
+      "papers_with_code": "https://paperswithcode.com/dataset/wlasl",
+      "license": "Computational Use Only / Academic Research License (Refer to WLASL repo)",
+      "instructions": "Download WLASL_v0.3.json and videos to data/import/wlasl/videos/ and set format to 'wlasl'"
+    },
+    "MS-ASL": {
+      "name": "Microsoft ASL (MS-ASL) Dataset",
+      "download_url": "https://www.microsoft.com/en-us/research/project/ms-asl/",
+      "license": "Microsoft Research License Agreement (MSR-LA)",
+      "instructions": "Download MSASL_train.json / val.json and videos to data/import/msasl/ and set format to 'msasl'"
+    },
+    "FolderPerGloss": {
+      "name": "Custom Video / Keypoint Folder (Folder-per-gloss)",
+      "instructions": "Organize videos as data/import/custom/<gloss>/clip1.mp4, clip2.mp4 or json keypoint files. Set format to 'folder_per_gloss'"
+    }
+  },
+  "dataset": {
+    "name": "Custom Community ASL Import",
+    "format": "folder_per_gloss",
+    "input_path": "data/import/custom",
+    "labels_file": "",
+    "license_confirmed": true,
+    "license": "CC-BY-4.0",
+    "source_attribution": "Community Volunteer Contributors",
+    "category_default": "General",
+    "target_fps": 30,
+    "max_frames_per_sign": 60,
+    "min_frames_per_sign": 5,
+    "smooth_window": 3,
+    "idle_movement_threshold": 0.008
+  }
+}
+

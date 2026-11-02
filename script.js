@@ -119,15 +119,17 @@ if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     alert('Browser does not support camera API');
 }
 
-// MediaPipe Hands setup
-const hands = new Hands({
-    locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
-    }
-});
+// MediaPipe Hands setup (reuses shared HandsPipeline if instantiated)
+const hands = (window.sharedHandsPipeline && window.sharedHandsPipeline.hands)
+    ? window.sharedHandsPipeline.hands
+    : new Hands({
+        locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+        }
+    });
 
 hands.setOptions({
-    maxNumHands: 1, // Focus on single hand for ASL spelling
+    maxNumHands: 2, // Support both hands for Two-Way Room and 2-hand signs
     modelComplexity: 0, // Lite model for smooth 30+ FPS real-time tracking
     minDetectionConfidence: 0.65,
     minTrackingConfidence: 0.5
@@ -967,6 +969,11 @@ function getLandmarkTensor(landmarks) {
 let isModelInferenceBusy = false;
 
 function onResults(results) {
+    // Feed shared hands pipeline for Two-Way Room and other consumers (zero duplicate tracking)
+    if (window.sharedHandsPipeline && typeof window.sharedHandsPipeline.handleMediaPipeResults === 'function') {
+        window.sharedHandsPipeline.handleMediaPipeResults(results);
+    }
+
     // Update FPS
     updateFps();
 
@@ -1574,11 +1581,7 @@ if (speakSentenceBtn) {
             utterance.rate = 0.9;
             synth.speak(utterance);
 
-            // Also broadcast to connected Two-Way Room partner
-            if (window.twoWayManager && window.twoWayManager.isConnected) {
-                window.twoWayManager.sendSign(currentSentence.trim());
-                console.log('[TwoWay] Broadcasted sentence to partner:', currentSentence.trim());
-            }
+            // Local voice playback (Use Send to Room to share with partner)
         }
     });
 }

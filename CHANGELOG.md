@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.4.0] - 2026-11-02
+
+### Added & Overhauled
+- **Advanced 3D Text-to-Sign Engine & NLP Pipeline**:
+  - Full longest-match resolution hierarchy: Multi-word phrase -> Exact gloss -> Lemma derivation -> Synonym mapping -> Numbers -> Fingerspelling fallback.
+  - Linked `src/lexicon_service.js` directly to `avatar.html` with IndexedDB preloading and continuous bone stepping to eliminate animation stutter and frozen avatar frames.
+  - Case-insensitive fingerspelling supporting authentic letter-by-letter manual alphabet fallback.
+- **Client-Side AI Sentence Simplification (Puter.js)**:
+  - Added optional "Simplify with AI" feature to rewrite complex English sentences using exclusively available whole-word sign glosses.
+  - Strict JSON schema validation ensuring that 100% of returned glosses exist in the lexicon or are valid numbers/proper names.
+  - Seamless fallback to the original sentence on timeout or invalid gloss output.
+  - Privacy notice informing users that only typed text is transmitted (zero video/camera egress).
+- **Interactive Lexicon & Growth Tools**:
+  - Added dynamic whole-word **Coverage Meter** (`coverage-label`, `coverage-bar-fill`) to `avatar.html`.
+  - Added **Lexicon Explorer Modal** (`modal-lexicon-explorer`) allowing users to search 97+ signs by category and test-play them directly on the avatar.
+  - Added **Missing Words Telemetry Modal** (`modal-missing-words`) tracking fingerspelled words locally and exporting them to CSV/JSON.
+  - Added **Record a Sign Tool** (`modal-record-sign`) allowing users to capture 21 wrist-relative landmarks via webcam and save directly into the lexicon.
+- **Verification & Documentation**:
+  - Authored `docs/weekly-lexicon-growth.md` detailing the weekly lexicon expansion loop.
+  - Expanded `tests/test_lexicon_resolver.js` with AI Rewrite output validation (12/12 passing).
+
+---
+
 ## [1.0.0] - 2026-08-20
 
 ### Added

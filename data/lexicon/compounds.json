@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "source": "ASL Agentive (-ER Suffix) & Morphological Compounds Rulebook",
+    "license": "Apache-2.0",
+    "entriesCount": 19
+  },
+  "compounds": {
+    "teacher": [
+      "TEACH",
+      "PERSON"
+    ],
+    "student": [
+      "LEARN",
+      "PERSON"
+    ],
+    "player": [
+      "PLAY",
+      "PERSON"
+    ],
+    "singer": [
+      "SING",
+      "PERSON"
+    ],
+    "writer": [
+      "WRITE",
+      "PERSON"
+    ],
+    "reader": [
+      "READ",
+      "PERSON"
+    ],
+    "worker": [
+      "WORK",
+      "PERSON"
+    ],
+    "dancer": [
+      "DANCE",
+      "PERSON"
+    ],
+    "cook": [
+      "FOOD",
+      "PERSON"
+    ],
+    "baker": [
+      "BREAD",
+      "PERSON"
+    ],
+    "helper": [
+      "HELP",
+      "PERSON"
+    ],
+    "driver": [
+      "DRIVE",
+      "PERSON"
+    ],
+    "doctor": [
+      "HOSPITAL",
+      "PERSON"
+    ],
+    "policeman": [
+      "POLICE",
+      "PERSON"
+    ],
+    "boyfriend": [
+      "BOY",
+      "FRIEND"
+    ],
+    "girlfriend": [
+      "GIRL",
+      "FRIEND"
+    ],
+    "breakfast": [
+      "MORNING",
+      "FOOD"
+    ],
+    "dinner": [
+      "NIGHT",
+      "FOOD"
+    ],
+    "lunch": [
+      "NOON",
+      "FOOD"
+    ]
+  }
+}
